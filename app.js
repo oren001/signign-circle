@@ -130,6 +130,21 @@ async function loadInitialSongs() {
         data.songs.forEach(song => { songsObject[song.id] = song; });
         await songsRef.set(songsObject);
     }
+
+    // Load songs into memory
+    const allSongs = await songsRef.once('value');
+    songs = Object.values(allSongs.val() || {});
+    renderSongSelector();
+    renderVotingPanel();
+    updateTotalVotes();
+
+    // Display Gentle Giant cover as home page if no song is selected
+    if (!currentSongId) {
+        const gentleGiant = songs.find(s => s.title === 'Gentle Giant');
+        if (gentleGiant) {
+            displaySong(gentleGiant.id);
+        }
+    }
 }
 
 // ===== Firebase Listeners =====
