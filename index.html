@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ניגונים בעברית - מעגל שירה</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="header-content">
+            <h1 class="app-title">🎵 ניגונים בעברית</h1>
+            <div class="header-controls">
+                <div class="sync-status" id="syncStatus">
+                    <span class="status-dot"></span>
+                    <span class="status-text">מתחבר...</span>
+                </div>
+                <div class="viewer-count" id="viewerCount">
+                    <span class="count-icon">👥</span>
+                    <span class="count-text">0</span>
+                </div>
+                <button class="leader-btn" id="leaderBtn">הפוך למנחה</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="app-main">
+        <!-- Song Viewer -->
+        <section class="song-viewer" id="songViewer">
+            <div class="viewer-container">
+                <div class="song-display" id="songDisplay">
+                    <div class="welcome-screen">
+                        <h2>ברוכים הבאים לניגונים בעברית! 🎶</h2>
+                        <p>בחרו שיר מהרשימה כדי להתחיל</p>
+                        <p class="hint">הצביעו לשירים האהובים עליכם והמנחה יבחר מה לשיר הבא!</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Controls (Leader Only) -->
+                <div class="nav-controls hidden" id="navControls">
+                    <button class="nav-btn" id="prevBtn">
+                        <span>→</span> קודם
+                    </button>
+                    <button class="nav-btn" id="nextBtn">
+                        הבא <span>←</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Voting Sidebar -->
+        <aside class="voting-sidebar" id="votingSidebar">
+            <div class="sidebar-header">
+                <h2>רשימת שירים</h2>
+                <button class="toggle-sidebar" id="toggleSidebar">
+                    <span class="toggle-icon">×</span>
+                </button>
+            </div>
+
+            <!-- Leader Controls -->
+            <div class="leader-controls hidden" id="leaderControls">
+                <div class="control-section">
+                    <h3>הוספת שיר</h3>
+                    <div class="add-song-form">
+                        <input type="text" id="songUrlInput" placeholder="הדביקו קישור או חפשו שיר..."
+                            class="song-input">
+                        <button class="add-btn" id="addSongBtn">הוסף</button>
+                    </div>
+                </div>
+                <div class="sort-controls">
+                    <label>
+                        <input type="checkbox" id="sortByVotes">
+                        מיין לפי הצבעות
+                    </label>
+                </div>
+            </div>
+
+            <!-- Song List -->
+            <div class="song-list" id="songList">
+                <div class="loading-songs">טוען שירים...</div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- PIN Entry Modal -->
+    <div class="modal hidden" id="pinModal">
+        <div class="modal-content">
+            <h2>הזינו קוד מנחה</h2>
+            <p>הזינו את הקוד בן 4 הספרות כדי להפוך למנחה</p>
+            <div class="pin-input-container">
+                <input type="password" id="pinInput" maxlength="4" placeholder="****" class="pin-input"
+                    inputmode="numeric" pattern="[0-9]*">
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" id="cancelPinBtn">ביטול</button>
+                <button class="btn-primary" id="submitPinBtn">אישור</button>
+            </div>
+            <div class="pin-error hidden" id="pinError">קוד שגוי. נסו שוב.</div>
+        </div>
+    </div>
+
+    <!-- Mobile Sidebar Toggle Button -->
+    <button class="mobile-toggle" id="mobileToggle">
+        <span class="toggle-text">שירים</span>
+        <span class="vote-badge" id="voteBadge">0</span>
+    </button>
+
+    <!-- Scripts -->
+    <script src="firebase-config.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

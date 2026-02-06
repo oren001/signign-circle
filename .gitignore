@@ -1,0 +1,33 @@
+# .gitignore for Singing Circle
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Node modules (if you add any build tools later)
+node_modules/
+
+# Environment files (if you add any secrets)
+.env
+.env.local
+
+# Firebase cache
+.firebase/
+firebase-debug.log
+
+# Netlify
+.netlify/
