@@ -1,46 +1,6 @@
 {
   "songs": [
     {
-      "id": "song-1",
-      "title": "Example Song 1",
-      "type": "image",
-      "source": "songs/song1.jpg",
-      "votes": 0,
-      "addedBy": "system"
-    },
-    {
-      "id": "song-2",
-      "title": "Example Song 2",
-      "type": "image",
-      "source": "songs/song2.jpg",
-      "votes": 0,
-      "addedBy": "system"
-    },
-    {
-      "id": "song-3",
-      "title": "Example Song 3",
-      "type": "image",
-      "source": "songs/song3.jpg",
-      "votes": 0,
-      "addedBy": "system"
-    },
-    {
-      "id": "song-4",
-      "title": "Example Song 4",
-      "type": "image",
-      "source": "songs/song4.jpg",
-      "votes": 0,
-      "addedBy": "system"
-    },
-    {
-      "id": "song-5",
-      "title": "Example Song 5",
-      "type": "image",
-      "source": "songs/song5.jpg",
-      "votes": 0,
-      "addedBy": "system"
-    },
-    {
       "id": "book-page-1",
       "title": "Gentle Giant Chords Book",
       "type": "image",
