@@ -96,6 +96,22 @@ body {
     color: white;
 }
 
+.feedback-btn {
+    padding: 0.3rem 0.6rem;
+    font-size: 1rem;
+    border-radius: 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.feedback-btn:hover {
+    background: var(--surface-light);
+    transform: scale(1.1);
+}
+
 /* ===== Main Application Layout ===== */
 .app-main {
     height: calc(100vh - 50px);

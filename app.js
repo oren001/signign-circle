@@ -11,6 +11,7 @@ const elements = {
     syncStatus: document.getElementById('syncStatus'),
     viewerCount: document.getElementById('viewerCount'),
     leaderBtn: document.getElementById('leaderBtn'),
+    feedbackBtn: document.getElementById('feedbackBtn'),
 
     // Song Viewer
     songDisplay: document.getElementById('songDisplay'),
@@ -158,6 +159,7 @@ function setupFirebaseListeners() {
 // ===== Event Listeners =====
 function setupEventListeners() {
     elements.leaderBtn.addEventListener('click', () => elements.pinModal.classList.remove('hidden'));
+    elements.feedbackBtn.addEventListener('click', handleFeedbackClick);
     elements.submitPinBtn.addEventListener('click', submitPin);
     elements.cancelPinBtn.addEventListener('click', () => elements.pinModal.classList.add('hidden'));
 
@@ -350,6 +352,58 @@ function escapeHtml(text) {
     const d = document.createElement('div');
     d.textContent = text;
     return d.innerHTML;
+}
+
+// ===== Feedback System =====
+function handleFeedbackClick() {
+    const currentSong = songs.find(s => s.id === currentSongId);
+    const songContext = currentSong ? currentSong.title : 'לא נבחר שיר';
+
+    const feedback = prompt('💬 איך נוכל לשפר את האפליקציה?\n\n(השיר הנוכחי: ' + songContext + ')');
+
+    if (feedback && feedback.trim()) {
+        sessionRef.child('feedback').push({
+            text: feedback.trim(),
+            timestamp: Date.now(),
+            userId: currentUserId,
+            songContext: songContext
+        }).then(() => {
+            alert('תודה על הפידבק! 🙏\n\nהמשוב שלך עוזר לנו לשפר את האפליקציה.');
+        }).catch((error) => {
+            console.error('Error saving feedback:', error);
+            alert('שגיאה בשמירת הפידבק. נסה שוב.');
+        });
+    }
+}
+
+// ===== Song Warnings =====
+function checkSongWarning(song) {
+    // Check if song has a specific warning
+    // For now, hardcoded for "אנה" song
+    if (song.title.includes('אנה')) {
+        return '⚠️ בדוק האם גבי באזור - היא לא אוהבת את השיר\n\nלהמשיך בכל זאת?';
+    }
+    return null;
+}
+
+// Override selectSong to add warning check
+const originalSelectSong = selectSong;
+function selectSong(songId) {
+    const song = songs.find(s => s.id === songId);
+    if (!song) return;
+
+    // Check for warnings
+    const warning = checkSongWarning(song);
+    if (warning) {
+        if (!confirm(warning)) {
+            return; // User canceled
+        }
+    }
+
+    // Continue with normal selection
+    if (isLeader) {
+        currentSongRef.set(songId);
+    }
 }
 
 if (window.firebaseDB) init();
