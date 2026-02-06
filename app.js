@@ -84,6 +84,12 @@ async function init() {
         setupEventListeners();
         loadMyVotes();
         loadLeaderStatus();
+
+        // Setup upload listeners (from upload.js)
+        if (typeof setupUploadListeners === 'function') {
+            setupUploadListeners();
+        }
+
         console.log('App initialized successfully');
     } catch (error) {
         console.error('Initialization error:', error);

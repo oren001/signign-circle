@@ -17,6 +17,9 @@ firebase.initializeApp(firebaseConfig);
 // Get a reference to the database service
 const database = firebase.database();
 
+// Get a reference to the storage service
+const storage = firebase.storage();
+
 // Default session ID (you can customize this for multiple singing circles)
 const SESSION_ID = 'v2'; // Version 2 - separate session from v1
 
@@ -25,5 +28,6 @@ const LEADER_PIN = '1234';
 
 // Export for use in app.js
 window.firebaseDB = database;
+window.firebaseStorage = storage;
 window.SESSION_ID = SESSION_ID;
 window.LEADER_PIN = LEADER_PIN;

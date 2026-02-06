@@ -10,6 +10,7 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 </head>
 
 <body>
@@ -47,6 +48,9 @@
                 <div class="focus-controls">
                     <button class="focus-btn" id="openSelectorBtn">
                         <span class="icon">📜</span> בחירת שיר
+                    </button>
+                    <button class="focus-btn" id="openUploadBtn">
+                        <span class="icon">➕</span> הוסף שיר
                     </button>
                     <button class="focus-btn secondary" id="openVotingBtn">
                         <span class="icon">🗳️</span> הצבעות <span class="badge" id="totalVotesBadge">0</span>
@@ -115,11 +119,57 @@
         </div>
     </div>
 
+    <!-- Upload Song Modal -->
+    <div class="modal hidden" id="uploadModal">
+        <div class="modal-content upload-modal">
+            <div class="modal-header">
+                <h2>הוסף שיר חדש</h2>
+                <button class="close-modal-btn" id="closeUploadBtn">×</button>
+            </div>
+
+            <div class="upload-form">
+                <div class="form-group">
+                    <label for="songNameInput">שם השיר:</label>
+                    <input type="text" id="songNameInput" placeholder="לדוגמה: שיר יפה - אמן מעולה" class="text-input">
+                </div>
+
+                <div class="form-group">
+                    <label for="songImageInput">תמונת השיר (אקורדים/מילים):</label>
+                    <input type="file" id="songImageInput" accept="image/*" class="file-input">
+                    <div class="file-input-label">
+                        <span class="icon">📷</span>
+                        <span id="fileNameDisplay">בחר תמונה...</span>
+                    </div>
+                </div>
+
+                <div class="image-preview hidden" id="imagePreview">
+                    <label>תצוגה מקדימה:</label>
+                    <img id="previewImage" alt="תצוגה מקדימה">
+                </div>
+
+                <div class="upload-progress hidden" id="uploadProgress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">מעלה...</div>
+                </div>
+
+                <div class="upload-error hidden" id="uploadError"></div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-secondary" id="cancelUploadBtn">ביטול</button>
+                <button class="btn-primary" id="submitUploadBtn">הוסף שיר</button>
+            </div>
+        </div>
+    </div>
+
 
 
     <!-- Scripts -->
     <script src="firebase-config.js"></script>
     <script src="app.js"></script>
+    <script src="upload.js"></script>
 </body>
 
 </html>
