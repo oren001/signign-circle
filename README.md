@@ -1,6 +1,6 @@
-# 🎵 Singing Circle - Synchronized Song Viewer
+# 🎵 Singing Circle - Synchronized Song Viewer (Version 2)
 
-A real-time synchronized web application for singing circles to collaboratively view, vote on, and display songs together.
+**Version 2 Development Branch** - This is the development version with new features and improvements.
 
 ## Features
 

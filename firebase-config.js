@@ -18,7 +18,7 @@ firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
 // Default session ID (you can customize this for multiple singing circles)
-const SESSION_ID = 'default';
+const SESSION_ID = 'v2'; // Version 2 - separate session from v1
 
 // Leader PIN (change this to your preferred 4-digit code)
 const LEADER_PIN = '1234';
