@@ -374,6 +374,42 @@ body {
     font-weight: 700;
 }
 
+/* Night Mode & Quiet Indicators */
+.night-mode-badge {
+    font-size: 0.85rem;
+    background: rgba(139, 92, 246, 0.2);
+    color: #a78bfa;
+    padding: 0.3rem 0.6rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    animation: night-pulse 2s infinite;
+}
+
+@keyframes night-pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 8px rgba(139, 92, 246, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(139, 92, 246, 0);
+    }
+}
+
+.quiet-icon {
+    font-size: 0.9rem;
+    margin-right: 0.4rem;
+    opacity: 0.8;
+}
+
+.card-title .quiet-icon {
+    display: inline-block;
+    vertical-align: middle;
+}
+
 /* Vote List */
 .panel-content {
     flex: 1;

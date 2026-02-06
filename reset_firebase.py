@@ -1,7 +1,7 @@
 import requests
 import json
 
-db_url = "https://singing-circle-default-rtdb.firebaseio.com/sessions/default.json"
+db_url = "https://singing-circle-default-rtdb.firebaseio.com/sessions/v2.json"
 
 
 def reset():

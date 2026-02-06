@@ -251,6 +251,11 @@ function displaySong(songId) {
     renderSongSelector();
 }
 
+function isNightMode() {
+    const hour = new Date().getHours();
+    return hour >= 22 || hour < 6;
+}
+
 // ===== Renderers =====
 function renderSongSelector() {
     if (!elements.songList) return;
@@ -264,8 +269,33 @@ function renderSongSelector() {
         );
     }
 
-    // 2. Sort by votes (Descending)
-    const sortedSongs = [...filteredSongs].sort((a, b) => (b.votes || 0) - (a.votes || 0));
+    // 2. Sort by votes and boost quiet songs if night mode
+    const nightMode = isNightMode();
+    const sortedSongs = [...filteredSongs].sort((a, b) => {
+        let scoreA = a.votes || 0;
+        let scoreB = b.votes || 0;
+
+        if (nightMode) {
+            if (a.isQuiet) scoreA += 1000;
+            if (b.isQuiet) scoreB += 1000;
+        }
+
+        return scoreB - scoreA;
+    });
+
+    // Update header with Night Mode status
+    const titleRow = elements.songSelectorPanel.querySelector('.header-title-row');
+    let nightBadge = titleRow.querySelector('.night-mode-badge');
+    if (nightMode) {
+        if (!nightBadge) {
+            nightBadge = document.createElement('span');
+            nightBadge.className = 'night-mode-badge';
+            nightBadge.innerHTML = '🌙 מצב לילה פעיל';
+            titleRow.insertBefore(nightBadge, titleRow.querySelector('.close-panel-btn'));
+        }
+    } else if (nightBadge) {
+        nightBadge.remove();
+    }
 
     // 3. Render
     if (sortedSongs.length === 0) {
@@ -279,7 +309,10 @@ function renderSongSelector() {
         div.className = `song-card ${song.id === currentSongId ? 'active' : ''}`;
 
         div.innerHTML = `
-            <div class="card-title">${escapeHtml(song.title)}</div>
+            <div class="card-title">
+                ${escapeHtml(song.title)}
+                ${song.isQuiet ? '<span class="quiet-icon" title="שיר שקט">🌙</span>' : ''}
+            </div>
             <div class="card-actions">
                 <button class="card-vote-btn ${isVoted ? 'voted' : ''}" 
                         onclick="voteSong('${song.id}', event)">
@@ -396,9 +429,17 @@ function handleFeedbackClick() {
 
 // ===== Song Warnings =====
 function checkSongWarning(song) {
-    // Check if song has a specific warning
-    // For now, hardcoded for "אנה" song
-    if (song.title.includes('אנה')) {
+    const title = song.title;
+
+    // Feldman vs Shlomo Artzi
+    if (title.includes('שלמה ארצי') || title === 'תרקוד' || title === 'תגידי') {
+        if (confirm('⚠️ האם פלדמן באזור? (שירי שלמה ארצי אסורים בנוכחותו)')) {
+            return '⛔ לא ניתן לשיר שלמה ארצי כשיש פלדמן! תבחר שיר אחר.';
+        }
+    }
+
+    // Gabi vs Anna
+    if (title.includes('אנה')) {
         return '⚠️ בדוק האם גבי באזור - היא לא אוהבת את השיר\n\nלהמשיך בכל זאת?';
     }
     return null;
@@ -413,6 +454,10 @@ function selectSong(songId) {
     // Check for warnings
     const warning = checkSongWarning(song);
     if (warning) {
+        if (warning.startsWith('⛔')) {
+            alert(warning);
+            return;
+        }
         if (!confirm(warning)) {
             return; // User canceled
         }
