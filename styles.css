@@ -32,6 +32,7 @@ body {
     color: var(--text-primary);
     overflow: hidden;
     height: 100vh;
+    height: 100dvh;
     direction: rtl;
 }
 
@@ -98,6 +99,7 @@ body {
 /* ===== Main Application Layout ===== */
 .app-main {
     height: calc(100vh - 50px);
+    height: calc(100dvh - 50px);
     position: relative;
     background: #000;
 }
@@ -129,14 +131,15 @@ body {
 
 .song-display img {
     max-width: 100%;
-    max-height: 100%;
+    max-height: 90%;
     object-fit: contain;
+    display: block;
 }
 
 /* Bottom Controls */
 .focus-controls {
     position: absolute;
-    bottom: 1.5rem;
+    bottom: 5rem;
     left: 50%;
     transform: translateX(-50%);
     display: flex;

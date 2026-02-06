@@ -179,11 +179,23 @@ function loadLeaderStatus() {
 // ===== Song Display =====
 function displaySong(songId) {
     const song = songs.find(s => s.id === songId);
-    if (!song) return;
+    if (!song) {
+        console.warn('Song not found:', songId);
+        return;
+    }
+
+    console.log('Displaying song:', song.title, song.source);
+    currentSongId = songId;
     elements.songDisplay.innerHTML = '';
+
     if (song.type === 'image') {
         const img = document.createElement('img');
         img.src = song.source;
+        img.alt = song.title;
+        img.onerror = () => {
+            console.error('Failed to load image:', song.source);
+            elements.songDisplay.innerHTML = `<div class="error-msg">שגיאה בטעינת התמונה: ${song.title}</div>`;
+        };
         elements.songDisplay.appendChild(img);
     } else if (song.type === 'url') {
         const iframe = document.createElement('iframe');
