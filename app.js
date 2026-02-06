@@ -284,7 +284,18 @@ function renderSongSelector() {
             if (b.isQuiet) scoreB += 1000;
         }
 
-        return scoreB - scoreA;
+        // Primary sort: Score (Votes + Night Mode Boost)
+        if (scoreB !== scoreA) {
+            return scoreB - scoreA;
+        }
+
+        // Secondary sort: Numerical Page Number (extract from ID)
+        const getPageNum = (id) => {
+            const match = id.match(/\d+$/);
+            return match ? parseInt(match[0], 10) : 999;
+        };
+
+        return getPageNum(a.id) - getPageNum(b.id);
     });
 
     // Update header with Night Mode status
