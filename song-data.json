@@ -74,7 +74,7 @@
     },
     {
       "id": "book-page-10",
-      "title": "You’ve got a friend / James Taylor",
+      "title": "You've got a friend / James Taylor",
       "type": "image",
       "source": "songs/page_010.png",
       "votes": 0,
@@ -114,7 +114,7 @@
     },
     {
       "id": "book-page-15",
-      "title": "שיר 15",
+      "title": "אדם בתוך עצמו - שלום חנוך",
       "type": "image",
       "source": "songs/page_015.png",
       "votes": 0,
@@ -154,7 +154,7 @@
     },
     {
       "id": "book-page-20",
-      "title": "שיר 20",
+      "title": "אימפריות נופלות לאט - דן תורן",
       "type": "image",
       "source": "songs/page_020.png",
       "votes": 0,
@@ -194,7 +194,7 @@
     },
     {
       "id": "book-page-25",
-      "title": "שיר 25",
+      "title": "אני ואתה - אריק איינשטיין",
       "type": "image",
       "source": "songs/page_025.png",
       "votes": 0,
@@ -314,7 +314,7 @@
     },
     {
       "id": "book-page-40",
-      "title": "שיר 40",
+      "title": "גן סגור - הכבש השישה עשר, גידי גוב",
       "type": "image",
       "source": "songs/page_040.png",
       "votes": 0,
@@ -394,7 +394,7 @@
     },
     {
       "id": "book-page-50",
-      "title": "שיר 50",
+      "title": "הולך נגד הרוח - שלום חנוך",
       "type": "image",
       "source": "songs/page_050.png",
       "votes": 0,
@@ -474,7 +474,7 @@
     },
     {
       "id": "book-page-60",
-      "title": "שיר 60",
+      "title": "זו נדירך - קורין אלאל",
       "type": "image",
       "source": "songs/page_060.png",
       "votes": 0,
@@ -554,7 +554,7 @@
     },
     {
       "id": "book-page-70",
-      "title": "שיר 70",
+      "title": "יוצא לאור - אהוד בנאי",
       "type": "image",
       "source": "songs/page_070.png",
       "votes": 0,
@@ -794,7 +794,7 @@
     },
     {
       "id": "book-page-100",
-      "title": "שיר 100",
+      "title": "לא תפסו אותי - מאיר אריאל",
       "type": "image",
       "source": "songs/page_100.png",
       "votes": 0,
