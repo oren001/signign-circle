@@ -307,8 +307,8 @@ function selectSong(songId) {
     }
 }
 
-function toggleVote(event, songId) {
-    event.stopPropagation();
+function voteSong(songId, event) {
+    if (event) event.stopPropagation();
     if (myVotes.has(songId)) {
         myVotes.delete(songId);
         songsRef.child(songId).child('votes').transaction(v => Math.max(0, (v || 0) - 1));
@@ -421,6 +421,8 @@ function selectSong(songId) {
     // Continue with normal selection
     if (isLeader) {
         currentSongRef.set(songId);
+    } else {
+        displaySong(songId);
     }
 }
 
