@@ -7,6 +7,30 @@
       "source": "songs/page_003.png",
       "votes": 0,
       "addedBy": "system"
+    },
+    {
+      "id": "book-page-20",
+      "title": "אימפריות נופלות לאט - דן תורן",
+      "type": "image",
+      "source": "songs/page_020.png",
+      "votes": 0,
+      "addedBy": "system"
+    },
+    {
+      "id": "book-page-50",
+      "title": "הולך נגד הרוח - שלום חנוך",
+      "type": "image",
+      "source": "songs/page_050.png",
+      "votes": 0,
+      "addedBy": "system"
+    },
+    {
+      "id": "book-page-100",
+      "title": "לא תפסו אותי - מאיר אריאל",
+      "type": "image",
+      "source": "songs/page_100.png",
+      "votes": 0,
+      "addedBy": "system"
     }
   ]
 }
