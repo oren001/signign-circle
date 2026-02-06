@@ -48,13 +48,10 @@
                 <!-- Navigation Controls (Focus Mode) -->
                 <div class="focus-controls">
                     <button class="focus-btn" id="openSelectorBtn">
-                        <span class="icon">📜</span> בחירת שיר
+                        <span class="icon">📜</span> בחירת רשימת שירים
                     </button>
                     <button class="focus-btn" id="openUploadBtn">
                         <span class="icon">➕</span> הוסף שיר
-                    </button>
-                    <button class="focus-btn secondary" id="openVotingBtn">
-                        <span class="icon">🗳️</span> הצבעות <span class="badge" id="totalVotesBadge">0</span>
                     </button>
                 </div>
 
@@ -69,8 +66,14 @@
         <!-- Song Selector Panel (Slide up) -->
         <aside class="song-selector-panel hidden" id="songSelectorPanel">
             <div class="panel-header">
-                <h3>בחירת שיר</h3>
-                <button class="close-panel-btn">×</button>
+                <div class="header-title-row">
+                    <h3>בחירת שיר</h3>
+                    <button class="close-panel-btn">×</button>
+                </div>
+                <div class="search-container">
+                    <input type="text" id="songSearchInput" placeholder="חפש שיר..." class="song-search-input">
+                    <span class="search-icon">🔍</span>
+                </div>
             </div>
 
             <div class="leader-controls hidden" id="leaderControls">
@@ -89,18 +92,7 @@
             </div>
         </aside>
 
-        <!-- Voting Panel (Slide up) -->
-        <aside class="voting-panel hidden" id="votingPanel">
-            <div class="panel-header">
-                <h3>הצבעות</h3>
-                <button class="close-panel-btn">×</button>
-            </div>
-            <div class="panel-content">
-                <div class="vote-list" id="voteList">
-                    <!-- Voting items go here -->
-                </div>
-            </div>
-        </aside>
+        <!-- Voting Panel Removed (Merged into Selector) -->
     </main>
 
     <!-- PIN Entry Modal -->

@@ -4,6 +4,7 @@ let currentUserId = generateUserId();
 let currentSongId = null;
 let songs = [];
 let myVotes = new Set();
+let searchQuery = '';
 
 // ===== DOM Elements =====
 const elements = {
@@ -19,14 +20,10 @@ const elements = {
     prevBtn: document.getElementById('prevBtn'),
     nextBtn: document.getElementById('nextBtn'),
     openSelectorBtn: document.getElementById('openSelectorBtn'),
-    openVotingBtn: document.getElementById('openVotingBtn'),
-    totalVotesBadge: document.getElementById('totalVotesBadge'),
-
     // Panels
     songSelectorPanel: document.getElementById('songSelectorPanel'),
-    votingPanel: document.getElementById('votingPanel'),
+    songSearchInput: document.getElementById('songSearchInput'),
     songList: document.getElementById('songList'),
-    voteList: document.getElementById('voteList'),
     leaderControls: document.getElementById('leaderControls'),
     songUrlInput: document.getElementById('songUrlInput'),
     addSongBtn: document.getElementById('addSongBtn'),
@@ -174,17 +171,16 @@ function setupEventListeners() {
     // Panels
     elements.openSelectorBtn.addEventListener('click', () => {
         elements.songSelectorPanel.classList.remove('hidden');
-        elements.votingPanel.classList.add('hidden');
     });
-    elements.openVotingBtn.addEventListener('click', () => {
-        elements.votingPanel.classList.remove('hidden');
-        elements.songSelectorPanel.classList.add('hidden');
+
+    elements.songSearchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value.toLowerCase();
+        renderSongSelector();
     });
 
     document.querySelectorAll('.close-panel-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             elements.songSelectorPanel.classList.add('hidden');
-            elements.votingPanel.classList.add('hidden');
         });
     });
 
@@ -257,35 +253,50 @@ function displaySong(songId) {
 
 // ===== Renderers =====
 function renderSongSelector() {
+    if (!elements.songList) return;
     elements.songList.innerHTML = '';
-    songs.forEach(song => {
+
+    // 1. Filter songs by search query
+    let filteredSongs = songs;
+    if (searchQuery) {
+        filteredSongs = songs.filter(song =>
+            song.title.toLowerCase().includes(searchQuery)
+        );
+    }
+
+    // 2. Sort by votes (Descending)
+    const sortedSongs = [...filteredSongs].sort((a, b) => (b.votes || 0) - (a.votes || 0));
+
+    // 3. Render
+    if (sortedSongs.length === 0) {
+        elements.songList.innerHTML = '<div class="no-results">לא נמצאו שירים</div>';
+        return;
+    }
+
+    sortedSongs.forEach(song => {
+        const isVoted = myVotes.has(song.id);
         const div = document.createElement('div');
         div.className = `song-card ${song.id === currentSongId ? 'active' : ''}`;
-        div.innerHTML = `<button class="card-title">${escapeHtml(song.title)}</button>`;
+
+        div.innerHTML = `
+            <div class="card-title">${escapeHtml(song.title)}</div>
+            <div class="card-actions">
+                <button class="card-vote-btn ${isVoted ? 'voted' : ''}" 
+                        onclick="voteSong('${song.id}', event)">
+                    <span class="vote-icon">${isVoted ? '❤️' : '🤍'}</span>
+                    <span class="vote-count">${song.votes || 0}</span>
+                </button>
+            </div>
+        `;
+
         div.onclick = () => selectSong(song.id);
         elements.songList.appendChild(div);
     });
 }
 
 function renderVotingPanel() {
-    elements.voteList.innerHTML = '';
-    // Sort by votes
-    const sorted = [...songs].sort((a, b) => (b.votes || 0) - (a.votes || 0));
-    sorted.forEach(song => {
-        const div = document.createElement('div');
-        div.className = 'vote-item';
-        div.innerHTML = `
-            <div class="vote-item-info">
-                <div class="vote-item-title">${escapeHtml(song.title)}</div>
-                <div class="vote-item-count">${song.votes || 0} הצבעות</div>
-            </div>
-            <button class="mini-vote-btn ${myVotes.has(song.id) ? 'voted' : ''}" onclick="toggleVote(event, '${song.id}')">
-                ${myVotes.has(song.id) ? '✓' : '♡'}
-            </button>
-        `;
-        div.onclick = () => selectSong(song.id);
-        elements.voteList.appendChild(div);
-    });
+    // Legacy function replaced by unified selector
+    renderSongSelector();
 }
 
 function selectSong(songId) {
@@ -306,12 +317,11 @@ function toggleVote(event, songId) {
         songsRef.child(songId).child('votes').transaction(v => (v || 0) + 1);
     }
     localStorage.setItem('myVotes', JSON.stringify([...myVotes]));
-    renderVotingPanel();
+    renderSongSelector();
 }
 
 function updateTotalVotes() {
-    const total = songs.reduce((sum, s) => sum + (s.votes || 0), 0);
-    elements.totalVotesBadge.textContent = total;
+    // No longer needed for badge as it's removed, but we keep the logic if we want it later
 }
 
 // ===== Navigation =====
