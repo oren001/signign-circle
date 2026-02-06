@@ -98,10 +98,23 @@ async function uploadSong() {
         return;
     }
 
+    // Check if Firebase Storage is available
+    if (!window.firebaseStorage) {
+        showUploadError('Firebase Storage לא זמין. אנא רענן את הדף.');
+        console.error('Firebase Storage not initialized');
+        return;
+    }
+
     try {
         submitUploadBtn.disabled = true;
         uploadProgress.classList.remove('hidden');
         uploadError.classList.add('hidden');
+
+        console.log('Starting upload...', {
+            songName,
+            fileSize: selectedFile.size,
+            fileType: selectedFile.type
+        });
 
         // Generate unique song ID
         const songId = `user-song-${Date.now()}`;
@@ -115,19 +128,32 @@ async function uploadSong() {
         uploadTask.on('state_changed',
             (snapshot) => {
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload progress:', progress + '%');
                 progressFill.style.width = progress + '%';
                 progressText.textContent = `מעלה... ${Math.round(progress)}%`;
             },
             (error) => {
                 console.error('Upload error:', error);
-                showUploadError('שגיאה בהעלאת התמונה. נסה שוב.');
+                let errorMsg = 'שגיאה בהעלאת התמונה.';
+
+                if (error.code === 'storage/unauthorized') {
+                    errorMsg = 'אין הרשאה להעלות קבצים. Firebase Storage לא מופעל או אין הרשאות.';
+                } else if (error.code === 'storage/canceled') {
+                    errorMsg = 'ההעלאה בוטלה.';
+                } else if (error.code === 'storage/unknown') {
+                    errorMsg = 'שגיאה לא ידועה. נסה שוב.';
+                }
+
+                showUploadError(errorMsg);
                 submitUploadBtn.disabled = false;
                 uploadProgress.classList.add('hidden');
             },
             async () => {
                 // Upload completed successfully
                 try {
+                    console.log('Upload completed, getting download URL...');
                     const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+                    console.log('Download URL:', downloadURL);
 
                     // Save song data to Firebase Database
                     const newSong = {
@@ -141,9 +167,11 @@ async function uploadSong() {
                         uploadedByName: 'Anonymous'
                     };
 
+                    console.log('Saving song to database...', newSong);
                     await songsRef.child(songId).set(newSong);
 
                     progressText.textContent = 'הושלם! ✓';
+                    console.log('Song uploaded successfully!');
 
                     // Close modal after short delay
                     setTimeout(() => {
@@ -152,7 +180,7 @@ async function uploadSong() {
 
                 } catch (error) {
                     console.error('Error saving song data:', error);
-                    showUploadError('שגיאה בשמירת נתוני השיר');
+                    showUploadError('שגיאה בשמירת נתוני השיר: ' + error.message);
                     submitUploadBtn.disabled = false;
                 }
             }
@@ -160,7 +188,7 @@ async function uploadSong() {
 
     } catch (error) {
         console.error('Upload error:', error);
-        showUploadError('שגיאה בהעלאת השיר. נסה שוב.');
+        showUploadError('שגיאה בהעלאת השיר: ' + error.message);
         submitUploadBtn.disabled = false;
         uploadProgress.classList.add('hidden');
     }
