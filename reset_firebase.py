@@ -1,7 +1,8 @@
 import requests
 import json
 
-db_url = "https://singing-circle-default-rtdb.firebaseio.com/sessions/singing-circle-default.json"
+db_url = "https://singing-circle-default-rtdb.firebaseio.com/sessions/default.json"
+
 
 def reset():
     # Fetch songs from song-data.json
@@ -12,8 +13,9 @@ def reset():
     
     update_data = {
         "songs": songs_obj,
-        "currentSong": "book-page-1"
+        "currentSong": "book-page-3"
     }
+
     
     print("Updating Firebase...")
     r = requests.put(db_url, json=update_data)
