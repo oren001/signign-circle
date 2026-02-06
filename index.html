@@ -33,59 +33,67 @@
 
     <!-- Main Content -->
     <main class="app-main">
-        <!-- Song Viewer -->
+        <!-- Song Viewer (Focus Mode) -->
         <section class="song-viewer" id="songViewer">
             <div class="viewer-container">
                 <div class="song-display" id="songDisplay">
                     <div class="welcome-screen">
                         <h2>ברוכים הבאים לניגונים בעברית! 🎶</h2>
-                        <p>בחרו שיר מהרשימה כדי להתחיל</p>
-                        <p class="hint">הצביעו לשירים האהובים עליכם והמנחה יבחר מה לשיר הבא!</p>
+                        <p>השתמשו ברשימה למטה כדי לבחור שיר</p>
                     </div>
                 </div>
 
-                <!-- Navigation Controls (Leader Only) -->
-                <div class="nav-controls hidden" id="navControls">
-                    <button class="nav-btn" id="prevBtn">
-                        <span>→</span> קודם
+                <!-- Navigation Controls (Focus Mode) -->
+                <div class="focus-controls">
+                    <button class="focus-btn" id="openSelectorBtn">
+                        <span class="icon">📜</span> בחירת שיר
                     </button>
-                    <button class="nav-btn" id="nextBtn">
-                        הבא <span>←</span>
+                    <button class="focus-btn secondary" id="openVotingBtn">
+                        <span class="icon">🗳️</span> הצבעות <span class="badge" id="totalVotesBadge">0</span>
                     </button>
+                </div>
+
+                <!-- Leader Navigation (Overlay) -->
+                <div class="leader-nav hidden" id="navControls">
+                    <button class="nav-round-btn prev" id="prevBtn"><span>→</span></button>
+                    <button class="nav-round-btn next" id="nextBtn"><span>←</span></button>
                 </div>
             </div>
         </section>
 
-        <!-- Voting Sidebar -->
-        <aside class="voting-sidebar" id="votingSidebar">
-            <div class="sidebar-header">
-                <h2>רשימת שירים</h2>
-                <button class="toggle-sidebar" id="toggleSidebar">
-                    <span class="toggle-icon">×</span>
-                </button>
+        <!-- Song Selector Panel (Slide up) -->
+        <aside class="song-selector-panel hidden" id="songSelectorPanel">
+            <div class="panel-header">
+                <h3>בחירת שיר</h3>
+                <button class="close-panel-btn">×</button>
             </div>
 
-            <!-- Leader Controls -->
             <div class="leader-controls hidden" id="leaderControls">
                 <div class="control-section">
-                    <h3>הוספת שיר</h3>
                     <div class="add-song-form">
-                        <input type="text" id="songUrlInput" placeholder="הדביקו קישור או חפשו שיר..."
-                            class="song-input">
+                        <input type="text" id="songUrlInput" placeholder="חיפוש או קישור..." class="song-input">
                         <button class="add-btn" id="addSongBtn">הוסף</button>
                     </div>
                 </div>
-                <div class="sort-controls">
-                    <label>
-                        <input type="checkbox" id="sortByVotes">
-                        מיין לפי הצבעות
-                    </label>
-                </div>
             </div>
 
-            <!-- Song List -->
-            <div class="song-list" id="songList">
-                <div class="loading-songs">טוען שירים...</div>
+            <div class="song-list-container">
+                <div class="song-grid" id="songList">
+                    <div class="loading-songs">טוען שירים...</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Voting Panel (Slide up) -->
+        <aside class="voting-panel hidden" id="votingPanel">
+            <div class="panel-header">
+                <h3>הצבעות</h3>
+                <button class="close-panel-btn">×</button>
+            </div>
+            <div class="panel-content">
+                <div class="vote-list" id="voteList">
+                    <!-- Voting items go here -->
+                </div>
             </div>
         </aside>
     </main>
@@ -107,11 +115,7 @@
         </div>
     </div>
 
-    <!-- Mobile Sidebar Toggle Button -->
-    <button class="mobile-toggle" id="mobileToggle">
-        <span class="toggle-text">שירים</span>
-        <span class="vote-badge" id="voteBadge">0</span>
-    </button>
+
 
     <!-- Scripts -->
     <script src="firebase-config.js"></script>
