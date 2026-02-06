@@ -45,9 +45,38 @@ const currentSongRef = sessionRef.child('currentSong');
 const viewersRef = sessionRef.child('viewers');
 const myViewerRef = viewersRef.child(currentUserId);
 
+// ===== Wake Lock for Screen Always On =====
+let wakeLock = null;
+
+async function requestWakeLock() {
+    try {
+        if ('wakeLock' in navigator) {
+            wakeLock = await navigator.wakeLock.request('screen');
+            console.log('✓ Screen wake lock activated');
+
+            wakeLock.addEventListener('release', () => {
+                console.log('Wake lock released');
+            });
+        } else {
+            console.warn('Wake Lock API not supported');
+        }
+    } catch (err) {
+        console.error('Wake lock error:', err);
+    }
+}
+
+// Re-request wake lock when page becomes visible again
+document.addEventListener('visibilitychange', async () => {
+    if (wakeLock !== null && document.visibilityState === 'visible') {
+        await requestWakeLock();
+    }
+});
+
 // ===== Initialization =====
 async function init() {
     try {
+        // Request wake lock to keep screen on
+        await requestWakeLock();
         setupConnectionMonitoring();
         registerViewer();
         await loadInitialSongs();
