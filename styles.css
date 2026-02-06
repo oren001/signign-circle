@@ -139,10 +139,31 @@ body {
 .song-display {
     flex: 1;
     display: flex;
-    align-items: center;
     justify-content: center;
-    overflow: auto;
-    padding: 0.5rem;
+    align-items: center;
+    padding: 1rem;
+    overflow-y: auto;
+    position: relative;
+    background-color: #1a1a1a;
+}
+
+/* Home Page Wallpaper Style */
+.song-display.cover-mode::before {
+    content: "ברוכים הבאים למעגל השירה שלנו 🎶";
+    position: absolute;
+    top: 20%;
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 300;
+    text-align: center;
+}
+
+.song-display.cover-mode img {
+    max-width: 200px;
+    opacity: 0.15;
+    filter: grayscale(100%);
+    box-shadow: none;
+    pointer-events: none;
 }
 
 .song-display img {

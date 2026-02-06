@@ -13,7 +13,7 @@ def reset():
     
     update_data = {
         "songs": songs_obj,
-        "currentSong": "book-page-3"
+        "currentSong": "book-page-1"
     }
 
     

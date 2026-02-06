@@ -229,6 +229,10 @@ function displaySong(songId) {
     currentSongId = songId;
     elements.songDisplay.innerHTML = '';
 
+    // Check if it's the cover page to apply special "wallpaper" style
+    elements.songDisplay.classList.toggle('cover-mode', songId === 'book-page-1');
+
+
     if (song.type === 'image') {
         const img = document.createElement('img');
         img.src = song.source;
