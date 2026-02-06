@@ -42,7 +42,7 @@
     },
     {
       "id": "book-page-1",
-      "title": "ספר שירים - 1 ",
+      "title": "Gentle Giant Chords Book",
       "type": "image",
       "source": "songs/page_001.png",
       "votes": 0,
@@ -50,7 +50,7 @@
     },
     {
       "id": "book-page-2",
-      "title": "ספר שירים - 2 ",
+      "title": "English Songs Index",
       "type": "image",
       "source": "songs/page_002.png",
       "votes": 0,
@@ -58,7 +58,7 @@
     },
     {
       "id": "book-page-3",
-      "title": "ספר שירים - 3 ",
+      "title": "Hey Jude / The Beatles",
       "type": "image",
       "source": "songs/page_003.png",
       "votes": 0,
@@ -66,7 +66,7 @@
     },
     {
       "id": "book-page-4",
-      "title": "ספר שירים - 4 ",
+      "title": "The Long and Winding Road / The Beatles",
       "type": "image",
       "source": "songs/page_004.png",
       "votes": 0,
@@ -74,7 +74,7 @@
     },
     {
       "id": "book-page-5",
-      "title": "ספר שירים - 5 ",
+      "title": "Yesterday / The Beatles",
       "type": "image",
       "source": "songs/page_005.png",
       "votes": 0,
@@ -82,7 +82,7 @@
     },
     {
       "id": "book-page-6",
-      "title": "ספר שירים - 6 ",
+      "title": "Can’t Help Falling In Love / Elvis Presley",
       "type": "image",
       "source": "songs/page_006.png",
       "votes": 0,
@@ -90,7 +90,7 @@
     },
     {
       "id": "book-page-7",
-      "title": "ספר שירים - 7 ",
+      "title": "Knockin on Heavens Doors / Bob Dylan",
       "type": "image",
       "source": "songs/page_007.png",
       "votes": 0,
@@ -98,7 +98,7 @@
     },
     {
       "id": "book-page-8",
-      "title": "ספר שירים - 8 ",
+      "title": "Nothing Else Matters / Metallica",
       "type": "image",
       "source": "songs/page_008.png",
       "votes": 0,
@@ -106,7 +106,7 @@
     },
     {
       "id": "book-page-9",
-      "title": "ספר שירים - 9 ",
+      "title": "I Talk to the Wind / King Crimson",
       "type": "image",
       "source": "songs/page_009.png",
       "votes": 0,
@@ -114,7 +114,7 @@
     },
     {
       "id": "book-page-10",
-      "title": "ספר שירים - 10 ",
+      "title": "You’ve got a friend / James Taylor",
       "type": "image",
       "source": "songs/page_010.png",
       "votes": 0,
@@ -122,7 +122,7 @@
     },
     {
       "id": "book-page-11",
-      "title": "ספר שירים - 11 ",
+      "title": "More Than Words / Extreme",
       "type": "image",
       "source": "songs/page_011.png",
       "votes": 0,
