@@ -17,7 +17,7 @@
     <!-- Header -->
     <header class="app-header">
         <div class="header-content">
-            <h1 class="app-title">🎵 ניגונים בעברית <span style="font-size: 0.5em; opacity: 0.7;">v2</span></h1>
+            <h1 class="app-title">📖 ניגונים בעברית <span>v3</span></h1>
             <div class="header-controls">
                 <div class="sync-status" id="syncStatus">
                     <span class="status-dot"></span>
@@ -28,7 +28,7 @@
                     <span class="count-text">0</span>
                 </div>
                 <button class="feedback-btn" id="feedbackBtn" title="שתף פידבק">💬</button>
-                <button class="leader-btn" id="leaderBtn">הפוך למנחה</button>
+                <button class="leader-btn" id="leaderBtn">כניסת מנחה</button>
             </div>
         </div>
     </header>
@@ -40,8 +40,12 @@
             <div class="viewer-container">
                 <div class="song-display" id="songDisplay">
                     <div class="welcome-screen">
-                        <h2>ברוכים הבאים לניגונים בעברית! 🎶</h2>
-                        <p>השתמשו ברשימה למטה כדי לבחור שיר</p>
+                        <h2>ברוכים הבאים לספר השירים 🎶</h2>
+                        <p>השירה המשותפת שלנו מתחילה כאן.</p>
+                        <button class="focus-btn" onclick="document.getElementById('openSelectorBtn').click()"
+                            style="margin: 2rem auto;">
+                            📜 פתח את הספר
+                        </button>
                     </div>
                 </div>
 

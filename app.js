@@ -149,9 +149,14 @@ function setupFirebaseListeners() {
 
     currentSongRef.on('value', (snapshot) => {
         const songId = snapshot.val();
-        if (songId && songId !== currentSongId) {
-            currentSongId = songId;
-            displaySong(songId);
+        if (songId) {
+            if (songId !== currentSongId) {
+                currentSongId = songId;
+                displaySong(songId);
+            }
+        } else {
+            // Default to cover page if nothing is active
+            displaySong('book-page-1');
         }
     });
 
@@ -229,9 +234,8 @@ function displaySong(songId) {
     currentSongId = songId;
     elements.songDisplay.innerHTML = '';
 
-    // Check if it's the cover page to apply special "wallpaper" style
-    elements.songDisplay.classList.toggle('cover-mode', songId === 'book-page-1');
-
+    // Check if it's a cover page (front or back) to apply special "wallpaper" style
+    elements.songDisplay.classList.toggle('cover-mode', songId === 'book-page-1' || songId === 'book-page-292');
 
     if (song.type === 'image') {
         const img = document.createElement('img');
@@ -250,6 +254,32 @@ function displaySong(songId) {
         iframe.style.border = 'none';
         elements.songDisplay.appendChild(iframe);
     }
+
+    // Add Community Actions (Edit/Flag)
+    const actionsDiv = document.createElement('div');
+    actionsDiv.className = 'song-actions';
+
+    // Edit Button (Visible to Leaders)
+    if (isLeader) { // Note: using global isLeader state
+        const editBtn = document.createElement('button');
+        editBtn.className = 'action-btn';
+        editBtn.title = 'ערוך שם שיר';
+        editBtn.innerHTML = '✏️';
+        editBtn.onclick = () => promptEditTitle(song);
+        actionsDiv.appendChild(editBtn);
+    }
+
+    // Flag Button (Visible to All)
+    const flagBtn = document.createElement('button');
+    flagBtn.className = 'action-btn';
+    flagBtn.title = 'דווח על איכות נמוכה';
+    flagBtn.innerHTML = song.isFlagged ? '⚠️' : '🚩';
+    if (song.isFlagged) flagBtn.classList.add('flagged');
+    flagBtn.onclick = () => toggleFlag(song);
+    actionsDiv.appendChild(flagBtn);
+
+    elements.songDisplay.appendChild(actionsDiv);
+
     // Close panels when song is selected
     elements.songSelectorPanel.classList.add('hidden');
     renderSongSelector();
@@ -265,11 +295,11 @@ function renderSongSelector() {
     if (!elements.songList) return;
     elements.songList.innerHTML = '';
 
-    // 1. Filter songs by search query
-    let filteredSongs = songs;
+    // 1. Filter songs by search query (including lyrics)
     if (searchQuery) {
         filteredSongs = songs.filter(song =>
-            song.title.toLowerCase().includes(searchQuery)
+            song.title.toLowerCase().includes(searchQuery) ||
+            (song.fullText && song.fullText.toLowerCase().includes(searchQuery))
         );
     }
 
@@ -320,170 +350,202 @@ function renderSongSelector() {
 
     sortedSongs.forEach(song => {
         const isVoted = myVotes.has(song.id);
-        const div = document.createElement('div');
-        div.className = `song-card ${song.id === currentSongId ? 'active' : ''}`;
+        sortedSongs.forEach(song => {
+            const isVoted = myVotes.has(song.id);
+            const div = document.createElement('div');
+            div.className = `song-card ${song.id === currentSongId ? 'active' : ''}`;
 
-        div.innerHTML = `
+            div.innerHTML = `
             <div class="card-title">
                 ${escapeHtml(song.title)}
-                ${song.isQuiet ? '<span class="quiet-icon" title="שיר שקט">🌙</span>' : ''}
+                ${song.isQuiet ? '<div class="quiet-icon" title="שיר שקט">🌙</div>' : ''}
+                ${song.isFlagged ? '<div class="quality-badge">⚠️ איכות נמוכה</div>' : ''}
             </div>
             <div class="card-actions">
                 <button class="card-vote-btn ${isVoted ? 'voted' : ''}" 
                         onclick="voteSong('${song.id}', event)">
-                    <span class="vote-icon">${isVoted ? '❤️' : '🤍'}</span>
-                    <span class="vote-count">${song.votes || 0}</span>
+                    <span>${isVoted ? '❤️' : '🤍'}</span>
+                    <span>${song.votes || 0}</span>
                 </button>
             </div>
         `;
 
-        div.onclick = () => selectSong(song.id);
-        elements.songList.appendChild(div);
-    });
-}
+            div.onclick = () => selectSong(song.id);
+            elements.songList.appendChild(div);
+        });
+    }
 
 function renderVotingPanel() {
-    // Legacy function replaced by unified selector
-    renderSongSelector();
-}
+            // Legacy function replaced by unified selector
+            renderSongSelector();
+        }
 
 function selectSong(songId) {
-    if (isLeader) {
-        currentSongRef.set(songId);
-    } else {
-        displaySong(songId);
-    }
-}
+            if (isLeader) {
+                currentSongRef.set(songId);
+            } else {
+                displaySong(songId);
+            }
+        }
 
 function voteSong(songId, event) {
-    if (event) event.stopPropagation();
-    if (myVotes.has(songId)) {
-        myVotes.delete(songId);
-        songsRef.child(songId).child('votes').transaction(v => Math.max(0, (v || 0) - 1));
-    } else {
-        myVotes.add(songId);
-        songsRef.child(songId).child('votes').transaction(v => (v || 0) + 1);
-    }
-    localStorage.setItem('myVotes', JSON.stringify([...myVotes]));
-    renderSongSelector();
-}
+            if (event) event.stopPropagation();
+            if (myVotes.has(songId)) {
+                myVotes.delete(songId);
+                songsRef.child(songId).child('votes').transaction(v => Math.max(0, (v || 0) - 1));
+            } else {
+                myVotes.add(songId);
+                songsRef.child(songId).child('votes').transaction(v => (v || 0) + 1);
+            }
+            localStorage.setItem('myVotes', JSON.stringify([...myVotes]));
+            renderSongSelector();
+        }
 
 function updateTotalVotes() {
-    // No longer needed for badge as it's removed, but we keep the logic if we want it later
-}
+            // No longer needed for badge as it's removed, but we keep the logic if we want it later
+        }
 
 // ===== Navigation =====
 function navigatePrevious() {
-    const idx = songs.findIndex(s => s.id === currentSongId);
-    if (idx > 0) selectSong(songs[idx - 1].id);
-}
+            const idx = songs.findIndex(s => s.id === currentSongId);
+            if (idx > 0) selectSong(songs[idx - 1].id);
+        }
 
 function navigateNext() {
-    const idx = songs.findIndex(s => s.id === currentSongId);
-    if (idx < songs.length - 1) selectSong(songs[idx + 1].id);
-}
+            const idx = songs.findIndex(s => s.id === currentSongId);
+            if (idx < songs.length - 1) selectSong(songs[idx + 1].id);
+        }
 
 // ===== Add Song =====
 async function addSong() {
-    const val = elements.songUrlInput.value.trim();
-    if (!val) return;
-    const isUrl = val.startsWith('http');
-    const newSong = {
-        id: `song-${Date.now()}`,
-        title: isUrl ? 'קישור חיצוני' : val,
-        type: 'url',
-        source: isUrl ? val : `https://www.ultimate-guitar.com/search.php?value=${encodeURIComponent(val)}`,
-        votes: 0
-    };
-    await songsRef.child(newSong.id).set(newSong);
-    elements.songUrlInput.value = '';
-}
+            const val = elements.songUrlInput.value.trim();
+            if (!val) return;
+            const isUrl = val.startsWith('http');
+            const newSong = {
+                id: `song-${Date.now()}`,
+                title: isUrl ? 'קישור חיצוני' : val,
+                type: 'url',
+                source: isUrl ? val : `https://www.ultimate-guitar.com/search.php?value=${encodeURIComponent(val)}`,
+                votes: 0
+            };
+            await songsRef.child(newSong.id).set(newSong);
+            elements.songUrlInput.value = '';
+        }
 
 // ===== Helpers =====
 function generateUserId() {
-    let id = localStorage.getItem('userId');
-    if (!id) {
-        id = `user-${Date.now()}`;
-        localStorage.setItem('userId', id);
-    }
-    return id;
-}
+            let id = localStorage.getItem('userId');
+            if (!id) {
+                id = `user-${Date.now()}`;
+                localStorage.setItem('userId', id);
+            }
+            return id;
+        }
 
 function loadMyVotes() {
-    const saved = localStorage.getItem('myVotes');
-    if (saved) myVotes = new Set(JSON.parse(saved));
-}
+            const saved = localStorage.getItem('myVotes');
+            if (saved) myVotes = new Set(JSON.parse(saved));
+        }
 
 function escapeHtml(text) {
-    const d = document.createElement('div');
-    d.textContent = text;
-    return d.innerHTML;
-}
+            const d = document.createElement('div');
+            d.textContent = text;
+            return d.innerHTML;
+        }
 
 // ===== Feedback System =====
 function handleFeedbackClick() {
-    const currentSong = songs.find(s => s.id === currentSongId);
-    const songContext = currentSong ? currentSong.title : 'לא נבחר שיר';
+            const currentSong = songs.find(s => s.id === currentSongId);
+            const songContext = currentSong ? currentSong.title : 'לא נבחר שיר';
 
-    const feedback = prompt('💬 איך נוכל לשפר את האפליקציה?\n\n(השיר הנוכחי: ' + songContext + ')');
+            const feedback = prompt('💬 איך נוכל לשפר את האפליקציה?\n\n(השיר הנוכחי: ' + songContext + ')');
 
-    if (feedback && feedback.trim()) {
-        sessionRef.child('feedback').push({
-            text: feedback.trim(),
-            timestamp: Date.now(),
-            userId: currentUserId,
-            songContext: songContext
-        }).then(() => {
-            alert('תודה על הפידבק! 🙏\n\nהמשוב שלך עוזר לנו לשפר את האפליקציה.');
-        }).catch((error) => {
-            console.error('Error saving feedback:', error);
-            alert('שגיאה בשמירת הפידבק. נסה שוב.');
-        });
-    }
-}
+            if (feedback && feedback.trim()) {
+                sessionRef.child('feedback').push({
+                    text: feedback.trim(),
+                    timestamp: Date.now(),
+                    userId: currentUserId,
+                    songContext: songContext
+                }).then(() => {
+                    alert('תודה על הפידבק! 🙏\n\nהמשוב שלך עוזר לנו לשפר את האפליקציה.');
+                }).catch((error) => {
+                    console.error('Error saving feedback:', error);
+                    alert('שגיאה בשמירת הפידבק. נסה שוב.');
+                });
+            }
+        }
 
 // ===== Song Warnings =====
 function checkSongWarning(song) {
-    const title = song.title;
+            const title = song.title;
 
-    // Feldman vs Shlomo Artzi
-    if (title.includes('שלמה ארצי') || title === 'תרקוד' || title === 'תגידי') {
-        if (confirm('⚠️ האם פלדמן באזור? (שירי שלמה ארצי אסורים בנוכחותו)')) {
-            return '⛔ לא ניתן לשיר שלמה ארצי כשיש פלדמן! תבחר שיר אחר.';
+            // Feldman vs Shlomo Artzi
+            if (title.includes('שלמה ארצי') || title === 'תרקוד' || title === 'תגידי') {
+                if (confirm('⚠️ האם פלדמן באזור? (שירי שלמה ארצי אסורים בנוכחותו)')) {
+                    return '⛔ לא ניתן לשיר שלמה ארצי כשיש פלדמן! תבחר שיר אחר.';
+                }
+            }
+
+            // Gabi vs Anna
+            if (title.includes('אנה')) {
+                return '⚠️ בדוק האם גבי באזור - היא לא אוהבת את השיר\n\nלהמשיך בכל זאת?';
+            }
+            return null;
         }
-    }
-
-    // Gabi vs Anna
-    if (title.includes('אנה')) {
-        return '⚠️ בדוק האם גבי באזור - היא לא אוהבת את השיר\n\nלהמשיך בכל זאת?';
-    }
-    return null;
-}
 
 // Override selectSong to add warning check
 const originalSelectSong = selectSong;
-function selectSong(songId) {
-    const song = songs.find(s => s.id === songId);
-    if (!song) return;
+    function selectSong(songId) {
+        const song = songs.find(s => s.id === songId);
+        if (!song) return;
 
-    // Check for warnings
-    const warning = checkSongWarning(song);
-    if (warning) {
-        if (warning.startsWith('⛔')) {
-            alert(warning);
-            return;
+        // Check for warnings
+        const warning = checkSongWarning(song);
+        if (warning) {
+            if (warning.startsWith('⛔')) {
+                alert(warning);
+                return;
+            }
+            if (!confirm(warning)) {
+                return; // User canceled
+            }
         }
-        if (!confirm(warning)) {
-            return; // User canceled
+
+        // Continue with normal selection
+        if (isLeader) {
+            currentSongRef.set(songId);
+        } else {
+            displaySong(songId);
         }
     }
 
-    // Continue with normal selection
-    if (isLeader) {
-        currentSongRef.set(songId);
-    } else {
-        displaySong(songId);
-    }
-}
+    if (window.firebaseDB) init();
 
-if (window.firebaseDB) init();
+    // ===== Community Action Handlers =====
+    function promptEditTitle(song) {
+        const newTitle = prompt('עריכת שם השיר:', song.title);
+        if (newTitle && newTitle !== song.title) {
+            updateSongData(song.id, { title: newTitle });
+        }
+    }
+
+    function toggleFlag(song) {
+        const isCurrentlyFlagged = !!song.isFlagged;
+        const confirmMsg = isCurrentlyFlagged ? 'להסיר את הדיווח על איכות נמוכה?' : 'לדווח על שיר זה כבעל איכות נמוכה?';
+        if (confirm(confirmMsg)) {
+            updateSongData(song.id, { isFlagged: !isCurrentlyFlagged });
+        }
+    }
+
+    function updateSongData(songId, updates) {
+        if (window.firebaseDB && updates) {
+            // Use the globally exposed functions from firebase-config.js if available, 
+            // or let the real-time listener handle the local state.
+            const songRef = window.ref(window.firebaseDB, `sessions/v2/songs/${songId}`);
+            window.update(songRef, updates)
+                .then(() => {
+                    console.log(`Updated ${songId}:`, updates);
+                })
+                .catch(err => console.error('Firebase update failed:', err));
+        }
+    }
