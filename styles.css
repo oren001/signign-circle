@@ -600,6 +600,103 @@ button {
     border: none;
 }
 
+/* ===== Upload Modal & Form ===== */
+.upload-modal {
+    max-height: 90vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.upload-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 700;
+    color: var(--primary-dark);
+}
+
+.file-input-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 1.5rem;
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    background: var(--background);
+    transition: var(--transition);
+}
+
+.file-input-label:hover {
+    border-color: var(--primary);
+    background: white;
+}
+
+.file-input {
+    display: none;
+}
+
+.image-preview {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+#previewImage {
+    max-width: 100%;
+    max-height: 250px;
+    object-fit: contain;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    margin-top: 0.5rem;
+}
+
+/* Progress & Errors */
+.upload-progress {
+    margin-top: 1rem;
+}
+
+.progress-bar {
+    height: 10px;
+    background: var(--background);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--primary);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.upload-error {
+    color: var(--error);
+    background: #FFEBEE;
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-top: 1rem;
+}
+
 .btn-secondary {
     background: white;
     color: var(--primary);
