@@ -1,22 +1,33 @@
 /* ===== CSS Variables ===== */
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@200;300;400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
 :root {
-    --primary-color: #6366f1;
-    --primary-dark: #4f46e5;
-    --primary-light: #818cf8;
-    --secondary-color: #ec4899;
-    --background: #0f172a;
-    --surface: #1e293b;
-    --surface-light: #334155;
-    --text-primary: #f1f5f9;
+    /* Golden Circle Palette */
+    --primary-color: #f59e0b;
+    /* Golden */
+    --primary-dark: #d97706;
+    --primary-light: #fbbf24;
+    --secondary-color: #8b5cf6;
+    /* Violet */
+    --background: #020617;
+    /* Deepest Indigo */
+    --surface: rgba(30, 41, 59, 0.6);
+    --surface-light: rgba(51, 65, 85, 0.4);
+    --accent-gold: rgba(245, 158, 11, 0.15);
+
+    --text-primary: #f8fafc;
     --text-secondary: #cbd5e1;
-    --text-muted: #94a3b8;
+    --text-muted: #64748b;
+
     --success: #10b981;
     --warning: #f59e0b;
     --error: #ef4444;
-    --border: #334155;
-    --shadow: rgba(0, 0, 0, 0.3);
-    --glass-bg: rgba(30, 41, 59, 0.7);
-    --glass-border: rgba(148, 163, 184, 0.1);
+
+    --border: rgba(148, 163, 184, 0.1);
+    --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    --glass-bg: rgba(15, 23, 42, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --blur: blur(12px);
 }
 
 /* ===== Global Styles ===== */
@@ -24,17 +35,31 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
-    font-family: 'Assistant', 'Rubik', 'Heebo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #000;
+    font-family: 'Assistant', sans-serif;
+    background: var(--background);
+    background-image:
+        radial-gradient(circle at 0% 0%, rgba(245, 158, 11, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 100% 100%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
     color: var(--text-primary);
     overflow: hidden;
     height: 100vh;
     height: 100dvh;
     direction: rtl;
+    line-height: 1.5;
 }
+
+h1,
+h2,
+h3,
+.app-title {
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.02em;
+}
+
 
 /* ===== Header (Minimal) ===== */
 .app-header {

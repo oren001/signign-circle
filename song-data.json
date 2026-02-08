@@ -2,7 +2,7 @@
   "songs": [
     {
       "id": "book-page-1",
-      "title": "Gentle Giant",
+      "title": "עמוד 1",
       "type": "image",
       "source": "songs/page_001.png",
       "votes": 0,
@@ -10,7 +10,7 @@
     },
     {
       "id": "book-page-2",
-      "title": "N/A (Cover Page / Intro)",
+      "title": "עמוד 2",
       "type": "image",
       "source": "songs/page_002.png",
       "votes": 0,
@@ -18,34 +18,31 @@
     },
     {
       "id": "book-page-3",
-      "title": "Hey Jude",
+      "title": "עמוד 3",
       "type": "image",
       "source": "songs/page_003.png",
       "votes": 0,
-      "addedBy": "system",
-      "isQuiet": true
+      "addedBy": "system"
     },
     {
       "id": "book-page-4",
-      "title": "The Long and Winding Road",
+      "title": "עמוד 4",
       "type": "image",
       "source": "songs/page_004.png",
       "votes": 0,
-      "addedBy": "system",
-      "isQuiet": true
+      "addedBy": "system"
     },
     {
       "id": "book-page-5",
-      "title": "Yesterday",
+      "title": "עמוד 5",
       "type": "image",
       "source": "songs/page_005.png",
       "votes": 0,
-      "addedBy": "system",
-      "isQuiet": true
+      "addedBy": "system"
     },
     {
       "id": "book-page-6",
-      "title": "Can’t Help Falling In Love",
+      "title": "עמוד 6",
       "type": "image",
       "source": "songs/page_006.png",
       "votes": 0,
@@ -53,7 +50,7 @@
     },
     {
       "id": "book-page-7",
-      "title": "Knockin on Heavens Doors",
+      "title": "עמוד 7",
       "type": "image",
       "source": "songs/page_007.png",
       "votes": 0,
@@ -61,7 +58,7 @@
     },
     {
       "id": "book-page-8",
-      "title": "Nothing Else Matters",
+      "title": "עמוד 8",
       "type": "image",
       "source": "songs/page_008.png",
       "votes": 0,
@@ -69,7 +66,7 @@
     },
     {
       "id": "book-page-9",
-      "title": "I Talk to the Wind",
+      "title": "עמוד 9",
       "type": "image",
       "source": "songs/page_009.png",
       "votes": 0,
@@ -77,7 +74,7 @@
     },
     {
       "id": "book-page-10",
-      "title": "You’ve got a friend",
+      "title": "עמוד 10",
       "type": "image",
       "source": "songs/page_010.png",
       "votes": 0,
@@ -85,7 +82,7 @@
     },
     {
       "id": "book-page-11",
-      "title": "More Than Words",
+      "title": "עמוד 11",
       "type": "image",
       "source": "songs/page_011.png",
       "votes": 0,
@@ -93,7 +90,7 @@
     },
     {
       "id": "book-page-12",
-      "title": "N/A (Hebrew Songs Section Divider)",
+      "title": "עמוד 12",
       "type": "image",
       "source": "songs/page_012.png",
       "votes": 0,
@@ -101,7 +98,7 @@
     },
     {
       "id": "book-page-13",
-      "title": "אביא לך",
+      "title": "עמוד 13",
       "type": "image",
       "source": "songs/page_013.png",
       "votes": 0,
@@ -109,7 +106,7 @@
     },
     {
       "id": "book-page-14",
-      "title": "אגדת דשא",
+      "title": "עמוד 14",
       "type": "image",
       "source": "songs/page_014.png",
       "votes": 0,
@@ -117,25 +114,23 @@
     },
     {
       "id": "book-page-15",
-      "title": "אדם בתוך עצמו",
+      "title": "עמוד 15",
       "type": "image",
       "source": "songs/page_015.png",
       "votes": 0,
-      "addedBy": "system",
-      "isQuiet": true
+      "addedBy": "system"
     },
     {
       "id": "book-page-16",
-      "title": "אהבה קצרה",
+      "title": "עמוד 16",
       "type": "image",
       "source": "songs/page_016.png",
       "votes": 0,
-      "addedBy": "system",
-      "isQuiet": true
+      "addedBy": "system"
     },
     {
       "id": "book-page-17",
-      "title": "אהובתי",
+      "title": "עמוד 17",
       "type": "image",
       "source": "songs/page_017.png",
       "votes": 0,
@@ -143,16 +138,15 @@
     },
     {
       "id": "book-page-18",
-      "title": "אולי",
+      "title": "עמוד 18",
       "type": "image",
       "source": "songs/page_018.png",
       "votes": 0,
-      "addedBy": "system",
-      "isQuiet": true
+      "addedBy": "system"
     },
     {
       "id": "book-page-19",
-      "title": "אחד אלוהים",
+      "title": "עמוד 19",
       "type": "image",
       "source": "songs/page_019.png",
       "votes": 0,
@@ -160,7 +154,7 @@
     },
     {
       "id": "book-page-20",
-      "title": "אימפריות נופלות לאט",
+      "title": "עמוד 20",
       "type": "image",
       "source": "songs/page_020.png",
       "votes": 0,
@@ -168,7 +162,7 @@
     },
     {
       "id": "book-page-21",
-      "title": "אל תפחד",
+      "title": "עמוד 21",
       "type": "image",
       "source": "songs/page_021.png",
       "votes": 0,
@@ -176,7 +170,7 @@
     },
     {
       "id": "book-page-22",
-      "title": "אם כבר לבד",
+      "title": "עמוד 22",
       "type": "image",
       "source": "songs/page_022.png",
       "votes": 0,
@@ -184,7 +178,7 @@
     },
     {
       "id": "book-page-23",
-      "title": "אנה",
+      "title": "עמוד 23",
       "type": "image",
       "source": "songs/page_023.png",
       "votes": 0,
@@ -192,7 +186,7 @@
     },
     {
       "id": "book-page-24",
-      "title": "אנחנו שניים",
+      "title": "עמוד 24",
       "type": "image",
       "source": "songs/page_024.png",
       "votes": 0,
@@ -200,7 +194,7 @@
     },
     {
       "id": "book-page-25",
-      "title": "אני ואתה",
+      "title": "עמוד 25",
       "type": "image",
       "source": "songs/page_025.png",
       "votes": 0,
@@ -208,7 +202,7 @@
     },
     {
       "id": "book-page-26",
-      "title": "אשליות",
+      "title": "עמוד 26",
       "type": "image",
       "source": "songs/page_026.png",
       "votes": 0,
@@ -216,7 +210,7 @@
     },
     {
       "id": "book-page-27",
-      "title": "את מביאה הכל",
+      "title": "עמוד 27",
       "type": "image",
       "source": "songs/page_027.png",
       "votes": 0,
@@ -224,7 +218,7 @@
     },
     {
       "id": "book-page-28",
-      "title": "אתה פה חסר לי",
+      "title": "עמוד 28",
       "type": "image",
       "source": "songs/page_028.png",
       "votes": 0,
@@ -232,7 +226,7 @@
     },
     {
       "id": "book-page-29",
-      "title": "אתם זוכרים את השירים",
+      "title": "עמוד 29",
       "type": "image",
       "source": "songs/page_029.png",
       "votes": 0,
@@ -240,7 +234,7 @@
     },
     {
       "id": "book-page-30",
-      "title": "בגללך",
+      "title": "עמוד 30",
       "type": "image",
       "source": "songs/page_030.png",
       "votes": 0,
@@ -248,7 +242,7 @@
     },
     {
       "id": "book-page-31",
-      "title": "בדרך אל הים",
+      "title": "עמוד 31",
       "type": "image",
       "source": "songs/page_031.png",
       "votes": 0,
@@ -256,7 +250,7 @@
     },
     {
       "id": "book-page-32",
-      "title": "בואי",
+      "title": "עמוד 32",
       "type": "image",
       "source": "songs/page_032.png",
       "votes": 0,
@@ -264,7 +258,7 @@
     },
     {
       "id": "book-page-33",
-      "title": "בך לא נוגע",
+      "title": "עמוד 33",
       "type": "image",
       "source": "songs/page_033.png",
       "votes": 0,
@@ -272,7 +266,7 @@
     },
     {
       "id": "book-page-34",
-      "title": "במרחק נגיעה מכאן",
+      "title": "עמוד 34",
       "type": "image",
       "source": "songs/page_034.png",
       "votes": 0,
@@ -280,7 +274,7 @@
     },
     {
       "id": "book-page-35",
-      "title": "בצהרי היום",
+      "title": "עמוד 35",
       "type": "image",
       "source": "songs/page_035.png",
       "votes": 0,
@@ -288,7 +282,7 @@
     },
     {
       "id": "book-page-36",
-      "title": "ברחובות שלנו",
+      "title": "עמוד 36",
       "type": "image",
       "source": "songs/page_036.png",
       "votes": 0,
@@ -296,7 +290,7 @@
     },
     {
       "id": "book-page-37",
-      "title": "גאולה",
+      "title": "עמוד 37",
       "type": "image",
       "source": "songs/page_037.png",
       "votes": 0,
@@ -304,16 +298,15 @@
     },
     {
       "id": "book-page-38",
-      "title": "גיטרה וכינור",
+      "title": "עמוד 38",
       "type": "image",
       "source": "songs/page_038.png",
       "votes": 0,
-      "addedBy": "system",
-      "isQuiet": true
+      "addedBy": "system"
     },
     {
       "id": "book-page-39",
-      "title": "גן סגור",
+      "title": "עמוד 39",
       "type": "image",
       "source": "songs/page_039.png",
       "votes": 0,
@@ -321,7 +314,7 @@
     },
     {
       "id": "book-page-40",
-      "title": "גשם (בנזין)",
+      "title": "עמוד 40",
       "type": "image",
       "source": "songs/page_040.png",
       "votes": 0,
@@ -329,7 +322,7 @@
     },
     {
       "id": "book-page-41",
-      "title": "גשם (מאיר בנאי)",
+      "title": "עמוד 41",
       "type": "image",
       "source": "songs/page_041.png",
       "votes": 0,
@@ -337,7 +330,7 @@
     },
     {
       "id": "book-page-42",
-      "title": "דוד ושאול",
+      "title": "עמוד 42",
       "type": "image",
       "source": "songs/page_042.png",
       "votes": 0,
@@ -345,7 +338,7 @@
     },
     {
       "id": "book-page-43",
-      "title": "דמיון חופשי",
+      "title": "עמוד 43",
       "type": "image",
       "source": "songs/page_043.png",
       "votes": 0,
@@ -353,7 +346,7 @@
     },
     {
       "id": "book-page-44",
-      "title": "דרך ארוכה",
+      "title": "עמוד 44",
       "type": "image",
       "source": "songs/page_044.png",
       "votes": 0,
@@ -361,16 +354,15 @@
     },
     {
       "id": "book-page-45",
-      "title": "דרכנו",
+      "title": "עמוד 45",
       "type": "image",
       "source": "songs/page_045.png",
       "votes": 0,
-      "addedBy": "system",
-      "isQuiet": true
+      "addedBy": "system"
     },
     {
       "id": "book-page-46",
-      "title": "האהבה הראשונה",
+      "title": "עמוד 46",
       "type": "image",
       "source": "songs/page_046.png",
       "votes": 0,
@@ -378,7 +370,7 @@
     },
     {
       "id": "book-page-47",
-      "title": "האיש שראה הכל",
+      "title": "עמוד 47",
       "type": "image",
       "source": "songs/page_047.png",
       "votes": 0,
@@ -386,7 +378,7 @@
     },
     {
       "id": "book-page-48",
-      "title": "הולך בטל",
+      "title": "עמוד 48",
       "type": "image",
       "source": "songs/page_048.png",
       "votes": 0,
@@ -394,16 +386,15 @@
     },
     {
       "id": "book-page-49",
-      "title": "הולך נגד הרוח",
+      "title": "עמוד 49",
       "type": "image",
       "source": "songs/page_049.png",
       "votes": 0,
-      "addedBy": "system",
-      "isQuiet": true
+      "addedBy": "system"
     },
     {
       "id": "book-page-50",
-      "title": "החדר האינטימי שלי",
+      "title": "עמוד 50",
       "type": "image",
       "source": "songs/page_050.png",
       "votes": 0,
@@ -411,7 +402,7 @@
     },
     {
       "id": "book-page-51",
-      "title": "היא לא דומה",
+      "title": "עמוד 51",
       "type": "image",
       "source": "songs/page_051.png",
       "votes": 0,
@@ -419,7 +410,7 @@
     },
     {
       "id": "book-page-52",
-      "title": "הכוכבים דולקים על אש קטנה",
+      "title": "עמוד 52",
       "type": "image",
       "source": "songs/page_052.png",
       "votes": 0,
@@ -427,7 +418,7 @@
     },
     {
       "id": "book-page-53",
-      "title": "הפרח בגני",
+      "title": "עמוד 53",
       "type": "image",
       "source": "songs/page_053.png",
       "votes": 0,
@@ -435,7 +426,7 @@
     },
     {
       "id": "book-page-54",
-      "title": "הקיץ האחרון",
+      "title": "עמוד 54",
       "type": "image",
       "source": "songs/page_054.png",
       "votes": 0,
@@ -443,7 +434,7 @@
     },
     {
       "id": "book-page-55",
-      "title": "ואיך שלא",
+      "title": "עמוד 55",
       "type": "image",
       "source": "songs/page_055.png",
       "votes": 0,
@@ -451,7 +442,7 @@
     },
     {
       "id": "book-page-56",
-      "title": "זה מכבר",
+      "title": "עמוד 56",
       "type": "image",
       "source": "songs/page_056.png",
       "votes": 0,
@@ -459,7 +450,7 @@
     },
     {
       "id": "book-page-57",
-      "title": "זה קורה",
+      "title": "עמוד 57",
       "type": "image",
       "source": "songs/page_057.png",
       "votes": 0,
@@ -467,16 +458,15 @@
     },
     {
       "id": "book-page-58",
-      "title": "זמר נוגה",
+      "title": "עמוד 58",
       "type": "image",
       "source": "songs/page_058.png",
       "votes": 0,
-      "addedBy": "system",
-      "isQuiet": true
+      "addedBy": "system"
     },
     {
       "id": "book-page-59",
-      "title": "זן נדיר",
+      "title": "עמוד 59",
       "type": "image",
       "source": "songs/page_059.png",
       "votes": 0,
@@ -484,7 +474,7 @@
     },
     {
       "id": "book-page-60",
-      "title": "שישי שבת",
+      "title": "עמוד 60",
       "type": "image",
       "source": "songs/page_060.png",
       "votes": 0,
@@ -492,7 +482,7 @@
     },
     {
       "id": "book-page-61",
-      "title": "שלח לי מלאך",
+      "title": "עמוד 61",
       "type": "image",
       "source": "songs/page_061.png",
       "votes": 0,
@@ -500,7 +490,7 @@
     },
     {
       "id": "book-page-62",
-      "title": "שלכת",
+      "title": "עמוד 62",
       "type": "image",
       "source": "songs/page_062.png",
       "votes": 0,
@@ -508,7 +498,7 @@
     },
     {
       "id": "book-page-63",
-      "title": "שלל שרב",
+      "title": "עמוד 63",
       "type": "image",
       "source": "songs/page_063.png",
       "votes": 0,
@@ -516,7 +506,7 @@
     },
     {
       "id": "book-page-64",
-      "title": "שמש",
+      "title": "עמוד 64",
       "type": "image",
       "source": "songs/page_064.png",
       "votes": 0,
@@ -524,7 +514,7 @@
     },
     {
       "id": "book-page-65",
-      "title": "שמש שמש",
+      "title": "עמוד 65",
       "type": "image",
       "source": "songs/page_065.png",
       "votes": 0,
@@ -532,7 +522,7 @@
     },
     {
       "id": "book-page-66",
-      "title": "שמת לי פודרה",
+      "title": "עמוד 66",
       "type": "image",
       "source": "songs/page_066.png",
       "votes": 0,
@@ -540,7 +530,7 @@
     },
     {
       "id": "book-page-67",
-      "title": "שנינו שווים",
+      "title": "עמוד 67",
       "type": "image",
       "source": "songs/page_067.png",
       "votes": 0,
@@ -548,7 +538,7 @@
     },
     {
       "id": "book-page-68",
-      "title": "שער הרחמים",
+      "title": "עמוד 68",
       "type": "image",
       "source": "songs/page_068.png",
       "votes": 0,
@@ -556,7 +546,7 @@
     },
     {
       "id": "book-page-69",
-      "title": "שתי אצבעות מצידון",
+      "title": "עמוד 69",
       "type": "image",
       "source": "songs/page_069.png",
       "votes": 0,
@@ -564,7 +554,7 @@
     },
     {
       "id": "book-page-70",
-      "title": "תגידי",
+      "title": "עמוד 70",
       "type": "image",
       "source": "songs/page_070.png",
       "votes": 0,
@@ -572,7 +562,7 @@
     },
     {
       "id": "book-page-71",
-      "title": "תותים",
+      "title": "עמוד 71",
       "type": "image",
       "source": "songs/page_071.png",
       "votes": 0,
@@ -580,7 +570,7 @@
     },
     {
       "id": "book-page-72",
-      "title": "תחזור תחזור",
+      "title": "עמוד 72",
       "type": "image",
       "source": "songs/page_072.png",
       "votes": 0,
@@ -588,7 +578,7 @@
     },
     {
       "id": "book-page-73",
-      "title": "תלבשי לבן",
+      "title": "עמוד 73",
       "type": "image",
       "source": "songs/page_073.png",
       "votes": 0,
@@ -596,7 +586,7 @@
     },
     {
       "id": "book-page-74",
-      "title": "תמונה אימפרסיוניסטית",
+      "title": "עמוד 74",
       "type": "image",
       "source": "songs/page_074.png",
       "votes": 0,
@@ -604,7 +594,7 @@
     },
     {
       "id": "book-page-75",
-      "title": "תמיד יחכו לך",
+      "title": "עמוד 75",
       "type": "image",
       "source": "songs/page_075.png",
       "votes": 0,
@@ -612,7 +602,7 @@
     },
     {
       "id": "book-page-76",
-      "title": "תן לשים ת'ראש על דיונה",
+      "title": "עמוד 76",
       "type": "image",
       "source": "songs/page_076.png",
       "votes": 0,
@@ -620,7 +610,7 @@
     },
     {
       "id": "book-page-77",
-      "title": "תפוחים ותמרים",
+      "title": "עמוד 77",
       "type": "image",
       "source": "songs/page_077.png",
       "votes": 0,
@@ -628,7 +618,7 @@
     },
     {
       "id": "book-page-78",
-      "title": "תרקוד",
+      "title": "עמוד 78",
       "type": "image",
       "source": "songs/page_078.png",
       "votes": 0,
@@ -636,7 +626,7 @@
     },
     {
       "id": "book-page-79",
-      "title": "תשאירי לי מקום לחבק אותך",
+      "title": "עמוד 79",
       "type": "image",
       "source": "songs/page_079.png",
       "votes": 0,
@@ -644,7 +634,7 @@
     },
     {
       "id": "book-page-80",
-      "title": "N/A (Chord Charts & Art)",
+      "title": "עמוד 80",
       "type": "image",
       "source": "songs/page_080.png",
       "votes": 0,
@@ -652,7 +642,7 @@
     },
     {
       "id": "book-page-81",
-      "title": "נספח אקורדים 81",
+      "title": "עמוד 81",
       "type": "image",
       "source": "songs/page_081.png",
       "votes": 0,
@@ -660,7 +650,7 @@
     },
     {
       "id": "book-page-82",
-      "title": "נספח אקורדים 82",
+      "title": "עמוד 82",
       "type": "image",
       "source": "songs/page_082.png",
       "votes": 0,
@@ -668,7 +658,7 @@
     },
     {
       "id": "book-page-83",
-      "title": "נספח אקורדים 83",
+      "title": "עמוד 83",
       "type": "image",
       "source": "songs/page_083.png",
       "votes": 0,
@@ -676,7 +666,7 @@
     },
     {
       "id": "book-page-84",
-      "title": "נספח אקורדים 84",
+      "title": "עמוד 84",
       "type": "image",
       "source": "songs/page_084.png",
       "votes": 0,
@@ -684,7 +674,7 @@
     },
     {
       "id": "book-page-85",
-      "title": "נספח אקורדים 85",
+      "title": "עמוד 85",
       "type": "image",
       "source": "songs/page_085.png",
       "votes": 0,
@@ -692,7 +682,7 @@
     },
     {
       "id": "book-page-86",
-      "title": "נספח אקורדים 86",
+      "title": "עמוד 86",
       "type": "image",
       "source": "songs/page_086.png",
       "votes": 0,
@@ -700,7 +690,7 @@
     },
     {
       "id": "book-page-87",
-      "title": "נספח אקורדים 87",
+      "title": "עמוד 87",
       "type": "image",
       "source": "songs/page_087.png",
       "votes": 0,
@@ -708,7 +698,7 @@
     },
     {
       "id": "book-page-88",
-      "title": "נספח אקורדים 88",
+      "title": "עמוד 88",
       "type": "image",
       "source": "songs/page_088.png",
       "votes": 0,
@@ -716,7 +706,7 @@
     },
     {
       "id": "book-page-89",
-      "title": "נספח אקורדים 89",
+      "title": "עמוד 89",
       "type": "image",
       "source": "songs/page_089.png",
       "votes": 0,
@@ -724,7 +714,7 @@
     },
     {
       "id": "book-page-90",
-      "title": "נספח אקורדים 90",
+      "title": "עמוד 90",
       "type": "image",
       "source": "songs/page_090.png",
       "votes": 0,
@@ -732,7 +722,7 @@
     },
     {
       "id": "book-page-91",
-      "title": "נספח אקורדים 91",
+      "title": "עמוד 91",
       "type": "image",
       "source": "songs/page_091.png",
       "votes": 0,
@@ -740,7 +730,7 @@
     },
     {
       "id": "book-page-92",
-      "title": "נספח אקורדים 92",
+      "title": "עמוד 92",
       "type": "image",
       "source": "songs/page_092.png",
       "votes": 0,
@@ -748,7 +738,7 @@
     },
     {
       "id": "book-page-93",
-      "title": "נספח אקורדים 93",
+      "title": "עמוד 93",
       "type": "image",
       "source": "songs/page_093.png",
       "votes": 0,
@@ -756,7 +746,7 @@
     },
     {
       "id": "book-page-94",
-      "title": "נספח אקורדים 94",
+      "title": "עמוד 94",
       "type": "image",
       "source": "songs/page_094.png",
       "votes": 0,
@@ -764,7 +754,7 @@
     },
     {
       "id": "book-page-95",
-      "title": "נספח אקורדים 95",
+      "title": "עמוד 95",
       "type": "image",
       "source": "songs/page_095.png",
       "votes": 0,
@@ -772,7 +762,7 @@
     },
     {
       "id": "book-page-96",
-      "title": "נספח אקורדים 96",
+      "title": "עמוד 96",
       "type": "image",
       "source": "songs/page_096.png",
       "votes": 0,
@@ -780,7 +770,7 @@
     },
     {
       "id": "book-page-97",
-      "title": "נספח אקורדים 97",
+      "title": "עמוד 97",
       "type": "image",
       "source": "songs/page_097.png",
       "votes": 0,
@@ -788,7 +778,7 @@
     },
     {
       "id": "book-page-98",
-      "title": "נספח אקורדים 98",
+      "title": "עמוד 98",
       "type": "image",
       "source": "songs/page_098.png",
       "votes": 0,
@@ -796,7 +786,7 @@
     },
     {
       "id": "book-page-99",
-      "title": "נספח אקורדים 99",
+      "title": "עמוד 99",
       "type": "image",
       "source": "songs/page_099.png",
       "votes": 0,
@@ -804,7 +794,7 @@
     },
     {
       "id": "book-page-100",
-      "title": "נספח אקורדים 100",
+      "title": "עמוד 100",
       "type": "image",
       "source": "songs/page_100.png",
       "votes": 0,
@@ -812,7 +802,7 @@
     },
     {
       "id": "book-page-101",
-      "title": "נספח אקורדים 101",
+      "title": "עמוד 101",
       "type": "image",
       "source": "songs/page_101.png",
       "votes": 0,
@@ -820,7 +810,7 @@
     },
     {
       "id": "book-page-102",
-      "title": "נספח אקורדים 102",
+      "title": "עמוד 102",
       "type": "image",
       "source": "songs/page_102.png",
       "votes": 0,
@@ -828,7 +818,7 @@
     },
     {
       "id": "book-page-103",
-      "title": "נספח אקורדים 103",
+      "title": "עמוד 103",
       "type": "image",
       "source": "songs/page_103.png",
       "votes": 0,
@@ -836,7 +826,7 @@
     },
     {
       "id": "book-page-104",
-      "title": "נספח אקורדים 104",
+      "title": "עמוד 104",
       "type": "image",
       "source": "songs/page_104.png",
       "votes": 0,
@@ -844,7 +834,7 @@
     },
     {
       "id": "book-page-105",
-      "title": "נספח אקורדים 105",
+      "title": "עמוד 105",
       "type": "image",
       "source": "songs/page_105.png",
       "votes": 0,
@@ -852,7 +842,7 @@
     },
     {
       "id": "book-page-106",
-      "title": "נספח אקורדים 106",
+      "title": "עמוד 106",
       "type": "image",
       "source": "songs/page_106.png",
       "votes": 0,
@@ -860,7 +850,7 @@
     },
     {
       "id": "book-page-107",
-      "title": "נספח אקורדים 107",
+      "title": "עמוד 107",
       "type": "image",
       "source": "songs/page_107.png",
       "votes": 0,
@@ -868,7 +858,7 @@
     },
     {
       "id": "book-page-108",
-      "title": "נספח אקורדים 108",
+      "title": "עמוד 108",
       "type": "image",
       "source": "songs/page_108.png",
       "votes": 0,
@@ -876,7 +866,7 @@
     },
     {
       "id": "book-page-109",
-      "title": "נספח אקורדים 109",
+      "title": "עמוד 109",
       "type": "image",
       "source": "songs/page_109.png",
       "votes": 0,
@@ -884,7 +874,7 @@
     },
     {
       "id": "book-page-110",
-      "title": "נספח אקורדים 110",
+      "title": "עמוד 110",
       "type": "image",
       "source": "songs/page_110.png",
       "votes": 0,
@@ -892,7 +882,7 @@
     },
     {
       "id": "book-page-111",
-      "title": "נספח אקורדים 111",
+      "title": "עמוד 111",
       "type": "image",
       "source": "songs/page_111.png",
       "votes": 0,
@@ -900,7 +890,7 @@
     },
     {
       "id": "book-page-112",
-      "title": "נספח אקורדים 112",
+      "title": "עמוד 112",
       "type": "image",
       "source": "songs/page_112.png",
       "votes": 0,
@@ -908,7 +898,7 @@
     },
     {
       "id": "book-page-113",
-      "title": "נספח אקורדים 113",
+      "title": "עמוד 113",
       "type": "image",
       "source": "songs/page_113.png",
       "votes": 0,
@@ -916,7 +906,7 @@
     },
     {
       "id": "book-page-114",
-      "title": "נספח אקורדים 114",
+      "title": "עמוד 114",
       "type": "image",
       "source": "songs/page_114.png",
       "votes": 0,
@@ -924,7 +914,7 @@
     },
     {
       "id": "book-page-115",
-      "title": "נספח אקורדים 115",
+      "title": "עמוד 115",
       "type": "image",
       "source": "songs/page_115.png",
       "votes": 0,
@@ -932,7 +922,7 @@
     },
     {
       "id": "book-page-116",
-      "title": "נספח אקורדים 116",
+      "title": "עמוד 116",
       "type": "image",
       "source": "songs/page_116.png",
       "votes": 0,
@@ -940,7 +930,7 @@
     },
     {
       "id": "book-page-117",
-      "title": "נספח אקורדים 117",
+      "title": "עמוד 117",
       "type": "image",
       "source": "songs/page_117.png",
       "votes": 0,
@@ -948,7 +938,7 @@
     },
     {
       "id": "book-page-118",
-      "title": "נספח אקורדים 118",
+      "title": "עמוד 118",
       "type": "image",
       "source": "songs/page_118.png",
       "votes": 0,
@@ -956,7 +946,7 @@
     },
     {
       "id": "book-page-119",
-      "title": "נספח אקורדים 119",
+      "title": "עמוד 119",
       "type": "image",
       "source": "songs/page_119.png",
       "votes": 0,
@@ -964,7 +954,7 @@
     },
     {
       "id": "book-page-120",
-      "title": "נספח אקורדים 120",
+      "title": "עמוד 120",
       "type": "image",
       "source": "songs/page_120.png",
       "votes": 0,
@@ -972,7 +962,7 @@
     },
     {
       "id": "book-page-121",
-      "title": "נספח אקורדים 121",
+      "title": "עמוד 121",
       "type": "image",
       "source": "songs/page_121.png",
       "votes": 0,
@@ -980,7 +970,7 @@
     },
     {
       "id": "book-page-122",
-      "title": "נספח אקורדים 122",
+      "title": "עמוד 122",
       "type": "image",
       "source": "songs/page_122.png",
       "votes": 0,
@@ -988,7 +978,7 @@
     },
     {
       "id": "book-page-123",
-      "title": "נספח אקורדים 123",
+      "title": "עמוד 123",
       "type": "image",
       "source": "songs/page_123.png",
       "votes": 0,
@@ -996,7 +986,7 @@
     },
     {
       "id": "book-page-124",
-      "title": "נספח אקורדים 124",
+      "title": "עמוד 124",
       "type": "image",
       "source": "songs/page_124.png",
       "votes": 0,
@@ -1004,7 +994,7 @@
     },
     {
       "id": "book-page-125",
-      "title": "נספח אקורדים 125",
+      "title": "עמוד 125",
       "type": "image",
       "source": "songs/page_125.png",
       "votes": 0,
@@ -1012,7 +1002,7 @@
     },
     {
       "id": "book-page-126",
-      "title": "נספח אקורדים 126",
+      "title": "עמוד 126",
       "type": "image",
       "source": "songs/page_126.png",
       "votes": 0,
@@ -1020,7 +1010,7 @@
     },
     {
       "id": "book-page-127",
-      "title": "נספח אקורדים 127",
+      "title": "עמוד 127",
       "type": "image",
       "source": "songs/page_127.png",
       "votes": 0,
@@ -1028,7 +1018,7 @@
     },
     {
       "id": "book-page-128",
-      "title": "נספח אקורדים 128",
+      "title": "עמוד 128",
       "type": "image",
       "source": "songs/page_128.png",
       "votes": 0,
@@ -1036,7 +1026,7 @@
     },
     {
       "id": "book-page-129",
-      "title": "נספח אקורדים 129",
+      "title": "עמוד 129",
       "type": "image",
       "source": "songs/page_129.png",
       "votes": 0,
@@ -1044,7 +1034,7 @@
     },
     {
       "id": "book-page-130",
-      "title": "נספח אקורדים 130",
+      "title": "עמוד 130",
       "type": "image",
       "source": "songs/page_130.png",
       "votes": 0,
@@ -1052,7 +1042,7 @@
     },
     {
       "id": "book-page-131",
-      "title": "נספח אקורדים 131",
+      "title": "עמוד 131",
       "type": "image",
       "source": "songs/page_131.png",
       "votes": 0,
@@ -1060,7 +1050,7 @@
     },
     {
       "id": "book-page-132",
-      "title": "נספח אקורדים 132",
+      "title": "עמוד 132",
       "type": "image",
       "source": "songs/page_132.png",
       "votes": 0,
@@ -1068,7 +1058,7 @@
     },
     {
       "id": "book-page-133",
-      "title": "נספח אקורדים 133",
+      "title": "עמוד 133",
       "type": "image",
       "source": "songs/page_133.png",
       "votes": 0,
@@ -1076,7 +1066,7 @@
     },
     {
       "id": "book-page-134",
-      "title": "נספח אקורדים 134",
+      "title": "עמוד 134",
       "type": "image",
       "source": "songs/page_134.png",
       "votes": 0,
@@ -1084,7 +1074,7 @@
     },
     {
       "id": "book-page-135",
-      "title": "נספח אקורדים 135",
+      "title": "עמוד 135",
       "type": "image",
       "source": "songs/page_135.png",
       "votes": 0,
@@ -1092,7 +1082,7 @@
     },
     {
       "id": "book-page-136",
-      "title": "נספח אקורדים 136",
+      "title": "עמוד 136",
       "type": "image",
       "source": "songs/page_136.png",
       "votes": 0,
@@ -1100,7 +1090,7 @@
     },
     {
       "id": "book-page-137",
-      "title": "נספח אקורדים 137",
+      "title": "עמוד 137",
       "type": "image",
       "source": "songs/page_137.png",
       "votes": 0,
@@ -1108,7 +1098,7 @@
     },
     {
       "id": "book-page-138",
-      "title": "נספח אקורדים 138",
+      "title": "עמוד 138",
       "type": "image",
       "source": "songs/page_138.png",
       "votes": 0,
@@ -1116,7 +1106,7 @@
     },
     {
       "id": "book-page-139",
-      "title": "נספח אקורדים 139",
+      "title": "עמוד 139",
       "type": "image",
       "source": "songs/page_139.png",
       "votes": 0,
@@ -1124,7 +1114,7 @@
     },
     {
       "id": "book-page-140",
-      "title": "נספח אקורדים 140",
+      "title": "עמוד 140",
       "type": "image",
       "source": "songs/page_140.png",
       "votes": 0,
@@ -1132,7 +1122,7 @@
     },
     {
       "id": "book-page-141",
-      "title": "נספח אקורדים 141",
+      "title": "עמוד 141",
       "type": "image",
       "source": "songs/page_141.png",
       "votes": 0,
@@ -1140,7 +1130,7 @@
     },
     {
       "id": "book-page-142",
-      "title": "נספח אקורדים 142",
+      "title": "עמוד 142",
       "type": "image",
       "source": "songs/page_142.png",
       "votes": 0,
@@ -1148,7 +1138,7 @@
     },
     {
       "id": "book-page-143",
-      "title": "נספח אקורדים 143",
+      "title": "עמוד 143",
       "type": "image",
       "source": "songs/page_143.png",
       "votes": 0,
@@ -1156,7 +1146,7 @@
     },
     {
       "id": "book-page-144",
-      "title": "נספח אקורדים 144",
+      "title": "עמוד 144",
       "type": "image",
       "source": "songs/page_144.png",
       "votes": 0,
@@ -1164,7 +1154,7 @@
     },
     {
       "id": "book-page-145",
-      "title": "נספח אקורדים 145",
+      "title": "עמוד 145",
       "type": "image",
       "source": "songs/page_145.png",
       "votes": 0,
@@ -1172,7 +1162,7 @@
     },
     {
       "id": "book-page-146",
-      "title": "נספח אקורדים 146",
+      "title": "עמוד 146",
       "type": "image",
       "source": "songs/page_146.png",
       "votes": 0,
@@ -1180,7 +1170,7 @@
     },
     {
       "id": "book-page-147",
-      "title": "נספח אקורדים 147",
+      "title": "עמוד 147",
       "type": "image",
       "source": "songs/page_147.png",
       "votes": 0,
@@ -1188,7 +1178,7 @@
     },
     {
       "id": "book-page-148",
-      "title": "נספח אקורדים 148",
+      "title": "עמוד 148",
       "type": "image",
       "source": "songs/page_148.png",
       "votes": 0,
@@ -1196,7 +1186,7 @@
     },
     {
       "id": "book-page-149",
-      "title": "נספח אקורדים 149",
+      "title": "עמוד 149",
       "type": "image",
       "source": "songs/page_149.png",
       "votes": 0,
@@ -1204,7 +1194,7 @@
     },
     {
       "id": "book-page-150",
-      "title": "נספח אקורדים 150",
+      "title": "עמוד 150",
       "type": "image",
       "source": "songs/page_150.png",
       "votes": 0,
@@ -1212,7 +1202,7 @@
     },
     {
       "id": "book-page-151",
-      "title": "נספח אקורדים 151",
+      "title": "עמוד 151",
       "type": "image",
       "source": "songs/page_151.png",
       "votes": 0,
@@ -1220,7 +1210,7 @@
     },
     {
       "id": "book-page-152",
-      "title": "נספח אקורדים 152",
+      "title": "עמוד 152",
       "type": "image",
       "source": "songs/page_152.png",
       "votes": 0,
@@ -1228,7 +1218,7 @@
     },
     {
       "id": "book-page-153",
-      "title": "נספח אקורדים 153",
+      "title": "עמוד 153",
       "type": "image",
       "source": "songs/page_153.png",
       "votes": 0,
@@ -1236,7 +1226,7 @@
     },
     {
       "id": "book-page-154",
-      "title": "נספח אקורדים 154",
+      "title": "עמוד 154",
       "type": "image",
       "source": "songs/page_154.png",
       "votes": 0,
@@ -1244,7 +1234,7 @@
     },
     {
       "id": "book-page-155",
-      "title": "נספח אקורדים 155",
+      "title": "עמוד 155",
       "type": "image",
       "source": "songs/page_155.png",
       "votes": 0,
@@ -1252,7 +1242,7 @@
     },
     {
       "id": "book-page-156",
-      "title": "נספח אקורדים 156",
+      "title": "עמוד 156",
       "type": "image",
       "source": "songs/page_156.png",
       "votes": 0,
@@ -1260,7 +1250,7 @@
     },
     {
       "id": "book-page-157",
-      "title": "נספח אקורדים 157",
+      "title": "עמוד 157",
       "type": "image",
       "source": "songs/page_157.png",
       "votes": 0,
@@ -1268,7 +1258,7 @@
     },
     {
       "id": "book-page-158",
-      "title": "נספח אקורדים 158",
+      "title": "עמוד 158",
       "type": "image",
       "source": "songs/page_158.png",
       "votes": 0,
@@ -1276,7 +1266,7 @@
     },
     {
       "id": "book-page-159",
-      "title": "נספח אקורדים 159",
+      "title": "עמוד 159",
       "type": "image",
       "source": "songs/page_159.png",
       "votes": 0,
@@ -1284,7 +1274,7 @@
     },
     {
       "id": "book-page-160",
-      "title": "נספח אקורדים 160",
+      "title": "עמוד 160",
       "type": "image",
       "source": "songs/page_160.png",
       "votes": 0,
@@ -1292,7 +1282,7 @@
     },
     {
       "id": "book-page-161",
-      "title": "נספח אקורדים 161",
+      "title": "עמוד 161",
       "type": "image",
       "source": "songs/page_161.png",
       "votes": 0,
@@ -1300,7 +1290,7 @@
     },
     {
       "id": "book-page-162",
-      "title": "נספח אקורדים 162",
+      "title": "עמוד 162",
       "type": "image",
       "source": "songs/page_162.png",
       "votes": 0,
@@ -1308,7 +1298,7 @@
     },
     {
       "id": "book-page-163",
-      "title": "נספח אקורדים 163",
+      "title": "עמוד 163",
       "type": "image",
       "source": "songs/page_163.png",
       "votes": 0,
@@ -1316,7 +1306,7 @@
     },
     {
       "id": "book-page-164",
-      "title": "נספח אקורדים 164",
+      "title": "עמוד 164",
       "type": "image",
       "source": "songs/page_164.png",
       "votes": 0,
@@ -1324,7 +1314,7 @@
     },
     {
       "id": "book-page-165",
-      "title": "נספח אקורדים 165",
+      "title": "עמוד 165",
       "type": "image",
       "source": "songs/page_165.png",
       "votes": 0,
@@ -1332,7 +1322,7 @@
     },
     {
       "id": "book-page-166",
-      "title": "נספח אקורדים 166",
+      "title": "עמוד 166",
       "type": "image",
       "source": "songs/page_166.png",
       "votes": 0,
@@ -1340,7 +1330,7 @@
     },
     {
       "id": "book-page-167",
-      "title": "נספח אקורדים 167",
+      "title": "עמוד 167",
       "type": "image",
       "source": "songs/page_167.png",
       "votes": 0,
@@ -1348,7 +1338,7 @@
     },
     {
       "id": "book-page-168",
-      "title": "נספח אקורדים 168",
+      "title": "עמוד 168",
       "type": "image",
       "source": "songs/page_168.png",
       "votes": 0,
@@ -1356,7 +1346,7 @@
     },
     {
       "id": "book-page-169",
-      "title": "נספח אקורדים 169",
+      "title": "עמוד 169",
       "type": "image",
       "source": "songs/page_169.png",
       "votes": 0,
@@ -1364,7 +1354,7 @@
     },
     {
       "id": "book-page-170",
-      "title": "נספח אקורדים 170",
+      "title": "עמוד 170",
       "type": "image",
       "source": "songs/page_170.png",
       "votes": 0,
@@ -1372,7 +1362,7 @@
     },
     {
       "id": "book-page-171",
-      "title": "נספח אקורדים 171",
+      "title": "עמוד 171",
       "type": "image",
       "source": "songs/page_171.png",
       "votes": 0,
@@ -1380,7 +1370,7 @@
     },
     {
       "id": "book-page-172",
-      "title": "נספח אקורדים 172",
+      "title": "עמוד 172",
       "type": "image",
       "source": "songs/page_172.png",
       "votes": 0,
@@ -1388,7 +1378,7 @@
     },
     {
       "id": "book-page-173",
-      "title": "נספח אקורדים 173",
+      "title": "עמוד 173",
       "type": "image",
       "source": "songs/page_173.png",
       "votes": 0,
@@ -1396,7 +1386,7 @@
     },
     {
       "id": "book-page-174",
-      "title": "נספח אקורדים 174",
+      "title": "עמוד 174",
       "type": "image",
       "source": "songs/page_174.png",
       "votes": 0,
@@ -1404,7 +1394,7 @@
     },
     {
       "id": "book-page-175",
-      "title": "נספח אקורדים 175",
+      "title": "עמוד 175",
       "type": "image",
       "source": "songs/page_175.png",
       "votes": 0,
@@ -1412,7 +1402,7 @@
     },
     {
       "id": "book-page-176",
-      "title": "נספח אקורדים 176",
+      "title": "עמוד 176",
       "type": "image",
       "source": "songs/page_176.png",
       "votes": 0,
@@ -1420,7 +1410,7 @@
     },
     {
       "id": "book-page-177",
-      "title": "נספח אקורדים 177",
+      "title": "עמוד 177",
       "type": "image",
       "source": "songs/page_177.png",
       "votes": 0,
@@ -1428,7 +1418,7 @@
     },
     {
       "id": "book-page-178",
-      "title": "נספח אקורדים 178",
+      "title": "עמוד 178",
       "type": "image",
       "source": "songs/page_178.png",
       "votes": 0,
@@ -1436,7 +1426,7 @@
     },
     {
       "id": "book-page-179",
-      "title": "נספח אקורדים 179",
+      "title": "עמוד 179",
       "type": "image",
       "source": "songs/page_179.png",
       "votes": 0,
@@ -1444,7 +1434,7 @@
     },
     {
       "id": "book-page-180",
-      "title": "נספח אקורדים 180",
+      "title": "עמוד 180",
       "type": "image",
       "source": "songs/page_180.png",
       "votes": 0,
@@ -1452,7 +1442,7 @@
     },
     {
       "id": "book-page-181",
-      "title": "נספח אקורדים 181",
+      "title": "עמוד 181",
       "type": "image",
       "source": "songs/page_181.png",
       "votes": 0,
@@ -1460,7 +1450,7 @@
     },
     {
       "id": "book-page-182",
-      "title": "נספח אקורדים 182",
+      "title": "עמוד 182",
       "type": "image",
       "source": "songs/page_182.png",
       "votes": 0,
@@ -1468,7 +1458,7 @@
     },
     {
       "id": "book-page-183",
-      "title": "נספח אקורדים 183",
+      "title": "עמוד 183",
       "type": "image",
       "source": "songs/page_183.png",
       "votes": 0,
@@ -1476,7 +1466,7 @@
     },
     {
       "id": "book-page-184",
-      "title": "נספח אקורדים 184",
+      "title": "עמוד 184",
       "type": "image",
       "source": "songs/page_184.png",
       "votes": 0,
@@ -1484,7 +1474,7 @@
     },
     {
       "id": "book-page-185",
-      "title": "נספח אקורדים 185",
+      "title": "עמוד 185",
       "type": "image",
       "source": "songs/page_185.png",
       "votes": 0,
@@ -1492,7 +1482,7 @@
     },
     {
       "id": "book-page-186",
-      "title": "נספח אקורדים 186",
+      "title": "עמוד 186",
       "type": "image",
       "source": "songs/page_186.png",
       "votes": 0,
@@ -1500,7 +1490,7 @@
     },
     {
       "id": "book-page-187",
-      "title": "נספח אקורדים 187",
+      "title": "עמוד 187",
       "type": "image",
       "source": "songs/page_187.png",
       "votes": 0,
@@ -1508,7 +1498,7 @@
     },
     {
       "id": "book-page-188",
-      "title": "נספח אקורדים 188",
+      "title": "עמוד 188",
       "type": "image",
       "source": "songs/page_188.png",
       "votes": 0,
@@ -1516,7 +1506,7 @@
     },
     {
       "id": "book-page-189",
-      "title": "נספח אקורדים 189",
+      "title": "עמוד 189",
       "type": "image",
       "source": "songs/page_189.png",
       "votes": 0,
@@ -1524,7 +1514,7 @@
     },
     {
       "id": "book-page-190",
-      "title": "נספח אקורדים 190",
+      "title": "עמוד 190",
       "type": "image",
       "source": "songs/page_190.png",
       "votes": 0,
@@ -1532,7 +1522,7 @@
     },
     {
       "id": "book-page-191",
-      "title": "נספח אקורדים 191",
+      "title": "עמוד 191",
       "type": "image",
       "source": "songs/page_191.png",
       "votes": 0,
@@ -1540,7 +1530,7 @@
     },
     {
       "id": "book-page-192",
-      "title": "נספח אקורדים 192",
+      "title": "עמוד 192",
       "type": "image",
       "source": "songs/page_192.png",
       "votes": 0,
@@ -1548,7 +1538,7 @@
     },
     {
       "id": "book-page-193",
-      "title": "נספח אקורדים 193",
+      "title": "עמוד 193",
       "type": "image",
       "source": "songs/page_193.png",
       "votes": 0,
@@ -1556,7 +1546,7 @@
     },
     {
       "id": "book-page-194",
-      "title": "נספח אקורדים 194",
+      "title": "עמוד 194",
       "type": "image",
       "source": "songs/page_194.png",
       "votes": 0,
@@ -1564,7 +1554,7 @@
     },
     {
       "id": "book-page-195",
-      "title": "נספח אקורדים 195",
+      "title": "עמוד 195",
       "type": "image",
       "source": "songs/page_195.png",
       "votes": 0,
@@ -1572,7 +1562,7 @@
     },
     {
       "id": "book-page-196",
-      "title": "נספח אקורדים 196",
+      "title": "עמוד 196",
       "type": "image",
       "source": "songs/page_196.png",
       "votes": 0,
@@ -1580,7 +1570,7 @@
     },
     {
       "id": "book-page-197",
-      "title": "נספח אקורדים 197",
+      "title": "עמוד 197",
       "type": "image",
       "source": "songs/page_197.png",
       "votes": 0,
@@ -1588,7 +1578,7 @@
     },
     {
       "id": "book-page-198",
-      "title": "נספח אקורדים 198",
+      "title": "עמוד 198",
       "type": "image",
       "source": "songs/page_198.png",
       "votes": 0,
@@ -1596,7 +1586,7 @@
     },
     {
       "id": "book-page-199",
-      "title": "נספח אקורדים 199",
+      "title": "עמוד 199",
       "type": "image",
       "source": "songs/page_199.png",
       "votes": 0,
@@ -1604,7 +1594,7 @@
     },
     {
       "id": "book-page-200",
-      "title": "נספח אקורדים 200",
+      "title": "עמוד 200",
       "type": "image",
       "source": "songs/page_200.png",
       "votes": 0,
@@ -1612,7 +1602,7 @@
     },
     {
       "id": "book-page-201",
-      "title": "נספח אקורדים 201",
+      "title": "עמוד 201",
       "type": "image",
       "source": "songs/page_201.png",
       "votes": 0,
@@ -1620,7 +1610,7 @@
     },
     {
       "id": "book-page-202",
-      "title": "נספח אקורדים 202",
+      "title": "עמוד 202",
       "type": "image",
       "source": "songs/page_202.png",
       "votes": 0,
@@ -1628,7 +1618,7 @@
     },
     {
       "id": "book-page-203",
-      "title": "נספח אקורדים 203",
+      "title": "עמוד 203",
       "type": "image",
       "source": "songs/page_203.png",
       "votes": 0,
@@ -1636,7 +1626,7 @@
     },
     {
       "id": "book-page-204",
-      "title": "נספח אקורדים 204",
+      "title": "עמוד 204",
       "type": "image",
       "source": "songs/page_204.png",
       "votes": 0,
@@ -1644,7 +1634,7 @@
     },
     {
       "id": "book-page-205",
-      "title": "נספח אקורדים 205",
+      "title": "עמוד 205",
       "type": "image",
       "source": "songs/page_205.png",
       "votes": 0,
@@ -1652,7 +1642,7 @@
     },
     {
       "id": "book-page-206",
-      "title": "נספח אקורדים 206",
+      "title": "עמוד 206",
       "type": "image",
       "source": "songs/page_206.png",
       "votes": 0,
@@ -1660,7 +1650,7 @@
     },
     {
       "id": "book-page-207",
-      "title": "נספח אקורדים 207",
+      "title": "עמוד 207",
       "type": "image",
       "source": "songs/page_207.png",
       "votes": 0,
@@ -1668,7 +1658,7 @@
     },
     {
       "id": "book-page-208",
-      "title": "נספח אקורדים 208",
+      "title": "עמוד 208",
       "type": "image",
       "source": "songs/page_208.png",
       "votes": 0,
@@ -1676,7 +1666,7 @@
     },
     {
       "id": "book-page-209",
-      "title": "נספח אקורדים 209",
+      "title": "עמוד 209",
       "type": "image",
       "source": "songs/page_209.png",
       "votes": 0,
@@ -1684,7 +1674,7 @@
     },
     {
       "id": "book-page-210",
-      "title": "נספח אקורדים 210",
+      "title": "עמוד 210",
       "type": "image",
       "source": "songs/page_210.png",
       "votes": 0,
@@ -1692,7 +1682,7 @@
     },
     {
       "id": "book-page-211",
-      "title": "נספח אקורדים 211",
+      "title": "עמוד 211",
       "type": "image",
       "source": "songs/page_211.png",
       "votes": 0,
@@ -1700,7 +1690,7 @@
     },
     {
       "id": "book-page-212",
-      "title": "נספח אקורדים 212",
+      "title": "עמוד 212",
       "type": "image",
       "source": "songs/page_212.png",
       "votes": 0,
@@ -1708,7 +1698,7 @@
     },
     {
       "id": "book-page-213",
-      "title": "נספח אקורדים 213",
+      "title": "עמוד 213",
       "type": "image",
       "source": "songs/page_213.png",
       "votes": 0,
@@ -1716,7 +1706,7 @@
     },
     {
       "id": "book-page-214",
-      "title": "נספח אקורדים 214",
+      "title": "עמוד 214",
       "type": "image",
       "source": "songs/page_214.png",
       "votes": 0,
@@ -1724,7 +1714,7 @@
     },
     {
       "id": "book-page-215",
-      "title": "נספח אקורדים 215",
+      "title": "עמוד 215",
       "type": "image",
       "source": "songs/page_215.png",
       "votes": 0,
@@ -1732,7 +1722,7 @@
     },
     {
       "id": "book-page-216",
-      "title": "נספח אקורדים 216",
+      "title": "עמוד 216",
       "type": "image",
       "source": "songs/page_216.png",
       "votes": 0,
@@ -1740,7 +1730,7 @@
     },
     {
       "id": "book-page-217",
-      "title": "נספח אקורדים 217",
+      "title": "עמוד 217",
       "type": "image",
       "source": "songs/page_217.png",
       "votes": 0,
@@ -1748,7 +1738,7 @@
     },
     {
       "id": "book-page-218",
-      "title": "נספח אקורדים 218",
+      "title": "עמוד 218",
       "type": "image",
       "source": "songs/page_218.png",
       "votes": 0,
@@ -1756,7 +1746,7 @@
     },
     {
       "id": "book-page-219",
-      "title": "נספח אקורדים 219",
+      "title": "עמוד 219",
       "type": "image",
       "source": "songs/page_219.png",
       "votes": 0,
@@ -1764,7 +1754,7 @@
     },
     {
       "id": "book-page-220",
-      "title": "נספח אקורדים 220",
+      "title": "עמוד 220",
       "type": "image",
       "source": "songs/page_220.png",
       "votes": 0,
@@ -1772,7 +1762,7 @@
     },
     {
       "id": "book-page-221",
-      "title": "נספח אקורדים 221",
+      "title": "עמוד 221",
       "type": "image",
       "source": "songs/page_221.png",
       "votes": 0,
@@ -1780,7 +1770,7 @@
     },
     {
       "id": "book-page-222",
-      "title": "נספח אקורדים 222",
+      "title": "עמוד 222",
       "type": "image",
       "source": "songs/page_222.png",
       "votes": 0,
@@ -1788,7 +1778,7 @@
     },
     {
       "id": "book-page-223",
-      "title": "נספח אקורדים 223",
+      "title": "עמוד 223",
       "type": "image",
       "source": "songs/page_223.png",
       "votes": 0,
@@ -1796,7 +1786,7 @@
     },
     {
       "id": "book-page-224",
-      "title": "נספח אקורדים 224",
+      "title": "עמוד 224",
       "type": "image",
       "source": "songs/page_224.png",
       "votes": 0,
@@ -1804,7 +1794,7 @@
     },
     {
       "id": "book-page-225",
-      "title": "נספח אקורדים 225",
+      "title": "עמוד 225",
       "type": "image",
       "source": "songs/page_225.png",
       "votes": 0,
@@ -1812,7 +1802,7 @@
     },
     {
       "id": "book-page-226",
-      "title": "נספח אקורדים 226",
+      "title": "עמוד 226",
       "type": "image",
       "source": "songs/page_226.png",
       "votes": 0,
@@ -1820,7 +1810,7 @@
     },
     {
       "id": "book-page-227",
-      "title": "נספח אקורדים 227",
+      "title": "עמוד 227",
       "type": "image",
       "source": "songs/page_227.png",
       "votes": 0,
@@ -1828,7 +1818,7 @@
     },
     {
       "id": "book-page-228",
-      "title": "נספח אקורדים 228",
+      "title": "עמוד 228",
       "type": "image",
       "source": "songs/page_228.png",
       "votes": 0,
@@ -1836,7 +1826,7 @@
     },
     {
       "id": "book-page-229",
-      "title": "נספח אקורדים 229",
+      "title": "עמוד 229",
       "type": "image",
       "source": "songs/page_229.png",
       "votes": 0,
@@ -1844,7 +1834,7 @@
     },
     {
       "id": "book-page-230",
-      "title": "נספח אקורדים 230",
+      "title": "עמוד 230",
       "type": "image",
       "source": "songs/page_230.png",
       "votes": 0,
@@ -1852,7 +1842,7 @@
     },
     {
       "id": "book-page-231",
-      "title": "נספח אקורדים 231",
+      "title": "עמוד 231",
       "type": "image",
       "source": "songs/page_231.png",
       "votes": 0,
@@ -1860,7 +1850,7 @@
     },
     {
       "id": "book-page-232",
-      "title": "נספח אקורדים 232",
+      "title": "עמוד 232",
       "type": "image",
       "source": "songs/page_232.png",
       "votes": 0,
@@ -1868,7 +1858,7 @@
     },
     {
       "id": "book-page-233",
-      "title": "נספח אקורדים 233",
+      "title": "עמוד 233",
       "type": "image",
       "source": "songs/page_233.png",
       "votes": 0,
@@ -1876,7 +1866,7 @@
     },
     {
       "id": "book-page-234",
-      "title": "נספח אקורדים 234",
+      "title": "עמוד 234",
       "type": "image",
       "source": "songs/page_234.png",
       "votes": 0,
@@ -1884,7 +1874,7 @@
     },
     {
       "id": "book-page-235",
-      "title": "נספח אקורדים 235",
+      "title": "עמוד 235",
       "type": "image",
       "source": "songs/page_235.png",
       "votes": 0,
@@ -1892,7 +1882,7 @@
     },
     {
       "id": "book-page-236",
-      "title": "נספח אקורדים 236",
+      "title": "עמוד 236",
       "type": "image",
       "source": "songs/page_236.png",
       "votes": 0,
@@ -1900,7 +1890,7 @@
     },
     {
       "id": "book-page-237",
-      "title": "נספח אקורדים 237",
+      "title": "עמוד 237",
       "type": "image",
       "source": "songs/page_237.png",
       "votes": 0,
@@ -1908,7 +1898,7 @@
     },
     {
       "id": "book-page-238",
-      "title": "נספח אקורדים 238",
+      "title": "עמוד 238",
       "type": "image",
       "source": "songs/page_238.png",
       "votes": 0,
@@ -1916,7 +1906,7 @@
     },
     {
       "id": "book-page-239",
-      "title": "נספח אקורדים 239",
+      "title": "עמוד 239",
       "type": "image",
       "source": "songs/page_239.png",
       "votes": 0,
@@ -1924,7 +1914,7 @@
     },
     {
       "id": "book-page-240",
-      "title": "נספח אקורדים 240",
+      "title": "עמוד 240",
       "type": "image",
       "source": "songs/page_240.png",
       "votes": 0,
@@ -1932,7 +1922,7 @@
     },
     {
       "id": "book-page-241",
-      "title": "נספח אקורדים 241",
+      "title": "עמוד 241",
       "type": "image",
       "source": "songs/page_241.png",
       "votes": 0,
@@ -1940,7 +1930,7 @@
     },
     {
       "id": "book-page-242",
-      "title": "נספח אקורדים 242",
+      "title": "עמוד 242",
       "type": "image",
       "source": "songs/page_242.png",
       "votes": 0,
@@ -1948,7 +1938,7 @@
     },
     {
       "id": "book-page-243",
-      "title": "נספח אקורדים 243",
+      "title": "עמוד 243",
       "type": "image",
       "source": "songs/page_243.png",
       "votes": 0,
@@ -1956,7 +1946,7 @@
     },
     {
       "id": "book-page-244",
-      "title": "נספח אקורדים 244",
+      "title": "עמוד 244",
       "type": "image",
       "source": "songs/page_244.png",
       "votes": 0,
@@ -1964,7 +1954,7 @@
     },
     {
       "id": "book-page-245",
-      "title": "נספח אקורדים 245",
+      "title": "עמוד 245",
       "type": "image",
       "source": "songs/page_245.png",
       "votes": 0,
@@ -1972,7 +1962,7 @@
     },
     {
       "id": "book-page-246",
-      "title": "נספח אקורדים 246",
+      "title": "עמוד 246",
       "type": "image",
       "source": "songs/page_246.png",
       "votes": 0,
@@ -1980,7 +1970,7 @@
     },
     {
       "id": "book-page-247",
-      "title": "נספח אקורדים 247",
+      "title": "עמוד 247",
       "type": "image",
       "source": "songs/page_247.png",
       "votes": 0,
@@ -1988,7 +1978,7 @@
     },
     {
       "id": "book-page-248",
-      "title": "נספח אקורדים 248",
+      "title": "עמוד 248",
       "type": "image",
       "source": "songs/page_248.png",
       "votes": 0,
@@ -1996,7 +1986,7 @@
     },
     {
       "id": "book-page-249",
-      "title": "נספח אקורדים 249",
+      "title": "עמוד 249",
       "type": "image",
       "source": "songs/page_249.png",
       "votes": 0,
@@ -2004,7 +1994,7 @@
     },
     {
       "id": "book-page-250",
-      "title": "נספח אקורדים 250",
+      "title": "עמוד 250",
       "type": "image",
       "source": "songs/page_250.png",
       "votes": 0,
@@ -2012,7 +2002,7 @@
     },
     {
       "id": "book-page-251",
-      "title": "נספח אקורדים 251",
+      "title": "עמוד 251",
       "type": "image",
       "source": "songs/page_251.png",
       "votes": 0,
@@ -2020,7 +2010,7 @@
     },
     {
       "id": "book-page-252",
-      "title": "נספח אקורדים 252",
+      "title": "עמוד 252",
       "type": "image",
       "source": "songs/page_252.png",
       "votes": 0,
@@ -2028,7 +2018,7 @@
     },
     {
       "id": "book-page-253",
-      "title": "נספח אקורדים 253",
+      "title": "עמוד 253",
       "type": "image",
       "source": "songs/page_253.png",
       "votes": 0,
@@ -2036,7 +2026,7 @@
     },
     {
       "id": "book-page-254",
-      "title": "נספח אקורדים 254",
+      "title": "עמוד 254",
       "type": "image",
       "source": "songs/page_254.png",
       "votes": 0,
@@ -2044,7 +2034,7 @@
     },
     {
       "id": "book-page-255",
-      "title": "נספח אקורדים 255",
+      "title": "עמוד 255",
       "type": "image",
       "source": "songs/page_255.png",
       "votes": 0,
@@ -2052,7 +2042,7 @@
     },
     {
       "id": "book-page-256",
-      "title": "נספח אקורדים 256",
+      "title": "עמוד 256",
       "type": "image",
       "source": "songs/page_256.png",
       "votes": 0,
@@ -2060,7 +2050,7 @@
     },
     {
       "id": "book-page-257",
-      "title": "נספח אקורדים 257",
+      "title": "עמוד 257",
       "type": "image",
       "source": "songs/page_257.png",
       "votes": 0,
@@ -2068,7 +2058,7 @@
     },
     {
       "id": "book-page-258",
-      "title": "נספח אקורדים 258",
+      "title": "עמוד 258",
       "type": "image",
       "source": "songs/page_258.png",
       "votes": 0,
@@ -2076,7 +2066,7 @@
     },
     {
       "id": "book-page-259",
-      "title": "נספח אקורדים 259",
+      "title": "עמוד 259",
       "type": "image",
       "source": "songs/page_259.png",
       "votes": 0,
@@ -2084,7 +2074,7 @@
     },
     {
       "id": "book-page-260",
-      "title": "נספח אקורדים 260",
+      "title": "עמוד 260",
       "type": "image",
       "source": "songs/page_260.png",
       "votes": 0,
@@ -2092,7 +2082,7 @@
     },
     {
       "id": "book-page-261",
-      "title": "נספח אקורדים 261",
+      "title": "עמוד 261",
       "type": "image",
       "source": "songs/page_261.png",
       "votes": 0,
@@ -2100,7 +2090,7 @@
     },
     {
       "id": "book-page-262",
-      "title": "נספח אקורדים 262",
+      "title": "עמוד 262",
       "type": "image",
       "source": "songs/page_262.png",
       "votes": 0,
@@ -2108,7 +2098,7 @@
     },
     {
       "id": "book-page-263",
-      "title": "נספח אקורדים 263",
+      "title": "עמוד 263",
       "type": "image",
       "source": "songs/page_263.png",
       "votes": 0,
@@ -2116,7 +2106,7 @@
     },
     {
       "id": "book-page-264",
-      "title": "נספח אקורדים 264",
+      "title": "עמוד 264",
       "type": "image",
       "source": "songs/page_264.png",
       "votes": 0,
@@ -2124,7 +2114,7 @@
     },
     {
       "id": "book-page-265",
-      "title": "נספח אקורדים 265",
+      "title": "עמוד 265",
       "type": "image",
       "source": "songs/page_265.png",
       "votes": 0,
@@ -2132,7 +2122,7 @@
     },
     {
       "id": "book-page-266",
-      "title": "נספח אקורדים 266",
+      "title": "עמוד 266",
       "type": "image",
       "source": "songs/page_266.png",
       "votes": 0,
@@ -2140,7 +2130,7 @@
     },
     {
       "id": "book-page-267",
-      "title": "נספח אקורדים 267",
+      "title": "עמוד 267",
       "type": "image",
       "source": "songs/page_267.png",
       "votes": 0,
@@ -2148,7 +2138,7 @@
     },
     {
       "id": "book-page-268",
-      "title": "נספח אקורדים 268",
+      "title": "עמוד 268",
       "type": "image",
       "source": "songs/page_268.png",
       "votes": 0,
@@ -2156,7 +2146,7 @@
     },
     {
       "id": "book-page-269",
-      "title": "נספח אקורדים 269",
+      "title": "עמוד 269",
       "type": "image",
       "source": "songs/page_269.png",
       "votes": 0,
@@ -2164,7 +2154,7 @@
     },
     {
       "id": "book-page-270",
-      "title": "נספח אקורדים 270",
+      "title": "עמוד 270",
       "type": "image",
       "source": "songs/page_270.png",
       "votes": 0,
@@ -2172,7 +2162,7 @@
     },
     {
       "id": "book-page-271",
-      "title": "נספח אקורדים 271",
+      "title": "עמוד 271",
       "type": "image",
       "source": "songs/page_271.png",
       "votes": 0,
@@ -2180,7 +2170,7 @@
     },
     {
       "id": "book-page-272",
-      "title": "נספח אקורדים 272",
+      "title": "עמוד 272",
       "type": "image",
       "source": "songs/page_272.png",
       "votes": 0,
@@ -2188,7 +2178,7 @@
     },
     {
       "id": "book-page-273",
-      "title": "נספח אקורדים 273",
+      "title": "עמוד 273",
       "type": "image",
       "source": "songs/page_273.png",
       "votes": 0,
@@ -2196,7 +2186,7 @@
     },
     {
       "id": "book-page-274",
-      "title": "נספח אקורדים 274",
+      "title": "עמוד 274",
       "type": "image",
       "source": "songs/page_274.png",
       "votes": 0,
@@ -2204,7 +2194,7 @@
     },
     {
       "id": "book-page-275",
-      "title": "נספח אקורדים 275",
+      "title": "עמוד 275",
       "type": "image",
       "source": "songs/page_275.png",
       "votes": 0,
@@ -2212,7 +2202,7 @@
     },
     {
       "id": "book-page-276",
-      "title": "נספח אקורדים 276",
+      "title": "עמוד 276",
       "type": "image",
       "source": "songs/page_276.png",
       "votes": 0,
@@ -2220,7 +2210,7 @@
     },
     {
       "id": "book-page-277",
-      "title": "נספח אקורדים 277",
+      "title": "עמוד 277",
       "type": "image",
       "source": "songs/page_277.png",
       "votes": 0,
@@ -2228,7 +2218,7 @@
     },
     {
       "id": "book-page-278",
-      "title": "נספח אקורדים 278",
+      "title": "עמוד 278",
       "type": "image",
       "source": "songs/page_278.png",
       "votes": 0,
@@ -2236,7 +2226,7 @@
     },
     {
       "id": "book-page-279",
-      "title": "נספח אקורדים 279",
+      "title": "עמוד 279",
       "type": "image",
       "source": "songs/page_279.png",
       "votes": 0,
@@ -2244,7 +2234,7 @@
     },
     {
       "id": "book-page-280",
-      "title": "נספח אקורדים 280",
+      "title": "עמוד 280",
       "type": "image",
       "source": "songs/page_280.png",
       "votes": 0,
@@ -2252,7 +2242,7 @@
     },
     {
       "id": "book-page-281",
-      "title": "נספח אקורדים 281",
+      "title": "עמוד 281",
       "type": "image",
       "source": "songs/page_281.png",
       "votes": 0,
@@ -2260,7 +2250,7 @@
     },
     {
       "id": "book-page-282",
-      "title": "נספח אקורדים 282",
+      "title": "עמוד 282",
       "type": "image",
       "source": "songs/page_282.png",
       "votes": 0,
@@ -2268,7 +2258,7 @@
     },
     {
       "id": "book-page-283",
-      "title": "נספח אקורדים 283",
+      "title": "עמוד 283",
       "type": "image",
       "source": "songs/page_283.png",
       "votes": 0,
@@ -2276,7 +2266,7 @@
     },
     {
       "id": "book-page-284",
-      "title": "נספח אקורדים 284",
+      "title": "עמוד 284",
       "type": "image",
       "source": "songs/page_284.png",
       "votes": 0,
@@ -2284,7 +2274,7 @@
     },
     {
       "id": "book-page-285",
-      "title": "נספח אקורדים 285",
+      "title": "עמוד 285",
       "type": "image",
       "source": "songs/page_285.png",
       "votes": 0,
@@ -2292,7 +2282,7 @@
     },
     {
       "id": "book-page-286",
-      "title": "נספח אקורדים 286",
+      "title": "עמוד 286",
       "type": "image",
       "source": "songs/page_286.png",
       "votes": 0,
@@ -2300,7 +2290,7 @@
     },
     {
       "id": "book-page-287",
-      "title": "נספח אקורדים 287",
+      "title": "עמוד 287",
       "type": "image",
       "source": "songs/page_287.png",
       "votes": 0,
@@ -2308,7 +2298,7 @@
     },
     {
       "id": "book-page-288",
-      "title": "נספח אקורדים 288",
+      "title": "עמוד 288",
       "type": "image",
       "source": "songs/page_288.png",
       "votes": 0,
@@ -2316,7 +2306,7 @@
     },
     {
       "id": "book-page-289",
-      "title": "נספח אקורדים 289",
+      "title": "עמוד 289",
       "type": "image",
       "source": "songs/page_289.png",
       "votes": 0,
@@ -2324,7 +2314,7 @@
     },
     {
       "id": "book-page-290",
-      "title": "נספח אקורדים 290",
+      "title": "עמוד 290",
       "type": "image",
       "source": "songs/page_290.png",
       "votes": 0,
@@ -2332,7 +2322,7 @@
     },
     {
       "id": "book-page-291",
-      "title": "נספח אקורדים 291",
+      "title": "עמוד 291",
       "type": "image",
       "source": "songs/page_291.png",
       "votes": 0,
@@ -2340,7 +2330,7 @@
     },
     {
       "id": "book-page-292",
-      "title": "נספח אקורדים 292",
+      "title": "עמוד 292",
       "type": "image",
       "source": "songs/page_292.png",
       "votes": 0,
