@@ -843,6 +843,82 @@ button {
     transform: scale(0.98);
 }
 
+/* User Account & Login */
+.user-account {
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.login-btn {
+    background: white;
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+}
+
+.login-btn:hover {
+    background: var(--background);
+    border-color: var(--primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface-light);
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+#userName {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.logout-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 2px;
+    opacity: 0.6;
+    transition: var(--transition);
+}
+
+.logout-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.nav-round-btn.push {
+    background: #FFFAF0;
+    border-color: var(--accent);
+    color: var(--accent);
+    margin-right: 0.5rem;
+}
+
+.nav-round-btn.push:hover {
+    background: var(--accent);
+    color: white;
+}
+
+.focus-controls {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 /* Responsive Overrides */
 @media (max-width: 768px) {
     .onboarding-content {
