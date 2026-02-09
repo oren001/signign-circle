@@ -9,6 +9,7 @@
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 </head>
@@ -29,6 +30,13 @@
                 </div>
                 <button class="feedback-btn" id="feedbackBtn" title="שתף פידבק">💡</button>
                 <button class="leader-btn" id="leaderBtn">כניסת מנחה</button>
+                <div class="user-account" id="userAccount">
+                    <button class="login-btn" id="loginBtn">התחבר עם Google</button>
+                    <div class="user-info hidden" id="userInfo">
+                        <span id="userName">אורח</span>
+                        <button class="logout-btn" id="logoutBtn" title="התנתק">🚪</button>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
@@ -52,17 +60,22 @@
                 <!-- Navigation Controls (Focus Mode) -->
                 <div class="focus-controls">
                     <button class="focus-btn" id="openSelectorBtn">
-                        <span class="icon">📜</span> בחירת רשימת שירים
+                        <span class="icon">📜</span> בחירת שיר
+                    </button>
+                    <button class="focus-btn" id="syncWithLeaderBtn" title="סנכרן תצוגה עם המנחה">
+                        <span class="icon">🔄</span> יישור למנחה
                     </button>
                     <button class="focus-btn" id="openUploadBtn">
-                        <span class="icon">➕</span> הוסף שיר
+                        <span class="icon">➕</span> הוסף
                     </button>
                 </div>
 
                 <!-- Leader Navigation (Overlay) -->
                 <div class="leader-nav hidden" id="navControls">
-                    <button class="nav-round-btn prev" id="prevBtn"><span>→</span></button>
-                    <button class="nav-round-btn next" id="nextBtn"><span>←</span></button>
+                    <button class="nav-round-btn prev" id="prevBtn" title="שיר קודם"><span>→</span></button>
+                    <button class="nav-round-btn next" id="nextBtn" title="שיר הבא"><span>←</span></button>
+                    <button class="nav-round-btn push" id="pushToAllBtn"
+                        title="דחוף תצוגה לכולם"><span>📢</span></button>
                 </div>
             </div>
         </section>
@@ -171,33 +184,40 @@
     <div class="modal hidden" id="onboardingModal">
         <div class="modal-content onboarding-content">
             <div class="onboarding-header">
-                <h2>ברוכים הבאים ל-V3! 🎶✨</h2>
-                <div class="version-tag">Classic Songbook Edition</div>
+                <h2>מה חדש בגרסת V3? 🎶✨</h2>
+                <div class="version-tag">The Golden Circle Edition</div>
             </div>
 
             <div class="onboarding-body">
                 <div class="guide-item">
                     <span class="guide-icon">🔍</span>
                     <div class="guide-text">
-                        <strong>חיפוש חכם:</strong> עכשיו אפשר לחפש שירים לא רק לפי כותרת, אלא גם לפי מילים מתוך השיר!
+                        <strong>חיפוש מילים:</strong> עכשיו אפשר למצוא כל שיר לפי מילים מתוכו (חיפוש בתוך הליריקה).
                     </div>
                 </div>
                 <div class="guide-item">
                     <span class="guide-icon">❤️</span>
                     <div class="guide-text">
-                        <strong>הצבעה קלה:</strong> הצביעו לשירים שאתם אוהבים ישירות מהרשימה או מתוך דף השיר.
+                        <strong>הצבעה ישירה:</strong> כפתור הצבעה חדש מופיע ישירות על דף השיר - לחצו על הלב!
                     </div>
                 </div>
                 <div class="guide-item">
-                    <span class="guide-icon">🚩</span>
+                    <span class="guide-icon">🔄</span>
                     <div class="guide-text">
-                        <strong>שיפור הקהילה:</strong> מצאתם טעות? שיר לא ברור? סמנו בדגל כדי שנוכל לתקן.
+                        <strong>שליטה בסינכרון:</strong> לחצו על "יישור למנחה" כדי להיצמד למקום שבו המנחה נמצא, או חכו
+                        שהמנחה יבצע "דחיפה" לכולם.
                     </div>
                 </div>
                 <div class="guide-item">
-                    <span class="guide-icon">📖</span>
+                    <span class="guide-icon">🎸</span>
                     <div class="guide-text">
-                        <strong>חזרה לבית:</strong> תמיד אפשר ללחוץ על שם האפליקציה למעלה כדי לחזור לכריכה הראשית.
+                        <strong>שירים חדשים:</strong> הוספנו את אסף אמדורסקי ועוד להיטי ענק לפי בקשתכם.
+                    </div>
+                </div>
+                <div class="guide-item">
+                    <span class="guide-icon">🏠</span>
+                    <div class="guide-text">
+                        <strong>חזרה לבית:</strong> לחיצה על שם האפליקציה למעלה תחזיר אתכם לכריכה הראשית.
                     </div>
                 </div>
             </div>

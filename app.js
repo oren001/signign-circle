@@ -37,7 +37,17 @@ const elements = {
     pinError: document.getElementById('pinError'),
 
     onboardingModal: document.getElementById('onboardingModal'),
-    closeOnboardingBtn: document.getElementById('closeOnboardingBtn')
+    closeOnboardingBtn: document.getElementById('closeOnboardingBtn'),
+
+    // Auth
+    loginBtn: document.getElementById('loginBtn'),
+    logoutBtn: document.getElementById('logoutBtn'),
+    userInfo: document.getElementById('userInfo'),
+    userName: document.getElementById('userName'),
+
+    // Sync
+    syncWithLeaderBtn: document.getElementById('syncWithLeaderBtn'),
+    pushToAllBtn: document.getElementById('pushToAllBtn')
 };
 
 // ===== Firebase References =====
@@ -92,7 +102,7 @@ async function init() {
         if (!localStorage.getItem('v3_onboarding_shown')) {
             setTimeout(() => {
                 elements.onboardingModal.classList.remove('hidden');
-            }, 1500);
+            }, 1000);
         }
 
         // Leader: Broadcast viewport changes (throttled)
@@ -100,21 +110,24 @@ async function init() {
         elements.songDisplay.addEventListener('scroll', () => {
             if (isLeader) {
                 const now = Date.now();
-                if (now - lastBroadcast > 200) { // Broadcast every 200ms
+                if (now - lastBroadcast > 200) {
                     broadcastViewport();
                     lastBroadcast = now;
                 }
             }
         }, { passive: true });
 
-        // Viewers: Sync to leader
+        // Viewers: Listen for "Forced" Sync from Leader
         viewportRef.on('value', (snapshot) => {
-            if (!isLeader) {
-                const data = snapshot.val();
-                if (data && data.userId !== currentUserId) {
-                    syncToLeaderViewport(data);
-                }
+            const data = snapshot.val();
+            if (data && data.forced && data.userId !== currentUserId) {
+                syncToLeaderViewport(data);
             }
+        });
+
+        // Auth state listener
+        window.firebaseAuth.onAuthStateChanged(user => {
+            updateUserUI(user);
         });
 
         // Setup upload listeners (from upload.js)
@@ -164,7 +177,14 @@ async function loadInitialSongs() {
 
     // Load songs into memory
     const allSongs = await songsRef.once('value');
-    songs = Object.values(allSongs.val() || {});
+    const data = allSongs.val() || {};
+    songs = Object.keys(data)
+        .filter(key => data[key] && typeof data[key] === 'object') // Filter out nulls/primitives
+        .map(key => ({
+            id: data[key].id || key,
+            ...data[key]
+        }));
+
     renderSongSelector();
     renderVotingPanel();
     updateTotalVotes();
@@ -175,7 +195,12 @@ async function loadInitialSongs() {
 function setupFirebaseListeners() {
     songsRef.on('value', (snapshot) => {
         const data = snapshot.val() || {};
-        songs = Object.values(data);
+        songs = Object.keys(data)
+            .filter(key => data[key] && typeof data[key] === 'object')
+            .map(key => ({
+                id: data[key].id || key,
+                ...data[key]
+            }));
         renderSongSelector();
         renderVotingPanel();
         updateTotalVotes();
@@ -221,6 +246,14 @@ function setupEventListeners() {
             displaySong('book-page-1'); // Fallback for local view
         }
     });
+
+    // Sync
+    elements.syncWithLeaderBtn.addEventListener('click', syncWithLeader);
+    elements.pushToAllBtn.addEventListener('click', pushViewportToAll);
+
+    // Auth
+    elements.loginBtn.addEventListener('click', handleLogin);
+    elements.logoutBtn.addEventListener('click', handleLogout);
 
     // Panels
     elements.openSelectorBtn.addEventListener('click', () => {
@@ -392,6 +425,7 @@ function renderSongSelector() {
 
         // Secondary sort: Numerical Page Number (extract from ID)
         const getPageNum = (id) => {
+            if (!id || typeof id !== 'string') return 999;
             const match = id.match(/\d+$/);
             return match ? parseInt(match[0], 10) : 999;
         };
@@ -621,38 +655,108 @@ function updateSongData(songId, updates) {
     }
 }
 
-// ===== Viewport Synchronization Helpers =====
-function broadcastViewport() {
+// ===== Viewport Sync =====
+function broadcastViewport(forced = false) {
     if (!isLeader) return;
 
     const container = elements.songDisplay;
     const img = container.querySelector('img');
-    if (!img) return;
+    const iframe = container.querySelector('iframe');
+    const content = img || iframe;
+
+    if (!content) return;
 
     // Normalize scroll positions as percentages
+    // For iframe, we might not be able to get internal scroll, so we just sync the container
+    const scrollWidth = (content.offsetWidth || content.clientWidth) - container.clientWidth;
+    const scrollHeight = (content.offsetHeight || content.clientHeight) - container.clientHeight;
+
     const data = {
         userId: currentUserId,
-        scrollX: container.scrollLeft / (img.offsetWidth - container.clientWidth) || 0,
-        scrollY: container.scrollTop / (img.offsetHeight - container.clientHeight) || 0,
-        zoom: 1, // Placeholder for future zoom slider
+        scrollX: scrollWidth > 0 ? container.scrollLeft / scrollWidth : 0,
+        scrollY: scrollHeight > 0 ? container.scrollTop / scrollHeight : 0,
+        zoom: 1,
+        forced: forced,
         timestamp: firebase.database.ServerValue.TIMESTAMP
     };
 
     viewportRef.set(data);
+
+    if (forced) {
+        console.log('📢 Viewport pushed to all viewers');
+        // Show brief visual feedback on button
+        const originalText = elements.pushToAllBtn.innerHTML;
+        elements.pushToAllBtn.innerHTML = '✅';
+        setTimeout(() => elements.pushToAllBtn.innerHTML = originalText, 2000);
+    }
+}
+
+function pushViewportToAll() {
+    broadcastViewport(true);
+}
+
+async function syncWithLeader() {
+    const snapshot = await viewportRef.once('value');
+    const data = snapshot.val();
+    if (data) {
+        syncToLeaderViewport(data);
+        console.log('📍 Synced view to leader');
+
+        // Visual feedback
+        const originalText = elements.syncWithLeaderBtn.innerHTML;
+        elements.syncWithLeaderBtn.style.color = 'var(--success)';
+        setTimeout(() => elements.syncWithLeaderBtn.style.color = '', 1000);
+    }
 }
 
 function syncToLeaderViewport(data) {
     const container = elements.songDisplay;
     const img = container.querySelector('img');
-    if (!img) return;
+    const iframe = container.querySelector('iframe');
+    const content = img || iframe;
+
+    if (!content) return;
 
     // Apply normalized scroll positions
-    const targetX = data.scrollX * (img.offsetWidth - container.clientWidth);
-    const targetY = data.scrollY * (img.offsetHeight - container.clientHeight);
+    const scrollWidth = (content.offsetWidth || content.clientWidth) - container.clientWidth;
+    const scrollHeight = (content.offsetHeight || content.clientHeight) - container.clientHeight;
+
+    const targetX = data.scrollX * scrollWidth;
+    const targetY = data.scrollY * scrollHeight;
 
     container.scrollTo({
         left: targetX,
         top: targetY,
         behavior: 'smooth'
     });
+}
+// ===== Auth Handlers =====
+function handleLogin() {
+    window.firebaseAuth.signInWithPopup(window.googleProvider)
+        .then((result) => {
+            console.log('Successfully logged in:', result.user.displayName);
+        }).catch((error) => {
+            console.error('Login failed:', error);
+            alert('התחברות נכשלה. נסה שוב מאוחר יותר.');
+        });
+}
+
+function handleLogout() {
+    window.firebaseAuth.signOut().then(() => {
+        console.log('Logged out');
+    });
+}
+
+function updateUserUI(user) {
+    if (user) {
+        elements.loginBtn.classList.add('hidden');
+        elements.userInfo.classList.remove('hidden');
+        elements.userName.textContent = user.displayName || 'משתמש';
+        currentUserId = user.uid; // Use persistent ID
+    } else {
+        elements.loginBtn.classList.remove('hidden');
+        elements.userInfo.classList.add('hidden');
+        elements.userName.textContent = 'אורח';
+        // currentUserId stays as the anonymous one generated at start
+    }
 }
