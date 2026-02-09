@@ -13,6 +13,7 @@ const elements = {
     viewerCount: document.getElementById('viewerCount'),
     leaderBtn: document.getElementById('leaderBtn'),
     feedbackBtn: document.getElementById('feedbackBtn'),
+    logoBtn: document.getElementById('logoBtn'),
 
     // Song Viewer
     songDisplay: document.getElementById('songDisplay'),
@@ -28,20 +29,24 @@ const elements = {
     songUrlInput: document.getElementById('songUrlInput'),
     addSongBtn: document.getElementById('addSongBtn'),
 
-    // Modal
+    // Modals
     pinModal: document.getElementById('pinModal'),
     pinInput: document.getElementById('pinInput'),
     submitPinBtn: document.getElementById('submitPinBtn'),
     cancelPinBtn: document.getElementById('cancelPinBtn'),
-    pinError: document.getElementById('pinError')
+    pinError: document.getElementById('pinError'),
+
+    onboardingModal: document.getElementById('onboardingModal'),
+    closeOnboardingBtn: document.getElementById('closeOnboardingBtn')
 };
 
 // ===== Firebase References =====
 const sessionRef = window.firebaseDB.ref(`sessions/${window.SESSION_ID}`);
-const songsRef = sessionRef.child('songs');
+const songsRef = window.firebaseDB.ref('songs');
 const currentSongRef = sessionRef.child('currentSong');
 const viewersRef = sessionRef.child('viewers');
-const myViewerRef = viewersRef.child(currentUserId);
+const viewportRef = sessionRef.child('viewport'); // For zoom/scroll sync
+const myViewerRef = viewersRef.child(currentUserId); // For zoom/scroll sync
 
 // ===== Wake Lock for Screen Always On =====
 let wakeLock = null;
@@ -82,6 +87,35 @@ async function init() {
         setupEventListeners();
         loadMyVotes();
         loadLeaderStatus();
+
+        // Show onboarding if not shown before
+        if (!localStorage.getItem('v3_onboarding_shown')) {
+            setTimeout(() => {
+                elements.onboardingModal.classList.remove('hidden');
+            }, 1500);
+        }
+
+        // Leader: Broadcast viewport changes (throttled)
+        let lastBroadcast = 0;
+        elements.songDisplay.addEventListener('scroll', () => {
+            if (isLeader) {
+                const now = Date.now();
+                if (now - lastBroadcast > 200) { // Broadcast every 200ms
+                    broadcastViewport();
+                    lastBroadcast = now;
+                }
+            }
+        }, { passive: true });
+
+        // Viewers: Sync to leader
+        viewportRef.on('value', (snapshot) => {
+            if (!isLeader) {
+                const data = snapshot.val();
+                if (data && data.userId !== currentUserId) {
+                    syncToLeaderViewport(data);
+                }
+            }
+        });
 
         // Setup upload listeners (from upload.js)
         if (typeof setupUploadListeners === 'function') {
@@ -173,6 +207,21 @@ function setupEventListeners() {
     elements.submitPinBtn.addEventListener('click', submitPin);
     elements.cancelPinBtn.addEventListener('click', () => elements.pinModal.classList.add('hidden'));
 
+    // Onboarding
+    elements.closeOnboardingBtn.addEventListener('click', () => {
+        elements.onboardingModal.classList.add('hidden');
+        localStorage.setItem('v3_onboarding_shown', 'true');
+    });
+
+    // Home / Logo
+    elements.logoBtn.addEventListener('click', () => {
+        if (isLeader) {
+            currentSongRef.set(null);
+        } else if (currentSongId) {
+            displaySong('book-page-1'); // Fallback for local view
+        }
+    });
+
     // Panels
     elements.openSelectorBtn.addEventListener('click', () => {
         elements.songSelectorPanel.classList.remove('hidden');
@@ -255,12 +304,29 @@ function displaySong(songId) {
         elements.songDisplay.appendChild(iframe);
     }
 
-    // Add Community Actions (Edit/Flag)
+    // Add Community Actions (Edit/Flag/Vote)
     const actionsDiv = document.createElement('div');
     actionsDiv.className = 'song-actions';
 
+    // Vote Button (Visible to All)
+    const isVoted = myVotes.has(song.id);
+    const viewerVoteBtn = document.createElement('button');
+    viewerVoteBtn.className = `action-btn vote-btn ${isVoted ? 'voted' : ''}`;
+    viewerVoteBtn.title = isVoted ? 'הצבעת לשיר זה' : 'הצבע לשיר זה';
+    viewerVoteBtn.innerHTML = isVoted ? '❤️' : '🤍';
+    viewerVoteBtn.setAttribute('data-votes', song.votes || 0);
+    viewerVoteBtn.onclick = (e) => {
+        voteSong(song.id, e);
+        // Instant UI feedback
+        const v = myVotes.has(song.id);
+        viewerVoteBtn.classList.toggle('voted', v);
+        viewerVoteBtn.innerHTML = v ? '❤️' : '🤍';
+        viewerVoteBtn.title = v ? 'הצבעת לשיר זה' : 'הצבע לשיר זה';
+    };
+    actionsDiv.appendChild(viewerVoteBtn);
+
     // Edit Button (Visible to Leaders)
-    if (isLeader) { // Note: using global isLeader state
+    if (isLeader) {
         const editBtn = document.createElement('button');
         editBtn.className = 'action-btn';
         editBtn.title = 'ערוך שם שיר';
@@ -283,6 +349,10 @@ function displaySong(songId) {
     // Close panels when song is selected
     elements.songSelectorPanel.classList.add('hidden');
     renderSongSelector();
+
+    // Reset viewport sync position when song changes
+    elements.songDisplay.scrollTop = 0;
+    elements.songDisplay.scrollLeft = 0;
 }
 
 function isNightMode() {
@@ -542,13 +612,47 @@ function toggleFlag(song) {
 
 function updateSongData(songId, updates) {
     if (window.firebaseDB && updates) {
-        // Use the globally exposed functions from firebase-config.js if available, 
-        // or let the real-time listener handle the local state.
-        const songRef = window.ref(window.firebaseDB, `sessions/v2/songs/${songId}`);
-        window.update(songRef, updates)
+        const songRef = window.firebaseDB.ref(`songs/${songId}`);
+        songRef.update(updates)
             .then(() => {
                 console.log(`Updated ${songId}:`, updates);
             })
             .catch(err => console.error('Firebase update failed:', err));
     }
+}
+
+// ===== Viewport Synchronization Helpers =====
+function broadcastViewport() {
+    if (!isLeader) return;
+
+    const container = elements.songDisplay;
+    const img = container.querySelector('img');
+    if (!img) return;
+
+    // Normalize scroll positions as percentages
+    const data = {
+        userId: currentUserId,
+        scrollX: container.scrollLeft / (img.offsetWidth - container.clientWidth) || 0,
+        scrollY: container.scrollTop / (img.offsetHeight - container.clientHeight) || 0,
+        zoom: 1, // Placeholder for future zoom slider
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+    };
+
+    viewportRef.set(data);
+}
+
+function syncToLeaderViewport(data) {
+    const container = elements.songDisplay;
+    const img = container.querySelector('img');
+    if (!img) return;
+
+    // Apply normalized scroll positions
+    const targetX = data.scrollX * (img.offsetWidth - container.clientWidth);
+    const targetY = data.scrollY * (img.offsetHeight - container.clientHeight);
+
+    container.scrollTo({
+        left: targetX,
+        top: targetY,
+        behavior: 'smooth'
+    });
 }

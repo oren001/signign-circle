@@ -17,7 +17,7 @@
     <!-- Header -->
     <header class="app-header">
         <div class="header-content">
-            <h1 class="app-title">📖 ניגונים בעברית <span>v3</span></h1>
+            <h1 class="app-title" id="logoBtn" style="cursor: pointer;">📖 ניגונים בעברית <span>v3</span></h1>
             <div class="header-controls">
                 <div class="sync-status" id="syncStatus">
                     <span class="status-dot"></span>
@@ -27,7 +27,7 @@
                     <span class="count-icon">👥</span>
                     <span class="count-text">0</span>
                 </div>
-                <button class="feedback-btn" id="feedbackBtn" title="שתף פידבק">💬</button>
+                <button class="feedback-btn" id="feedbackBtn" title="שתף פידבק">💡</button>
                 <button class="leader-btn" id="leaderBtn">כניסת מנחה</button>
             </div>
         </div>
@@ -167,6 +167,46 @@
     <script src="firebase-config.js"></script>
     <script src="app.js"></script>
     <script src="upload.js"></script>
+    <!-- Onboarding / Welcome Modal -->
+    <div class="modal hidden" id="onboardingModal">
+        <div class="modal-content onboarding-content">
+            <div class="onboarding-header">
+                <h2>ברוכים הבאים ל-V3! 🎶✨</h2>
+                <div class="version-tag">Classic Songbook Edition</div>
+            </div>
+
+            <div class="onboarding-body">
+                <div class="guide-item">
+                    <span class="guide-icon">🔍</span>
+                    <div class="guide-text">
+                        <strong>חיפוש חכם:</strong> עכשיו אפשר לחפש שירים לא רק לפי כותרת, אלא גם לפי מילים מתוך השיר!
+                    </div>
+                </div>
+                <div class="guide-item">
+                    <span class="guide-icon">❤️</span>
+                    <div class="guide-text">
+                        <strong>הצבעה קלה:</strong> הצביעו לשירים שאתם אוהבים ישירות מהרשימה או מתוך דף השיר.
+                    </div>
+                </div>
+                <div class="guide-item">
+                    <span class="guide-icon">🚩</span>
+                    <div class="guide-text">
+                        <strong>שיפור הקהילה:</strong> מצאתם טעות? שיר לא ברור? סמנו בדגל כדי שנוכל לתקן.
+                    </div>
+                </div>
+                <div class="guide-item">
+                    <span class="guide-icon">📖</span>
+                    <div class="guide-text">
+                        <strong>חזרה לבית:</strong> תמיד אפשר ללחוץ על שם האפליקציה למעלה כדי לחזור לכריכה הראשית.
+                    </div>
+                </div>
+            </div>
+
+            <div class="onboarding-footer">
+                <button class="btn-primary" id="closeOnboardingBtn">יאללה, בואו נשיר! 🎸</button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

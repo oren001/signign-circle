@@ -67,6 +67,39 @@ def rebuild_songs():
             
         new_songs.append(song)
     
+    # Add User-Requested Extra Songs
+    extra_songs = [
+        {
+            "id": "song-amdursky-15min",
+            "title": "15 דקות - אסף אמדורסקי",
+            "type": "url",
+            "source": "https://www.tab4u.com/tabs/songs/8_%D7%90%D7%A1%D7%A3_%D7%90%D7%9E%D7%93%D7%95%D7%A8%D7%A1%D7%A7%D7%99_-_15_%D7%93%D7%A7%D7%95%D7%AA.html",
+            "votes": 0,
+            "addedBy": "system",
+            "fullText": "אסף אמדורסקי 15 דקות אקורדים מילים יניב הורביץ"
+        },
+        {
+            "id": "song-amdursky-heaven",
+            "title": "השמים הכחולים - אסף אמדורסקי",
+            "type": "url",
+            "source": "https://www.tab4u.com/tabs/songs/47_%D7%90%D7%A1%D7%A3_%D7%90%D7%9E%D7%93%D7%95%D7%A8%D7%A1%D7%A7%D7%99_-_%D7%94%D7%A9%D7%9E%D7%99%D7%9D_%D7%94%D7%9B%D7%97%D7%95%D7%9C%D7%99%D7%9D.html",
+            "votes": 0,
+            "addedBy": "system",
+            "fullText": "השמים הכחולים אסף אמדורסקי אקורדים מילים"
+        },
+        {
+            "id": "song-amdursky-dear",
+            "title": "יקירתי - אסף אמדורסקי",
+            "type": "url",
+            "source": "https://www.tab4u.com/tabs/songs/39_%D7%90%D7%A1%D7%A3_%D7%90%D7%9E%D7%93%D7%95%D7%A8%D7%A1%D7%A7%D7%99_-_%D7%99%D7%A7%D7%99%D7%A8%D7%AA%D7%99.html",
+            "votes": 0,
+            "addedBy": "system",
+            "fullText": "יקירתי אסף אמדורסקי אקורדים מילים לטי גרובמן"
+        }
+    ]
+    
+    new_songs.extend(extra_songs)
+
     # Save the fresh database
     data = {"songs": new_songs}
     with open('song-data.json', 'w', encoding='utf-8') as f:
