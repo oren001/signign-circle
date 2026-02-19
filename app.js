@@ -141,6 +141,8 @@ els.songDisplay.addEventListener('touchstart', (e) => {
 els.songDisplay.addEventListener('touchmove', (e) => {
     if (e.touches.length === 2 && state.isLeader && initialDist) {
         e.preventDefault();
+        e.stopImmediatePropagation();
+
         const dist = Math.hypot(
             e.touches[0].clientX - e.touches[1].clientX,
             e.touches[0].clientY - e.touches[1].clientY
@@ -148,12 +150,15 @@ els.songDisplay.addEventListener('touchmove', (e) => {
         const scale = dist / initialDist;
         const newZoom = Math.min(Math.max(0.5, initialZoom * scale), 4);
 
-        state.viewport.zoom = newZoom;
+        // Set origin to 0 0 for predictable scrolling
+        els.songDisplay.style.transformOrigin = '0 0';
         els.songDisplay.style.transform = `scale(${newZoom})`;
 
+        // Update state
+        state.viewport.zoom = newZoom;
         broadcastViewport();
     }
-});
+}, { passive: false });
 
 els.songDisplay.addEventListener('touchend', () => {
     initialDist = null;
@@ -250,7 +255,7 @@ els.searchInput.addEventListener('input', (e) => {
 });
 
 // --- UPDATE CHECKER ---
-const CURRENT_VERSION = "4.5.3";
+const CURRENT_VERSION = "5.5.0";
 const VERSION_URL = "version.json";
 
 function checkForUpdates() {
