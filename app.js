@@ -134,8 +134,9 @@ els.songDisplay.addEventListener('touchstart', (e) => {
             e.touches[0].clientY - e.touches[1].clientY
         );
         initialZoom = state.viewport.zoom;
+        e.preventDefault();
     }
-});
+}, { passive: false });
 
 els.songDisplay.addEventListener('touchmove', (e) => {
     if (e.touches.length === 2 && state.isLeader && initialDist) {

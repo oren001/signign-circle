@@ -20,6 +20,9 @@ body {
     height: 100vh;
     overflow: hidden;
     direction: rtl;
+    touch-action: none; /* Prevent browser zoom */
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 /* Header */
