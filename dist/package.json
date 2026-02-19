@@ -1,0 +1,9 @@
+{
+    "name": "signign-circle",
+    "version": "5.5.0",
+    "description": "Static site deployment",
+    "scripts": {
+        "build": "echo 'No build step required, serving static files'"
+    },
+    "dependencies": {}
+}
