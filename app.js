@@ -248,3 +248,39 @@ els.searchInput.addEventListener('input', (e) => {
         item.style.display = text.includes(q) ? 'block' : 'none';
     });
 });
+
+// --- UPDATE CHECKER ---
+const CURRENT_VERSION = "4.5.2";
+const VERSION_URL = "version.json";
+
+function checkForUpdates() {
+    fetch(VERSION_URL + '?t=' + Date.now()) // bust cache
+        .then(r => r.json())
+        .then(data => {
+            if (data.version !== CURRENT_VERSION) {
+                showUpdateNotification(data.version);
+            }
+        })
+        .catch(() => { }); // silent fail
+}
+
+function showUpdateNotification(newVersion) {
+    const existing = document.getElementById('update-toast');
+    if (existing) return;
+
+    const toast = document.createElement('div');
+    toast.id = 'update-toast';
+    toast.className = 'toast';
+    toast.style.background = '#2ecc71'; // Green
+    toast.style.cursor = 'pointer';
+    toast.innerHTML = `🚀 גרסה חדשה (${newVersion}) זמינה! לחץ לרענון`;
+
+    toast.onclick = () => window.location.reload();
+
+    document.getElementById('toastContainer').appendChild(toast);
+}
+
+// Check every 30 seconds
+setInterval(checkForUpdates, 30000);
+// Check on load
+checkForUpdates();
