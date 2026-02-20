@@ -214,9 +214,16 @@ function loadSong(id) {
     state.currentSong = song;
     els.songTitle.innerText = song.title;
 
+    // Show loading state if needed
+    els.songImg.style.opacity = '0.5';
+
     const src = song.source.startsWith('http') ? song.source : `songs/${song.source.split('/').pop()}`;
     els.songImg.src = src;
     els.songImg.style.display = 'block';
+
+    els.songImg.onload = () => {
+        els.songImg.style.opacity = '1';
+    };
 
     // Reset view on new song
     state.viewport.zoom = 1;
@@ -228,6 +235,7 @@ function renderSongList() {
     els.songList.innerHTML = state.songs.map(song => `
         <div class="song-item" onclick="selectSong('${song.id}')">
             <div class="song-title">${song.title}</div>
+            <div class="song-item-arrow">←</div>
         </div>
     `).join('');
 }
@@ -255,7 +263,7 @@ els.searchInput.addEventListener('input', (e) => {
 });
 
 // --- UPDATE CHECKER ---
-const CURRENT_VERSION = "5.5.0";
+const CURRENT_VERSION = "4.52.0";
 const VERSION_URL = "version.json";
 
 function checkForUpdates() {

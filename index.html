@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Rubik:wght@300;400;500;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
 
     <!-- CSS -->
@@ -26,18 +26,19 @@
     <header class="app-header">
         <div class="header-right">
             <h1 class="app-title">ניגונים</h1>
-            <span class="version-tag">v5.5</span>
+            <span class="version-tag">Premium v4.52</span>
         </div>
 
         <div class="header-center" id="songTitleContainer">
-            <h2 id="currentSongTitle" class="viewer-song-title">בחרו שיר להתחיל</h2>
+            <h2 id="currentSongTitle" class="viewer-song-title">טוען...</h2>
         </div>
 
         <div class="header-left">
+            <button id="openMenuBtn" class="header-icon-btn" title="ספריה">📚</button>
+            <div id="viewerCount" class="viewer-count">👥 1</div>
             <button id="leaderBtn" class="leader-btn">
                 <span>🎤</span> הפוך למנחה
             </button>
-            <div id="viewerCount" class="viewer-count">👥 1</div>
         </div>
     </header>
 
@@ -46,33 +47,26 @@
             <div id="viewerContainer" class="viewer-container">
                 <div id="songDisplay" class="song-display">
                     <!-- Image will be injected here -->
-                    <img id="currentSongImg" src="" alt="" style="display: none;">
+                    <img id="currentSongImg" src="" alt="מילות השיר" style="display: none;">
                 </div>
             </div>
-        </div>
-
-        <!-- Floating Controls -->
-        <div class="nav-controls">
-            <button id="openMenuBtn" class="menu-action-btn">
-                <span>📚</span> ספריה
-            </button>
         </div>
     </main>
 
     <!-- Song Selector Panel -->
     <div id="songSelector" class="song-selector-panel hidden">
         <div class="panel-header">
-            <div class="search-container">
+            <button id="closePanelBtn" class="close-panel-btn">✕</button>
+            <div class="search-wrapper">
                 <input type="text" id="searchInput" class="song-search-input" placeholder="חפש שיר, אמן או מילים...">
             </div>
-            <button id="closePanelBtn" class="close-panel-btn">✕</button>
         </div>
         <div id="songListContainer" class="song-list-container">
             <!-- Songs will be rendered here -->
         </div>
     </div>
 
-    <!-- Toast Notification -->
+    <!-- Notifications -->
     <div id="toastContainer" class="toast-container"></div>
 
     <script type="module" src="app.js"></script>
