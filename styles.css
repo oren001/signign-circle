@@ -1,27 +1,27 @@
 :root {
-    /* Color Palette - Modern & Deep */
-    --bg-deep: #0a0a0c;
-    --bg-surface: #16161a;
-    --bg-elevated: #23232a;
+    /* Color Palette - v4.51 Restored */
+    --bg-deep: #0f172a;
+    --bg-surface: #1e293b;
+    --bg-elevated: #334155;
 
-    --accent: #8b5cf6;
-    --accent-glow: rgba(139, 92, 246, 0.4);
-    --accent-dim: #6d28d9;
+    --accent: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.4);
+    --accent-dim: #0ea5e9;
 
     --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
 
-    --glass-bg: rgba(22, 22, 26, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    --glass-bg: rgba(15, 23, 42, 0.8);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
 
     --header-h: 72px;
-    --radius-lg: 24px;
+    --radius-lg: 20px;
     --radius-md: 12px;
     --radius-sm: 8px;
 
-    --font-main: 'Outfit', 'Assistant', sans-serif;
+    --font-main: 'Assistant', 'Outfit', sans-serif;
 }
 
 * {
