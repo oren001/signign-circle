@@ -1,0 +1,7 @@
+requests
+python-dotenv
+pynput
+pillow
+anthropic
+pillow
+anthropic

@@ -82,58 +82,67 @@ function showToast(text, bg = '#333') {
     setTimeout(() => toast.remove(), 5000);
 }
 
-// Helper: Get center offset percentage
-function getScrollPercentages() {
+// Helper: Get visual parameters
+function getViewportData() {
+    const vv = window.visualViewport;
     const container = els.viewerContainer;
-    const centerX = container.scrollLeft + (container.clientWidth / 2);
-    const centerY = container.scrollTop + (container.clientHeight / 2);
-    const zoom = state.viewport.zoom;
-    const relX = centerX / (NATURAL_WIDTH * zoom);
-    const relY = centerY / (NATURAL_HEIGHT * zoom);
-    return { relX, relY };
+
+    // We capture both visual viewport (pinch/pan) and container scroll (standard scroll)
+    return {
+        zoom: vv ? vv.scale : 1,
+        vvLeft: vv ? vv.offsetLeft : 0,
+        vvTop: vv ? vv.offsetTop : 0,
+        scrollLeft: container.scrollLeft,
+        scrollTop: container.scrollTop
+    };
 }
 
 // BROADCAST (Leader)
 const broadcastViewport = () => {
-    if (!state.isLeader || !NATURAL_WIDTH) return;
+    if (!state.isLeader) return;
 
     const now = Date.now();
     if (now - lastBroadcast < 33) return; // ~30fps for smoother sync
 
-    const { relX, relY } = getScrollPercentages();
+    const data = getViewportData();
 
     set(refs.viewport, {
-        zoom: state.viewport.zoom,
-        relX,
-        relY,
+        ...data,
         timestamp: now,
         userId: USER_ID
     });
 
+    state.viewport.zoom = data.zoom;
     lastBroadcast = now;
 };
 
 // APPLY (Follower)
 const applyViewport = (data, force = false) => {
     state.lastViewportData = data;
-    if (state.isLeader || data.userId === USER_ID || !NATURAL_WIDTH) return;
+    if (state.isLeader || data.userId === USER_ID) return;
     if (!state.isFollowing && !force) return;
 
     isSyncing = true;
 
-    // 1. Apply Zoom Transform
-    els.songDisplay.style.transform = `scale(${data.zoom})`;
-    state.viewport.zoom = data.zoom; // keep state in sync
-
-    // 2. Apply Scroll (Target Center)
+    // Apply Scroll
     requestAnimationFrame(() => {
         const container = els.viewerContainer;
-        const targetCenterX = data.relX * NATURAL_WIDTH * data.zoom;
-        const targetCenterY = data.relY * NATURAL_HEIGHT * data.zoom;
+
+        // We can only reliably apply standard scroll remotely. 
+        // Native browser pinch zoom (visualViewport.scale) is mostly read-only for JS.
+        // We will attempt to emulate the look via transform if zoom > 1
+
+        if (data.zoom > 1) {
+            els.songDisplay.style.transformOrigin = `${data.vvLeft}px ${data.vvTop}px`;
+            els.songDisplay.style.transform = `scale(${data.zoom})`;
+        } else {
+            els.songDisplay.style.transformOrigin = `0 0`;
+            els.songDisplay.style.transform = `scale(1)`;
+        }
 
         container.scrollTo({
-            left: targetCenterX - (container.clientWidth / 2),
-            top: targetCenterY - (container.clientHeight / 2),
+            left: data.scrollLeft,
+            top: data.scrollTop,
             behavior: 'auto'
         });
 
@@ -165,69 +174,22 @@ if (els.followLeaderBtn) els.followLeaderBtn.addEventListener('click', resumeSyn
 
 // --- TOUCH HANDLING (Universal Navigation + Focal-Point Zoom) ---
 
-let initialDist = null;
-let initialZoom = 1;
-let lastTapTime = 0;
+// Let the browser handle zooming and panning naturally without us interfering.
+// We just observe changes via VisualViewport and Scroll events.
 
-function getDistance(touches) {
-    return Math.hypot(
-        touches[0].clientX - touches[1].clientX,
-        touches[0].clientY - touches[1].clientY
-    );
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => {
+        if (!state.isLeader && !isSyncing) breakSync();
+        if (state.isLeader) broadcastViewport();
+    });
+
+    window.visualViewport.addEventListener('scroll', () => {
+        if (!state.isLeader && !isSyncing) breakSync();
+        if (state.isLeader) broadcastViewport();
+    });
 }
 
-els.songDisplay.addEventListener('touchstart', (e) => {
-    // If follower touches the screen, break sync immediately
-    if (!state.isLeader && e.touches.length > 0) {
-        breakSync();
-    }
-
-    if (e.touches.length === 2) {
-        initialDist = getDistance(e.touches);
-        initialZoom = state.viewport.zoom;
-        e.preventDefault(); // Stop native Pinch-to-zoom for everyone (we handle it)
-    }
-
-    // Double Tap Zoom
-    if (e.touches.length === 1) {
-        const currentTime = Date.now();
-        const tapDelay = currentTime - lastTapTime;
-        if (tapDelay < 300 && tapDelay > 0) {
-            const newZoom = state.viewport.zoom === 1 ? 2.5 : 1;
-            els.songDisplay.style.transform = `scale(${newZoom})`;
-            state.viewport.zoom = newZoom;
-            if (state.isLeader) broadcastViewport();
-            e.preventDefault(); // Stop native double-tap zoom
-        }
-        lastTapTime = currentTime;
-    }
-}, { passive: false });
-
-els.songDisplay.addEventListener('touchmove', (e) => {
-    if (!state.isLeader) breakSync();
-
-    if (e.touches.length === 2 && initialDist) {
-        e.preventDefault(); // Take control of zoom
-
-        const dist = getDistance(e.touches);
-        const scale = dist / initialDist;
-        const newZoom = Math.min(Math.max(0.5, initialZoom * scale), 4);
-
-        els.songDisplay.style.transformOrigin = '0 0';
-        els.songDisplay.style.transform = `scale(${newZoom})`;
-        state.viewport.zoom = newZoom;
-
-        if (state.isLeader) broadcastViewport();
-    }
-}, { passive: false });
-
-els.songDisplay.addEventListener('touchend', (e) => {
-    if (e.touches.length < 2) {
-        initialDist = null;
-    }
-});
-
-// Broadcast/Break scroll events
+// Observe standard scrolling
 els.viewerContainer.addEventListener('scroll', () => {
     if (!state.isLeader && !isSyncing) {
         breakSync();
@@ -236,6 +198,20 @@ els.viewerContainer.addEventListener('scroll', () => {
         broadcastViewport();
     }
 });
+
+// Double tap is usually handled natively by browsers, but we can ensure broadcasts happen
+els.songDisplay.addEventListener('touchstart', (e) => {
+    if (!state.isLeader && e.touches.length > 0) breakSync();
+
+    // We do NOT call preventDefault here, allowing native zooming.
+    if (e.touches.length === 1) {
+        const currentTime = Date.now();
+        if (currentTime - lastTapTime > 0 && currentTime - lastTapTime < 300) {
+            setTimeout(() => { if (state.isLeader) broadcastViewport(); }, 350);
+        }
+        lastTapTime = currentTime;
+    }
+}, { passive: true });
 
 
 // --- UI LOGIC ---
@@ -382,7 +358,7 @@ els.searchInput.addEventListener('input', (e) => {
 });
 
 // --- UPDATE CHECKER ---
-const CURRENT_VERSION = "4.53.0";
+const CURRENT_VERSION = "4.53.2";
 const VERSION_URL = "version.json";
 
 function checkForUpdates() {
