@@ -38,13 +38,26 @@
         </div>
 
         <div class="header-left">
-            <button id="openMenuBtn" class="header-icon-btn" title="ספריה">📚</button>
             <div id="viewerCount" class="viewer-count">👥 1</div>
-            <button id="leaderBtn" class="leader-btn">
+            <button id="hamburgerBtn" class="header-icon-btn" title="תפריט">☰</button>
+        </div>
+    </header>
+
+    <!-- Unified Control Drawer (Hamburger Menu) -->
+    <div id="controlDrawer" class="control-drawer glass hidden">
+        <div class="drawer-header">
+            <h3>תפריט</h3>
+            <button id="closeDrawerBtn" class="close-icon-btn">✕</button>
+        </div>
+        <div class="drawer-content">
+            <button id="openMenuBtn" class="drawer-btn">
+                <span>📚</span> ספריה
+            </button>
+            <button id="leaderBtn" class="drawer-btn">
                 <span>🎤</span> הפוך למנחה
             </button>
         </div>
-    </header>
+    </div>
 
     <main class="app-main">
         <div id="songViewer" class="song-viewer">

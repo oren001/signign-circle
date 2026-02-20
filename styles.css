@@ -279,20 +279,87 @@ body {
     background: var(--bg-elevated);
     border: 1px solid var(--glass-border);
     color: white;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-size: 1.2rem;
-    transition: all 0.2s;
+    font-size: 1.4rem;
+    transition: all 0.2s ease;
 }
 
 .header-icon-btn:active {
     transform: scale(0.9);
     background: var(--accent);
+}
+
+/* Control Drawer */
+.control-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 280px;
+    height: 100vh;
+    z-index: 300;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.control-drawer.hidden {
+    transform: translateX(100%);
+}
+
+.drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.drawer-header h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.close-icon-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.drawer-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.03);
+    color: white;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 12px;
+}
+
+.drawer-btn:active {
+    background: var(--accent);
+    transform: scale(0.98);
+}
+
+.drawer-btn.active {
+    background: var(--accent);
+    box-shadow: 0 0 15px var(--accent-glow);
 }
 
 /* Toast */
