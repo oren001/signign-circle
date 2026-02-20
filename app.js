@@ -204,6 +204,7 @@ onValue(ref(db, 'songs'), (snap) => {
     const data = snap.val();
     if (data) {
         state.songs = Object.values(data);
+        showToast(`✅ נטענו ${state.songs.length} שירים`, '#27ae60');
         renderSongList();
 
         // If we were waiting for songs to load a specific song
@@ -211,19 +212,29 @@ onValue(ref(db, 'songs'), (snap) => {
             loadSong(state.pendingSongId);
             state.pendingSongId = null;
         }
+    } else {
+        showToast('⚠️ לא נמצאו שירים במאגר', '#f39c12');
     }
+}, (err) => {
+    showToast(`❌ שגיאת בסיס נתונים (שירים): ${err.message}`, '#e74c3c');
 });
 
 // Sync Current Song
 onValue(refs.currentSong, (snap) => {
     const id = snap.val();
+    showToast(`🎵 שיר נוכחי: ${id || 'אין'}`, '#8e44ad');
     if (id) {
         if (state.songs.length > 0) {
             loadSong(id);
         } else {
             state.pendingSongId = id;
+            els.songTitle.innerText = "מחכה לרשימת השירים...";
         }
+    } else {
+        els.songTitle.innerText = "בחרו שיר מהספריה";
     }
+}, (err) => {
+    showToast(`❌ שגיאת בסיס נתונים (סנכרון): ${err.message}`, '#e74c3c');
 });
 
 // Sync Viewport
