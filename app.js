@@ -289,7 +289,9 @@ function renderSongList() {
         if (votesB !== votesA) {
             return votesB - votesA; // Highest votes first
         }
-        return a.title.localeCompare(b.title); // Alphabetical tie-breaker
+        const titleA = a.title || "";
+        const titleB = b.title || "";
+        return titleA.localeCompare(titleB); // Alphabetical tie-breaker
     });
 
     els.songList.innerHTML = sortedSongs.map(song => `
@@ -343,7 +345,7 @@ els.searchInput.addEventListener('input', (e) => {
 });
 
 // --- UPDATE CHECKER ---
-const CURRENT_VERSION = "4.54.1";
+const CURRENT_VERSION = "4.55.1";
 const VERSION_URL = "version.json";
 
 function checkForUpdates() {
