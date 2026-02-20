@@ -26,7 +26,7 @@ const firebaseConfig = {
 const USER_ID = localStorage.getItem('userId') || `user-${Date.now()}`;
 localStorage.setItem('userId', USER_ID);
 
-let db, ref, onValue, set, refs;
+let db, ref, onValue, set, runTransaction, refs;
 
 Promise.all([
     import("https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"),
@@ -37,9 +37,11 @@ Promise.all([
     ref = firebaseDb.ref;
     onValue = firebaseDb.onValue;
     set = firebaseDb.set;
+    runTransaction = firebaseDb.runTransaction;
 
     refs = {
-        currentSong: ref(db, 'currentSongId')
+        currentSong: ref(db, 'currentSongId'),
+        votes: ref(db, 'votes')
     };
 
     initFirebaseListeners();
@@ -77,7 +79,7 @@ const els = {
     openMenuBtn: document.getElementById('openMenuBtn'),
     closePanelBtn: document.getElementById('closePanelBtn'),
     followLeaderBtn: document.getElementById('followLeaderBtn'),
-    followLeaderBtn: document.getElementById('followLeaderBtn')
+    clearVotesBtn: document.getElementById('clearVotesBtn')
 };
 
 // Refs
@@ -171,6 +173,11 @@ els.leaderBtn.addEventListener('click', () => {
     els.leaderBtn.classList.toggle('active');
     els.leaderBtn.innerHTML = state.isLeader ? '🎤 מנחה פעיל' : '🎤 הפוך למנחה';
 
+    // Show/hide leader special tools
+    if (els.clearVotesBtn) {
+        els.clearVotesBtn.classList.toggle('hidden', !state.isLeader);
+    }
+
     if (state.isLeader) {
         state.isFollowing = true;
         els.followLeaderBtn.classList.add('hidden');
@@ -178,6 +185,17 @@ els.leaderBtn.addEventListener('click', () => {
     }
     els.controlDrawer.classList.add('hidden'); // Close drawer after selection
 });
+
+// Clear All Votes
+if (els.clearVotesBtn) {
+    els.clearVotesBtn.addEventListener('click', () => {
+        if (state.isLeader && confirm('האם אתה בטוח שברצונך לאפס את כל ההצבעות?')) {
+            set(refs.votes, null);
+            showToast('🗑️ כל ההצבעות אופסו', '#e74c3c');
+            els.controlDrawer.classList.add('hidden');
+        }
+    });
+}
 
 function initFirebaseListeners() {
     // Load Songs
@@ -217,6 +235,18 @@ function initFirebaseListeners() {
     }, (err) => {
         showToast(`❌ שגיאת בסיס נתונים (סנכרון): ${err.message}`, '#e74c3c');
     });
+
+    // Sync Votes
+    onValue(refs.votes, (snap) => {
+        const voteData = snap.val() || {};
+        // Map votes onto state.songs and re-render
+        if (state.songs.length > 0) {
+            state.songs.forEach(song => {
+                song.votes = voteData[song.id] || 0;
+            });
+            renderSongList();
+        }
+    });
 }
 
 
@@ -252,17 +282,47 @@ function loadSong(id) {
 }
 
 function renderSongList() {
-    els.songList.innerHTML = state.songs.map(song => `
-        <div class="song-item" onclick="selectSong('${song.id}')">
-            <div class="song-title">${song.title}</div>
-            <div class="song-item-arrow">←</div>
+    // Sort songs primarily by votes (descending), secondary by original order/name
+    const sortedSongs = [...state.songs].sort((a, b) => {
+        const votesA = a.votes || 0;
+        const votesB = b.votes || 0;
+        if (votesB !== votesA) {
+            return votesB - votesA; // Highest votes first
+        }
+        return a.title.localeCompare(b.title); // Alphabetical tie-breaker
+    });
+
+    els.songList.innerHTML = sortedSongs.map(song => `
+        <div class="song-item">
+            <div class="song-title" onclick="selectSong('${song.id}')">${song.title}</div>
+            <div class="song-actions">
+                <div class="vote-badge ${song.votes > 0 ? 'has-votes' : ''}">${song.votes || 0}</div>
+                <button class="vote-btn" onclick="castVote('${song.id}', event)">👍</button>
+            </div>
         </div>
     `).join('');
 }
 
+window.castVote = (id, event) => {
+    // Prevent triggering selectSong if we clicked the vote button itself
+    if (event) {
+        event.stopPropagation();
+    }
+
+    // Optimistic UI Toast
+    showToast(`הצבעת לשיר!`, '#3498db');
+
+    const songVoteRef = ref(db, `votes/${id}`);
+    runTransaction(songVoteRef, (currentVotes) => {
+        return (currentVotes || 0) + 1;
+    });
+};
+
 window.selectSong = (id) => {
     if (state.isLeader) {
         set(refs.currentSong, id);
+        // Clear votes for this song so it doesn't stay at the top forever
+        set(ref(db, `votes/${id}`), 0);
     } else {
         loadSong(id); // Local preview
     }

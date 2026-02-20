@@ -276,6 +276,55 @@ body {
     justify-content: space-between;
 }
 
+.song-title {
+    flex: 1;
+}
+
+.song-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.vote-badge {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4px 10px;
+    border-radius: 20px;
+    transition: all 0.2s;
+}
+
+.vote-badge.has-votes {
+    color: white;
+    background: var(--accent);
+    font-weight: 600;
+}
+
+.vote-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.vote-btn:hover {
+    background: rgba(52, 152, 219, 0.2);
+    border-color: var(--accent);
+    transform: scale(1.1);
+}
+
+.vote-btn:active {
+    transform: scale(0.9);
+}
+
 .song-item:active {
     transform: scale(0.98);
     background: var(--bg-elevated);
