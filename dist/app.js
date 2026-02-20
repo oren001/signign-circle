@@ -1,5 +1,19 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+// --- CRITICAL CACHE BUSTER ---
+// If the user's browser has an old service worker caching index.html, it may load this file as a classic script.
+// Top-level imports would throw a SyntaxError. We use dynamic imports instead.
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function (registrations) {
+        let hasUnregistered = false;
+        for (let registration of registrations) {
+            registration.unregister();
+            hasUnregistered = true;
+            console.log('Unregistered old ServiceWorker');
+        }
+        if (hasUnregistered && !window.location.href.includes('reloaded')) {
+            window.location.href = window.location.href + (window.location.href.includes('?') ? '&' : '?') + 'reloaded=true';
+        }
+    });
+}
 
 const firebaseConfig = {
     apiKey: "AIzaSyDZPAln8_cWGZ54ElCce7_rGensf5P51Aw",
@@ -11,14 +25,35 @@ const firebaseConfig = {
     appId: "1:154350722932:web:86eaabc6c734c755625621"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
 const USER_ID = localStorage.getItem('userId') || `user-${Date.now()}`;
 localStorage.setItem('userId', USER_ID);
+
+let db, ref, onValue, set, refs;
+
+Promise.all([
+    import("https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"),
+    import("https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js")
+]).then(([firebaseApp, firebaseDb]) => {
+    const app = firebaseApp.initializeApp(firebaseConfig);
+    db = firebaseDb.getDatabase(app);
+    ref = firebaseDb.ref;
+    onValue = firebaseDb.onValue;
+    set = firebaseDb.set;
+
+    refs = {
+        currentSong: ref(db, 'currentSongId')
+    };
+
+    initFirebaseListeners();
+}).catch(err => {
+    console.error("Firebase load error", err);
+});
 
 // State
 let state = {
     isLeader: false,
+    isFollowing: true,
+    lastViewportData: null,
     currentSong: null,
     songs: [],
     viewport: {
@@ -30,6 +65,9 @@ let state = {
 
 // DOM Elements
 const els = {
+    hamburgerBtn: document.getElementById('hamburgerBtn'),
+    controlDrawer: document.getElementById('controlDrawer'),
+    closeDrawerBtn: document.getElementById('closeDrawerBtn'),
     leaderBtn: document.getElementById('leaderBtn'),
     songImg: document.getElementById('currentSongImg'),
     songDisplay: document.getElementById('songDisplay'),
@@ -39,140 +77,95 @@ const els = {
     songList: document.getElementById('songListContainer'),
     searchInput: document.getElementById('searchInput'),
     openMenuBtn: document.getElementById('openMenuBtn'),
-    closePanelBtn: document.getElementById('closePanelBtn')
+    closePanelBtn: document.getElementById('closePanelBtn'),
+    followLeaderBtn: document.getElementById('followLeaderBtn'),
+    followLeaderBtn: document.getElementById('followLeaderBtn')
 };
 
 // Refs
-const refs = {
-    currentSong: ref(db, 'currentSongId'),
-    viewport: ref(db, 'viewport')
+// (Moved inside dynamic import)
+
+// --- OVERVIEW: SONG SYNC ONLY (v4.54.0) ---
+// Viewport synchronization (zoom/pan) has been entirely removed. 
+// Users can navigate freely natively. Only the current song selection is synchronized.
+
+// Global Error Handler for better debugging on mobile
+window.onerror = (msg, url, line) => {
+    showToast(`❌ שגיאה: ${msg} (שורה ${line})`, '#e74c3c');
 };
 
-// --- SYNC ENGINE (Stream Leader View) ---
+function showToast(text, bg = '#333') {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.style.background = bg;
+    toast.innerText = text;
+    document.getElementById('toastContainer').appendChild(toast);
+    setTimeout(() => toast.remove(), 5000);
+}
 
-let lastBroadcast = 0;
-let isSyncing = false;
+// --- FOLLOW LEADER / RESET VIEW ---
 
-// Helper: Parse Matrix
-const getScaleFromMatrix = (transform) => {
-    if (transform === 'none' || !transform) return 1;
-    const matrix = transform.match(/matrix\(([^)]+)\)/);
-    if (matrix) {
-        return parseFloat(matrix[1].split(',')[0]);
+// This function now simply resets the user's manual zoom/pan back to (0,0) scale(1)
+// It does NOT initiate ongoing coordinate synchronization anymore.
+function resetViewToLeader() {
+    if (state.isLeader) return;
+
+    // Reset any arbitrary transforms and scroll position
+    els.songDisplay.style.transform = `scale(1)`;
+    els.songDisplay.style.transformOrigin = `0 0`;
+    els.viewerContainer.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+
+    // Hide the button after reset
+    els.followLeaderBtn.classList.add('hidden');
+
+    // We are now technically "Following" the leader's default view
+    state.isFollowing = true;
+    showToast('חזרת לתחילת השיר', '#27ae60');
+}
+
+// Show the "Follow Leader" button if user navigates away from default view
+function checkBreakSync() {
+    if (state.isLeader) return;
+    if (state.isFollowing) {
+        state.isFollowing = false;
+        els.followLeaderBtn.classList.remove('hidden');
     }
-    return 1;
+}
+
+// Wait until DOM is fully parsed to attach this specific button listener
+if (els.followLeaderBtn) els.followLeaderBtn.addEventListener('click', resetViewToLeader);
+
+// Trigger break sync if user scrolls at all
+els.viewerContainer.addEventListener('scroll', checkBreakSync);
+
+// Trigger break sync if user interacts (e.g., pinch zoom) via native visualViewport
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', checkBreakSync);
+    window.visualViewport.addEventListener('scroll', checkBreakSync);
+}
+
+
+// --- UI LOGIC ---
+
+// Drawer Handling
+els.hamburgerBtn.onclick = () => {
+    els.controlDrawer.classList.remove('hidden');
+    // Ensure viewport is locked while drawer is open
+    document.body.style.overflow = 'hidden';
 };
 
-// BROADCAST (Leader)
-const broadcastViewport = () => {
-    if (!state.isLeader) return;
-
-    const now = Date.now();
-    if (now - lastBroadcast < 50) return; // Throttle 20fps
-
-    const container = els.viewerContainer;
-    const content = els.songDisplay;
-    const scrollLeft = container.scrollLeft;
-    const scrollTop = container.scrollTop;
-
-    // Calculate Relative Scroll
-    // We normalize by the *current* scaled dimensions to get exact percentage
-    const scrollWidth = container.scrollWidth - container.clientWidth;
-    const scrollHeight = container.scrollHeight - container.clientHeight;
-
-    // Avoid division by zero
-    const relX = scrollWidth > 0 ? scrollLeft / scrollWidth : 0;
-    const relY = scrollHeight > 0 ? scrollTop / scrollHeight : 0;
-
-    set(refs.viewport, {
-        zoom: state.viewport.zoom,
-        relX,
-        relY,
-        timestamp: now,
-        userId: USER_ID
-    });
-
-    lastBroadcast = now;
+els.closeDrawerBtn.onclick = () => {
+    els.controlDrawer.classList.add('hidden');
+    document.body.style.overflow = '';
 };
 
-// APPLY (Follower)
-const applyViewport = (data) => {
-    if (state.isLeader || data.userId === USER_ID) return;
+// ... (other drawer buttons same) ...
 
-    isSyncing = true;
-
-    // 1. Apply Zoom
-    els.songDisplay.style.transform = `scale(${data.zoom})`;
-    els.songDisplay.style.width = 'fit-content';
-
-    // 2. Apply Scroll (Next Frame to ensure layout updated)
-    requestAnimationFrame(() => {
-        const container = els.viewerContainer;
-
-        const scrollWidth = container.scrollWidth - container.clientWidth;
-        const scrollHeight = container.scrollHeight - container.clientHeight;
-
-        container.scrollTo({
-            left: data.relX * scrollWidth,
-            top: data.relY * scrollHeight,
-            behavior: 'auto' // Instant jump for sync
-        });
-
-        isSyncing = false;
-    });
-};
-
-// --- TOUCH HANDLING (Pinch to Zoom) ---
-
-let initialDist = null;
-let initialZoom = 1;
-
-els.songDisplay.addEventListener('touchstart', (e) => {
-    if (e.touches.length === 2 && state.isLeader) {
-        initialDist = Math.hypot(
-            e.touches[0].clientX - e.touches[1].clientX,
-            e.touches[0].clientY - e.touches[1].clientY
-        );
-        initialZoom = state.viewport.zoom;
-        e.preventDefault();
-    }
-}, { passive: false });
-
-els.songDisplay.addEventListener('touchmove', (e) => {
-    if (e.touches.length === 2 && state.isLeader && initialDist) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-
-        const dist = Math.hypot(
-            e.touches[0].clientX - e.touches[1].clientX,
-            e.touches[0].clientY - e.touches[1].clientY
-        );
-        const scale = dist / initialDist;
-        const newZoom = Math.min(Math.max(0.5, initialZoom * scale), 4);
-
-        // Set origin to 0 0 for predictable scrolling
-        els.songDisplay.style.transformOrigin = '0 0';
-        els.songDisplay.style.transform = `scale(${newZoom})`;
-
-        // Update state
-        state.viewport.zoom = newZoom;
-        broadcastViewport();
-    }
-}, { passive: false });
-
-els.songDisplay.addEventListener('touchend', () => {
-    initialDist = null;
+// Close drawer when clicking buttons inside
+els.openMenuBtn.addEventListener('click', () => {
+    els.controlDrawer.classList.add('hidden');
+    els.songSelector.classList.remove('hidden');
 });
-
-// Scroll Listener
-els.viewerContainer.addEventListener('scroll', () => {
-    if (state.isLeader && !isSyncing) {
-        broadcastViewport();
-    }
-});
-
-
-// --- APP LOGIC ---
 
 // Toggle Leader
 els.leaderBtn.addEventListener('click', () => {
@@ -181,44 +174,80 @@ els.leaderBtn.addEventListener('click', () => {
     els.leaderBtn.innerHTML = state.isLeader ? '🎤 מנחה פעיל' : '🎤 הפוך למנחה';
 
     if (state.isLeader) {
-        // Force broadcast current state
-        broadcastViewport();
+        state.isFollowing = true;
+        els.followLeaderBtn.classList.add('hidden');
+        showToast('🌟 אתה כעת המנחה!', '#8b5cf6');
     }
+    els.controlDrawer.classList.add('hidden'); // Close drawer after selection
 });
 
-// Load Songs
-onValue(ref(db, 'songs'), (snap) => {
-    const data = snap.val();
-    if (data) {
-        state.songs = Object.values(data);
-        renderSongList();
-    }
-});
+function initFirebaseListeners() {
+    // Load Songs
+    onValue(ref(db, 'songs'), (snap) => {
+        const data = snap.val();
+        if (data) {
+            state.songs = Object.values(data);
+            showToast(`✅ נטענו ${state.songs.length} שירים`, '#27ae60');
+            renderSongList();
 
-// Sync Current Song
-onValue(refs.currentSong, (snap) => {
-    const id = snap.val();
-    if (id) loadSong(id);
-});
+            // If we were waiting for songs to load a specific song
+            if (state.pendingSongId) {
+                loadSong(state.pendingSongId);
+                state.pendingSongId = null;
+            }
+        } else {
+            showToast('⚠️ לא נמצאו שירים במאגר', '#f39c12');
+        }
+    }, (err) => {
+        showToast(`❌ שגיאת בסיס נתונים (שירים): ${err.message}`, '#e74c3c');
+    });
 
-// Sync Viewport
-onValue(refs.viewport, (snap) => {
-    const data = snap.val();
-    if (data) applyViewport(data);
-});
+    // Sync Current Song
+    onValue(refs.currentSong, (snap) => {
+        const id = snap.val();
+        showToast(`🎵 שיר נוכחי: ${id || 'אין'}`, '#8e44ad');
+        if (id) {
+            if (state.songs.length > 0) {
+                loadSong(id);
+            } else {
+                state.pendingSongId = id;
+                els.songTitle.innerText = "מחכה לרשימת השירים...";
+            }
+        } else {
+            els.songTitle.innerText = "בחרו שיר מהספריה";
+        }
+    }, (err) => {
+        showToast(`❌ שגיאת בסיס נתונים (סנכרון): ${err.message}`, '#e74c3c');
+    });
+}
+
 
 function loadSong(id) {
     const song = state.songs.find(s => s.id === id);
-    if (!song) return;
+    if (!song) {
+        state.pendingSongId = id;
+        els.songTitle.innerText = "מחפש שיר...";
+        return;
+    }
 
     state.currentSong = song;
     els.songTitle.innerText = song.title;
+
+    els.songImg.style.opacity = '0.5';
 
     const src = song.source.startsWith('http') ? song.source : `songs/${song.source.split('/').pop()}`;
     els.songImg.src = src;
     els.songImg.style.display = 'block';
 
-    // Reset view on new song
+    els.songImg.onload = () => {
+        els.songImg.style.opacity = '1';
+    };
+
+    els.songImg.onerror = () => {
+        showToast(`⚠️ שגיאה בטעינת תמונה: ${song.source.split('/').pop()}`, '#e67e22');
+        els.songImg.style.opacity = '1';
+    };
+
     state.viewport.zoom = 1;
     els.songDisplay.style.transform = 'scale(1)';
     els.viewerContainer.scrollTo(0, 0);
@@ -228,6 +257,7 @@ function renderSongList() {
     els.songList.innerHTML = state.songs.map(song => `
         <div class="song-item" onclick="selectSong('${song.id}')">
             <div class="song-title">${song.title}</div>
+            <div class="song-item-arrow">←</div>
         </div>
     `).join('');
 }
@@ -255,7 +285,7 @@ els.searchInput.addEventListener('input', (e) => {
 });
 
 // --- UPDATE CHECKER ---
-const CURRENT_VERSION = "5.5.0";
+const CURRENT_VERSION = "4.54.1";
 const VERSION_URL = "version.json";
 
 function checkForUpdates() {
