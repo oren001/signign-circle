@@ -135,12 +135,14 @@ const applyViewport = (data) => {
     });
 };
 
-// --- TOUCH HANDLING (Pinch to Zoom) ---
+// --- TOUCH HANDLING (Pinch to Zoom & Double Tap) ---
 
 let initialDist = null;
 let initialZoom = 1;
+let lastTapTime = 0;
 
 els.songDisplay.addEventListener('touchstart', (e) => {
+    // 1. Pinch to Zoom Init
     if (e.touches.length === 2 && state.isLeader) {
         initialDist = Math.hypot(
             e.touches[0].clientX - e.touches[1].clientX,
@@ -148,6 +150,21 @@ els.songDisplay.addEventListener('touchstart', (e) => {
         );
         initialZoom = state.viewport.zoom;
         e.preventDefault();
+    }
+
+    // 2. Double Tap Zoom
+    if (e.touches.length === 1 && state.isLeader) {
+        const currentTime = Date.now();
+        const tapDelay = currentTime - lastTapTime;
+        if (tapDelay < 300 && tapDelay > 0) {
+            // Double tap detected
+            const newZoom = state.viewport.zoom === 1 ? 2.5 : 1;
+            state.viewport.zoom = newZoom;
+            els.songDisplay.style.transform = `scale(${newZoom})`;
+            broadcastViewport();
+            e.preventDefault();
+        }
+        lastTapTime = currentTime;
     }
 }, { passive: false });
 
@@ -163,17 +180,15 @@ els.songDisplay.addEventListener('touchmove', (e) => {
         const scale = dist / initialDist;
         const newZoom = Math.min(Math.max(0.5, initialZoom * scale), 4);
 
-        // Set origin to 0 0 for predictable scrolling
         els.songDisplay.style.transformOrigin = '0 0';
         els.songDisplay.style.transform = `scale(${newZoom})`;
 
-        // Update state
         state.viewport.zoom = newZoom;
         broadcastViewport();
     }
 }, { passive: false });
 
-els.songDisplay.addEventListener('touchend', () => {
+els.songDisplay.addEventListener('touchend', (e) => {
     initialDist = null;
 });
 
@@ -188,8 +203,18 @@ els.viewerContainer.addEventListener('scroll', () => {
 // --- UI LOGIC ---
 
 // Drawer Handling
-els.hamburgerBtn.onclick = () => els.controlDrawer.classList.remove('hidden');
-els.closeDrawerBtn.onclick = () => els.controlDrawer.classList.add('hidden');
+els.hamburgerBtn.onclick = () => {
+    els.controlDrawer.classList.remove('hidden');
+    // Ensure viewport is locked while drawer is open
+    document.body.style.overflow = 'hidden';
+};
+
+els.closeDrawerBtn.onclick = () => {
+    els.controlDrawer.classList.add('hidden');
+    document.body.style.overflow = '';
+};
+
+// ... (other drawer buttons same) ...
 
 // Close drawer when clicking buttons inside
 els.openMenuBtn.addEventListener('click', () => {
@@ -317,7 +342,7 @@ els.searchInput.addEventListener('input', (e) => {
 });
 
 // --- UPDATE CHECKER ---
-const CURRENT_VERSION = "4.52.2";
+const CURRENT_VERSION = "4.52.3";
 const VERSION_URL = "version.json";
 
 function checkForUpdates() {
