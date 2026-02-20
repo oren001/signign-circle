@@ -174,6 +174,20 @@ els.viewerContainer.addEventListener('scroll', () => {
 
 // --- APP LOGIC ---
 
+// Global Error Handler for better debugging on mobile
+window.onerror = (msg, url, line) => {
+    showToast(`❌ שגיאה: ${msg} (שורה ${line})`, '#e74c3c');
+};
+
+function showToast(text, bg = '#333') {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.style.background = bg;
+    toast.innerText = text;
+    document.getElementById('toastContainer').appendChild(toast);
+    setTimeout(() => toast.remove(), 5000);
+}
+
 // Toggle Leader
 els.leaderBtn.addEventListener('click', () => {
     state.isLeader = !state.isLeader;
@@ -181,7 +195,6 @@ els.leaderBtn.addEventListener('click', () => {
     els.leaderBtn.innerHTML = state.isLeader ? '🎤 מנחה פעיל' : '🎤 הפוך למנחה';
 
     if (state.isLeader) {
-        // Force broadcast current state
         broadcastViewport();
     }
 });
@@ -192,13 +205,25 @@ onValue(ref(db, 'songs'), (snap) => {
     if (data) {
         state.songs = Object.values(data);
         renderSongList();
+
+        // If we were waiting for songs to load a specific song
+        if (state.pendingSongId) {
+            loadSong(state.pendingSongId);
+            state.pendingSongId = null;
+        }
     }
 });
 
 // Sync Current Song
 onValue(refs.currentSong, (snap) => {
     const id = snap.val();
-    if (id) loadSong(id);
+    if (id) {
+        if (state.songs.length > 0) {
+            loadSong(id);
+        } else {
+            state.pendingSongId = id;
+        }
+    }
 });
 
 // Sync Viewport
@@ -209,12 +234,15 @@ onValue(refs.viewport, (snap) => {
 
 function loadSong(id) {
     const song = state.songs.find(s => s.id === id);
-    if (!song) return;
+    if (!song) {
+        state.pendingSongId = id;
+        els.songTitle.innerText = "מחפש שיר...";
+        return;
+    }
 
     state.currentSong = song;
     els.songTitle.innerText = song.title;
 
-    // Show loading state if needed
     els.songImg.style.opacity = '0.5';
 
     const src = song.source.startsWith('http') ? song.source : `songs/${song.source.split('/').pop()}`;
@@ -225,7 +253,11 @@ function loadSong(id) {
         els.songImg.style.opacity = '1';
     };
 
-    // Reset view on new song
+    els.songImg.onerror = () => {
+        showToast(`⚠️ שגיאה בטעינת תמונה: ${song.source.split('/').pop()}`, '#e67e22');
+        els.songImg.style.opacity = '1';
+    };
+
     state.viewport.zoom = 1;
     els.songDisplay.style.transform = 'scale(1)';
     els.viewerContainer.scrollTo(0, 0);
