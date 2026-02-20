@@ -136,7 +136,54 @@ const applyViewport = (data) => {
 };
 
 // --- TOUCH HANDLING (Pinch to Zoom) ---
-// ... (touch handlers remain same, ensure they call broadcastViewport) ...
+
+let initialDist = null;
+let initialZoom = 1;
+
+els.songDisplay.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 2 && state.isLeader) {
+        initialDist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+        );
+        initialZoom = state.viewport.zoom;
+        e.preventDefault();
+    }
+}, { passive: false });
+
+els.songDisplay.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 2 && state.isLeader && initialDist) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        const dist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+        );
+        const scale = dist / initialDist;
+        const newZoom = Math.min(Math.max(0.5, initialZoom * scale), 4);
+
+        // Set origin to 0 0 for predictable scrolling
+        els.songDisplay.style.transformOrigin = '0 0';
+        els.songDisplay.style.transform = `scale(${newZoom})`;
+
+        // Update state
+        state.viewport.zoom = newZoom;
+        broadcastViewport();
+    }
+}, { passive: false });
+
+els.songDisplay.addEventListener('touchend', () => {
+    initialDist = null;
+});
+
+// Scroll Listener
+els.viewerContainer.addEventListener('scroll', () => {
+    if (state.isLeader && !isSyncing) {
+        broadcastViewport();
+    }
+});
+
 
 // --- UI LOGIC ---
 
@@ -270,7 +317,7 @@ els.searchInput.addEventListener('input', (e) => {
 });
 
 // --- UPDATE CHECKER ---
-const CURRENT_VERSION = "4.52.1";
+const CURRENT_VERSION = "4.52.2";
 const VERSION_URL = "version.json";
 
 function checkForUpdates() {
