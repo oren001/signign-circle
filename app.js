@@ -270,7 +270,7 @@ els.searchInput.addEventListener('input', (e) => {
 });
 
 // --- UPDATE CHECKER ---
-const CURRENT_VERSION = "4.52.0";
+const CURRENT_VERSION = "4.52.1";
 const VERSION_URL = "version.json";
 
 function checkForUpdates() {
