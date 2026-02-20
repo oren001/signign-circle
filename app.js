@@ -3,14 +3,12 @@
 // Top-level imports would throw a SyntaxError. We use dynamic imports instead.
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistrations().then(function (registrations) {
-        let hasUnregistered = false;
         for (let registration of registrations) {
-            registration.unregister();
-            hasUnregistered = true;
-            console.log('Unregistered old ServiceWorker');
-        }
-        if (hasUnregistered && !window.location.href.includes('reloaded')) {
-            window.location.href = window.location.href + (window.location.href.includes('?') ? '&' : '?') + 'reloaded=true';
+            registration.unregister().then(boolean => {
+                if (boolean) {
+                    console.log('Unregistered old ServiceWorker successfully');
+                }
+            });
         }
     });
 }
