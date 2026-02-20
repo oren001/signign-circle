@@ -1,5 +1,19 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+// --- CRITICAL CACHE BUSTER ---
+// If the user's browser has an old service worker caching index.html, it may load this file as a classic script.
+// Top-level imports would throw a SyntaxError. We use dynamic imports instead.
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function (registrations) {
+        let hasUnregistered = false;
+        for (let registration of registrations) {
+            registration.unregister();
+            hasUnregistered = true;
+            console.log('Unregistered old ServiceWorker');
+        }
+        if (hasUnregistered && !window.location.href.includes('reloaded')) {
+            window.location.href = window.location.href + (window.location.href.includes('?') ? '&' : '?') + 'reloaded=true';
+        }
+    });
+}
 
 const firebaseConfig = {
     apiKey: "AIzaSyDZPAln8_cWGZ54ElCce7_rGensf5P51Aw",
@@ -11,10 +25,29 @@ const firebaseConfig = {
     appId: "1:154350722932:web:86eaabc6c734c755625621"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
 const USER_ID = localStorage.getItem('userId') || `user-${Date.now()}`;
 localStorage.setItem('userId', USER_ID);
+
+let db, ref, onValue, set, refs;
+
+Promise.all([
+    import("https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"),
+    import("https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js")
+]).then(([firebaseApp, firebaseDb]) => {
+    const app = firebaseApp.initializeApp(firebaseConfig);
+    db = firebaseDb.getDatabase(app);
+    ref = firebaseDb.ref;
+    onValue = firebaseDb.onValue;
+    set = firebaseDb.set;
+
+    refs = {
+        currentSong: ref(db, 'currentSongId')
+    };
+
+    initFirebaseListeners();
+}).catch(err => {
+    console.error("Firebase load error", err);
+});
 
 // State
 let state = {
@@ -50,9 +83,7 @@ const els = {
 };
 
 // Refs
-const refs = {
-    currentSong: ref(db, 'currentSongId')
-};
+// (Moved inside dynamic import)
 
 // --- OVERVIEW: SONG SYNC ONLY (v4.54.0) ---
 // Viewport synchronization (zoom/pan) has been entirely removed. 
@@ -150,43 +181,45 @@ els.leaderBtn.addEventListener('click', () => {
     els.controlDrawer.classList.add('hidden'); // Close drawer after selection
 });
 
-// Load Songs
-onValue(ref(db, 'songs'), (snap) => {
-    const data = snap.val();
-    if (data) {
-        state.songs = Object.values(data);
-        showToast(`✅ נטענו ${state.songs.length} שירים`, '#27ae60');
-        renderSongList();
+function initFirebaseListeners() {
+    // Load Songs
+    onValue(ref(db, 'songs'), (snap) => {
+        const data = snap.val();
+        if (data) {
+            state.songs = Object.values(data);
+            showToast(`✅ נטענו ${state.songs.length} שירים`, '#27ae60');
+            renderSongList();
 
-        // If we were waiting for songs to load a specific song
-        if (state.pendingSongId) {
-            loadSong(state.pendingSongId);
-            state.pendingSongId = null;
-        }
-    } else {
-        showToast('⚠️ לא נמצאו שירים במאגר', '#f39c12');
-    }
-}, (err) => {
-    showToast(`❌ שגיאת בסיס נתונים (שירים): ${err.message}`, '#e74c3c');
-});
-
-// Sync Current Song
-onValue(refs.currentSong, (snap) => {
-    const id = snap.val();
-    showToast(`🎵 שיר נוכחי: ${id || 'אין'}`, '#8e44ad');
-    if (id) {
-        if (state.songs.length > 0) {
-            loadSong(id);
+            // If we were waiting for songs to load a specific song
+            if (state.pendingSongId) {
+                loadSong(state.pendingSongId);
+                state.pendingSongId = null;
+            }
         } else {
-            state.pendingSongId = id;
-            els.songTitle.innerText = "מחכה לרשימת השירים...";
+            showToast('⚠️ לא נמצאו שירים במאגר', '#f39c12');
         }
-    } else {
-        els.songTitle.innerText = "בחרו שיר מהספריה";
-    }
-}, (err) => {
-    showToast(`❌ שגיאת בסיס נתונים (סנכרון): ${err.message}`, '#e74c3c');
-});
+    }, (err) => {
+        showToast(`❌ שגיאת בסיס נתונים (שירים): ${err.message}`, '#e74c3c');
+    });
+
+    // Sync Current Song
+    onValue(refs.currentSong, (snap) => {
+        const id = snap.val();
+        showToast(`🎵 שיר נוכחי: ${id || 'אין'}`, '#8e44ad');
+        if (id) {
+            if (state.songs.length > 0) {
+                loadSong(id);
+            } else {
+                state.pendingSongId = id;
+                els.songTitle.innerText = "מחכה לרשימת השירים...";
+            }
+        } else {
+            els.songTitle.innerText = "בחרו שיר מהספריה";
+        }
+    }, (err) => {
+        showToast(`❌ שגיאת בסיס נתונים (סנכרון): ${err.message}`, '#e74c3c');
+    });
+}
 
 
 function loadSong(id) {
@@ -252,7 +285,7 @@ els.searchInput.addEventListener('input', (e) => {
 });
 
 // --- UPDATE CHECKER ---
-const CURRENT_VERSION = "4.53.2";
+const CURRENT_VERSION = "4.54.1";
 const VERSION_URL = "version.json";
 
 function checkForUpdates() {
