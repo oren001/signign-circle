@@ -45,7 +45,40 @@ const els = {
     closePanelBtn: document.getElementById('closePanelBtn')
 };
 
-// ... (previous refs and sync engine helpers remain same) ...
+// Refs
+const refs = {
+    currentSong: ref(db, 'currentSongId'),
+    viewport: ref(db, 'viewport')
+};
+
+// --- SYNC ENGINE (Stream Leader View) ---
+
+let lastBroadcast = 0;
+let isSyncing = false;
+
+// Helper: Parse Matrix
+const getScaleFromMatrix = (transform) => {
+    if (transform === 'none' || !transform) return 1;
+    const matrix = transform.match(/matrix\(([^)]+)\)/);
+    if (matrix) {
+        return parseFloat(matrix[1].split(',')[0]);
+    }
+    return 1;
+};
+
+// Global Error Handler for better debugging on mobile
+window.onerror = (msg, url, line) => {
+    showToast(`❌ שגיאה: ${msg} (שורה ${line})`, '#e74c3c');
+};
+
+function showToast(text, bg = '#333') {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.style.background = bg;
+    toast.innerText = text;
+    document.getElementById('toastContainer').appendChild(toast);
+    setTimeout(() => toast.remove(), 5000);
+}
 
 // BROADCAST (Leader)
 const broadcastViewport = () => {
