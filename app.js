@@ -141,19 +141,22 @@ let initialDist = null;
 let initialZoom = 1;
 let lastTapTime = 0;
 
+// Need non-passive listeners to call preventDefault
 els.songDisplay.addEventListener('touchstart', (e) => {
+    if (!state.isLeader) return;
+
     // 1. Pinch to Zoom Init
-    if (e.touches.length === 2 && state.isLeader) {
+    if (e.touches.length === 2) {
         initialDist = Math.hypot(
             e.touches[0].clientX - e.touches[1].clientX,
             e.touches[0].clientY - e.touches[1].clientY
         );
         initialZoom = state.viewport.zoom;
-        e.preventDefault();
+        e.preventDefault(); // Stop native Pinch-to-zoom
     }
 
     // 2. Double Tap Zoom
-    if (e.touches.length === 1 && state.isLeader) {
+    if (e.touches.length === 1) {
         const currentTime = Date.now();
         const tapDelay = currentTime - lastTapTime;
         if (tapDelay < 300 && tapDelay > 0) {
@@ -162,16 +165,17 @@ els.songDisplay.addEventListener('touchstart', (e) => {
             state.viewport.zoom = newZoom;
             els.songDisplay.style.transform = `scale(${newZoom})`;
             broadcastViewport();
-            e.preventDefault();
+            e.preventDefault(); // Stop native double-tap zoom
         }
         lastTapTime = currentTime;
     }
 }, { passive: false });
 
 els.songDisplay.addEventListener('touchmove', (e) => {
-    if (e.touches.length === 2 && state.isLeader && initialDist) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
+    if (!state.isLeader) return;
+
+    if (e.touches.length === 2 && initialDist) {
+        e.preventDefault(); // Stop native scroll/zoom
 
         const dist = Math.hypot(
             e.touches[0].clientX - e.touches[1].clientX,
@@ -189,7 +193,9 @@ els.songDisplay.addEventListener('touchmove', (e) => {
 }, { passive: false });
 
 els.songDisplay.addEventListener('touchend', (e) => {
-    initialDist = null;
+    if (e.touches.length < 2) {
+        initialDist = null;
+    }
 });
 
 // Scroll Listener
@@ -342,7 +348,7 @@ els.searchInput.addEventListener('input', (e) => {
 });
 
 // --- UPDATE CHECKER ---
-const CURRENT_VERSION = "4.52.3";
+const CURRENT_VERSION = "4.52.4";
 const VERSION_URL = "version.json";
 
 function checkForUpdates() {
