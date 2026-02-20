@@ -51,22 +51,12 @@ const els = {
 
 // Refs
 const refs = {
-    currentSong: ref(db, 'currentSongId'),
-    viewport: ref(db, 'viewport')
+    currentSong: ref(db, 'currentSongId')
 };
 
-// --- SYNC ENGINE (Focal-Point & Percentage Based v3.3) ---
-
-let lastBroadcast = 0;
-let isSyncing = false;
-let NATURAL_WIDTH = null;
-let NATURAL_HEIGHT = null;
-
-// Initialize natural dimensions when an image loads
-function initializeNaturalDimensions() {
-    NATURAL_WIDTH = els.songDisplay.offsetWidth;
-    NATURAL_HEIGHT = els.songDisplay.offsetHeight;
-}
+// --- OVERVIEW: SONG SYNC ONLY (v4.54.0) ---
+// Viewport synchronization (zoom/pan) has been entirely removed. 
+// Users can navigate freely natively. Only the current song selection is synchronized.
 
 // Global Error Handler for better debugging on mobile
 window.onerror = (msg, url, line) => {
@@ -82,136 +72,46 @@ function showToast(text, bg = '#333') {
     setTimeout(() => toast.remove(), 5000);
 }
 
-// Helper: Get visual parameters
-function getViewportData() {
-    const vv = window.visualViewport;
-    const container = els.viewerContainer;
+// --- FOLLOW LEADER / RESET VIEW ---
 
-    // We capture both visual viewport (pinch/pan) and container scroll (standard scroll)
-    return {
-        zoom: vv ? vv.scale : 1,
-        vvLeft: vv ? vv.offsetLeft : 0,
-        vvTop: vv ? vv.offsetTop : 0,
-        scrollLeft: container.scrollLeft,
-        scrollTop: container.scrollTop
-    };
-}
-
-// BROADCAST (Leader)
-const broadcastViewport = () => {
-    if (!state.isLeader) return;
-
-    const now = Date.now();
-    if (now - lastBroadcast < 33) return; // ~30fps for smoother sync
-
-    const data = getViewportData();
-
-    set(refs.viewport, {
-        ...data,
-        timestamp: now,
-        userId: USER_ID
-    });
-
-    state.viewport.zoom = data.zoom;
-    lastBroadcast = now;
-};
-
-// APPLY (Follower)
-const applyViewport = (data, force = false) => {
-    state.lastViewportData = data;
-    if (state.isLeader || data.userId === USER_ID) return;
-    if (!state.isFollowing && !force) return;
-
-    isSyncing = true;
-
-    // Apply Scroll
-    requestAnimationFrame(() => {
-        const container = els.viewerContainer;
-
-        // We can only reliably apply standard scroll remotely. 
-        // Native browser pinch zoom (visualViewport.scale) is mostly read-only for JS.
-        // We will attempt to emulate the look via transform if zoom > 1
-
-        if (data.zoom > 1) {
-            els.songDisplay.style.transformOrigin = `${data.vvLeft}px ${data.vvTop}px`;
-            els.songDisplay.style.transform = `scale(${data.zoom})`;
-        } else {
-            els.songDisplay.style.transformOrigin = `0 0`;
-            els.songDisplay.style.transform = `scale(1)`;
-        }
-
-        container.scrollTo({
-            left: data.scrollLeft,
-            top: data.scrollTop,
-            behavior: 'auto'
-        });
-
-        isSyncing = false;
-    });
-};
-
-// --- SYNC STATE MANAGEMENT & FOLLOW BUTTON ---
-
-function breakSync() {
-    if (state.isLeader || !state.isFollowing) return;
-    state.isFollowing = false;
-    els.followLeaderBtn.classList.remove('hidden');
-    showToast('הפסקת לעקוב. מנווט עצמאית.', '#f39c12');
-}
-
-function resumeSync() {
+// This function now simply resets the user's manual zoom/pan back to (0,0) scale(1)
+// It does NOT initiate ongoing coordinate synchronization anymore.
+function resetViewToLeader() {
     if (state.isLeader) return;
-    state.isFollowing = true;
+
+    // Reset any arbitrary transforms and scroll position
+    els.songDisplay.style.transform = `scale(1)`;
+    els.songDisplay.style.transformOrigin = `0 0`;
+    els.viewerContainer.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
+
+    // Hide the button after reset
     els.followLeaderBtn.classList.add('hidden');
-    if (state.lastViewportData) {
-        applyViewport(state.lastViewportData, true);
-    }
-    showToast('חזרת לעקוב אחרי המנחה', '#27ae60');
+
+    // We are now technically "Following" the leader's default view
+    state.isFollowing = true;
+    showToast('חזרת לתחילת השיר', '#27ae60');
 }
 
-// Attach listener dynamically since els.followLeaderBtn might be null during initialization before HTML is updated
-if (els.followLeaderBtn) els.followLeaderBtn.addEventListener('click', resumeSync);
+// Show the "Follow Leader" button if user navigates away from default view
+function checkBreakSync() {
+    if (state.isLeader) return;
+    if (state.isFollowing) {
+        state.isFollowing = false;
+        els.followLeaderBtn.classList.remove('hidden');
+    }
+}
 
-// --- TOUCH HANDLING (Universal Navigation + Focal-Point Zoom) ---
+// Wait until DOM is fully parsed to attach this specific button listener
+if (els.followLeaderBtn) els.followLeaderBtn.addEventListener('click', resetViewToLeader);
 
-// Let the browser handle zooming and panning naturally without us interfering.
-// We just observe changes via VisualViewport and Scroll events.
+// Trigger break sync if user scrolls at all
+els.viewerContainer.addEventListener('scroll', checkBreakSync);
 
+// Trigger break sync if user interacts (e.g., pinch zoom) via native visualViewport
 if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', () => {
-        if (!state.isLeader && !isSyncing) breakSync();
-        if (state.isLeader) broadcastViewport();
-    });
-
-    window.visualViewport.addEventListener('scroll', () => {
-        if (!state.isLeader && !isSyncing) breakSync();
-        if (state.isLeader) broadcastViewport();
-    });
+    window.visualViewport.addEventListener('resize', checkBreakSync);
+    window.visualViewport.addEventListener('scroll', checkBreakSync);
 }
-
-// Observe standard scrolling
-els.viewerContainer.addEventListener('scroll', () => {
-    if (!state.isLeader && !isSyncing) {
-        breakSync();
-    }
-    if (state.isLeader && !isSyncing) {
-        broadcastViewport();
-    }
-});
-
-// Double tap is usually handled natively by browsers, but we can ensure broadcasts happen
-els.songDisplay.addEventListener('touchstart', (e) => {
-    if (!state.isLeader && e.touches.length > 0) breakSync();
-
-    // We do NOT call preventDefault here, allowing native zooming.
-    if (e.touches.length === 1) {
-        const currentTime = Date.now();
-        if (currentTime - lastTapTime > 0 && currentTime - lastTapTime < 300) {
-            setTimeout(() => { if (state.isLeader) broadcastViewport(); }, 350);
-        }
-        lastTapTime = currentTime;
-    }
-}, { passive: true });
 
 
 // --- UI LOGIC ---
@@ -245,7 +145,6 @@ els.leaderBtn.addEventListener('click', () => {
     if (state.isLeader) {
         state.isFollowing = true;
         els.followLeaderBtn.classList.add('hidden');
-        broadcastViewport();
         showToast('🌟 אתה כעת המנחה!', '#8b5cf6');
     }
     els.controlDrawer.classList.add('hidden'); // Close drawer after selection
@@ -289,11 +188,6 @@ onValue(refs.currentSong, (snap) => {
     showToast(`❌ שגיאת בסיס נתונים (סנכרון): ${err.message}`, '#e74c3c');
 });
 
-// Sync Viewport
-onValue(refs.viewport, (snap) => {
-    const data = snap.val();
-    if (data) applyViewport(data);
-});
 
 function loadSong(id) {
     const song = state.songs.find(s => s.id === id);

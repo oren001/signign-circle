@@ -168,8 +168,7 @@ body {
     height: 100%;
     overflow: auto;
     position: relative;
-    /* Allow native scroll, but block double-tap to zoom from browser */
-    touch-action: pan-x pan-y;
+    /* Fully Native Scroll and Zoom */
     scrollbar-width: none;
     -ms-overflow-style: none;
     -webkit-overflow-scrolling: touch;
