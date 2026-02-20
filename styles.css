@@ -152,6 +152,7 @@ body {
     height: 100vh;
     padding-top: var(--header-h);
     position: relative;
+    overflow: hidden;
 }
 
 .song-viewer {
@@ -166,6 +167,9 @@ body {
     width: 100%;
     height: 100%;
     overflow: auto;
+    position: relative;
+    /* Allow native scroll, but block double-tap to zoom from browser */
+    touch-action: pan-x pan-y;
     scrollbar-width: none;
     -ms-overflow-style: none;
     -webkit-overflow-scrolling: touch;
@@ -177,9 +181,14 @@ body {
 
 .song-display {
     width: fit-content;
+    height: fit-content;
     min-width: 100%;
-    transform-origin: 0 0;
+    min-height: 100%;
+    transform-origin: top left;
     will-change: transform;
+    /* Prevent text selection during drag */
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .song-display img {
@@ -403,4 +412,29 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+.follow-leader-btn {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: white;
+    padding: 12px 24px;
+    border-radius: var(--radius-full);
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 1rem;
+    box-shadow: 0 4px 15px var(--accent-glow);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    z-index: 1000;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.follow-leader-btn.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 20px);
 }
