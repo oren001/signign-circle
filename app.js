@@ -71,15 +71,16 @@ const els = {
     controlDrawer: document.getElementById('controlDrawer'),
     closeDrawerBtn: document.getElementById('closeDrawerBtn'),
     leaderBtn: document.getElementById('leaderBtn'),
-    clearVotesBtn: document.getElementById('clearVotesBtn'), // New button
+    clearVotesBtn: document.getElementById('clearVotesBtn'),
     openMenuBtn: document.getElementById('openMenuBtn'),
     songSelector: document.getElementById('songSelector'),
     closePanelBtn: document.getElementById('closePanelBtn'),
     searchInput: document.getElementById('searchInput'),
-    sortSelect: document.getElementById('sortSelect'), // New select
+    sortSelect: document.getElementById('sortSelect'),
     songList: document.getElementById('songListContainer'),
     viewerCount: document.getElementById('viewerCount'),
-    songImg: document.getElementById('currentSongImg'),
+    pdfCanvas: document.getElementById('pdfCanvas'),
+    pdfLoader: document.getElementById('pdfLoader'),
     songTitle: document.getElementById('currentSongTitle'),
     viewerContainer: document.getElementById('viewerContainer'),
     songDisplay: document.getElementById('songDisplay'),
@@ -97,6 +98,70 @@ let currentSearchQuery = ''; // Holds active search term
 
 // Wakelock State
 let wakeLock = null;
+
+// PDF State
+let pdfDoc = null;
+let pdfRendering = false;
+let pdfCurrentPage = null;
+
+// Load PDF via PDF.js
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+
+pdfjsLib.getDocument('songs.pdf').promise.then(pdf => {
+    pdfDoc = pdf;
+    showToast(`✅ PDF נטען (${pdf.numPages} דפים)`, '#27ae60');
+}).catch(err => {
+    showToast('❌ שגיאה בטעינת PDF: ' + err.message, '#e74c3c');
+    console.error('PDF load error:', err);
+});
+
+// Get the book page number from a song entry
+function getPageNumber(song) {
+    // book-page-79 → 79
+    const match = song.id.match(/^book-page-(\d+)$/);
+    if (match) return parseInt(match[1], 10);
+    return null; // extracted-p* or other types
+}
+
+// Render a PDF page to the canvas
+async function renderPdfPage(pageNum) {
+    if (!pdfDoc) {
+        showToast('⏳ PDF עדיין בטעינה...', '#f39c12');
+        return;
+    }
+    if (pdfRendering) return;
+    pdfRendering = true;
+    pdfCurrentPage = pageNum;
+
+    els.pdfCanvas.style.display = 'none';
+    els.pdfLoader.style.display = 'block';
+
+    try {
+        const page = await pdfDoc.getPage(pageNum);
+        const containerWidth = els.viewerContainer.clientWidth || 400;
+        const viewport = page.getViewport({ scale: 1 });
+        const scale = containerWidth / viewport.width;
+        const scaledViewport = page.getViewport({ scale });
+
+        els.pdfCanvas.width = scaledViewport.width;
+        els.pdfCanvas.height = scaledViewport.height;
+
+        await page.render({
+            canvasContext: els.pdfCanvas.getContext('2d'),
+            viewport: scaledViewport
+        }).promise;
+
+        els.pdfLoader.style.display = 'none';
+        els.pdfCanvas.style.display = 'block';
+        requestWakeLock();
+    } catch (err) {
+        showToast(`⚠️ שגיאה בטעינת דף ${pageNum}: ${err.message}`, '#e67e22');
+        els.pdfLoader.style.display = 'none';
+    } finally {
+        pdfRendering = false;
+    }
+}
 
 // Refs
 // (Moved inside dynamic import)
@@ -309,22 +374,17 @@ function loadSong(id) {
     els.songTitle.innerHTML = `${song.title} <span style="font-size:0.6em; opacity:0.5; font-weight:normal;">[${song.id}]</span>`;
     if (els.activeVoteBtn) els.activeVoteBtn.classList.remove('hidden');
 
-    els.songImg.style.opacity = '0.5';
+    const pageNum = getPageNumber(song);
 
-    const src = song.source.startsWith('http') ? song.source : `songs/${song.source.split('/').pop()}`;
-    els.songImg.src = src;
-    els.songImg.style.display = 'block';
-
-    els.songImg.onload = () => {
-        els.songImg.style.opacity = '1';
-        // Request Wake Lock once a song is actively being viewed
-        requestWakeLock();
-    };
-
-    els.songImg.onerror = () => {
-        showToast(`⚠️ שגיאה בטעינת תמונה: ${song.source.split('/').pop()}`, '#e67e22');
-        els.songImg.style.opacity = '1';
-    };
+    if (pageNum !== null) {
+        // Render from PDF
+        renderPdfPage(pageNum);
+    } else {
+        // extracted-p* songs: no page in main PDF
+        els.pdfCanvas.style.display = 'none';
+        els.pdfLoader.style.display = 'block';
+        els.pdfLoader.innerHTML = `📄 "${song.title}"<br><small style="opacity:0.5;">שיר זה אינו בספר הראשי</small>`;
+    }
 
     state.viewport.zoom = 1;
     els.songDisplay.style.transform = 'scale(1)';
