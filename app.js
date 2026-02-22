@@ -346,7 +346,7 @@ function loadSong(id) {
         renderPdfPage(pageNum);
     } else {
         // extracted-p* songs not in the main PDF
-        els.pdfCanvas.style.display = 'none';
+        els.pdfViewer.style.display = 'none';
         els.pdfLoader.style.display = 'block';
         els.pdfLoader.innerHTML = `📄 "${song.title}"<br><small style="opacity:0.5;">שיר זה אינו בספר הראשי</small>`;
     }
