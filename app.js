@@ -70,18 +70,28 @@ const els = {
     controlDrawer: document.getElementById('controlDrawer'),
     closeDrawerBtn: document.getElementById('closeDrawerBtn'),
     leaderBtn: document.getElementById('leaderBtn'),
-    songImg: document.getElementById('currentSongImg'),
-    songDisplay: document.getElementById('songDisplay'),
-    viewerContainer: document.getElementById('viewerContainer'),
-    songTitle: document.getElementById('currentSongTitle'),
-    songSelector: document.getElementById('songSelector'),
-    songList: document.getElementById('songListContainer'),
-    searchInput: document.getElementById('searchInput'),
+    clearVotesBtn: document.getElementById('clearVotesBtn'), // New button
     openMenuBtn: document.getElementById('openMenuBtn'),
+    songSelector: document.getElementById('songSelector'),
     closePanelBtn: document.getElementById('closePanelBtn'),
-    followLeaderBtn: document.getElementById('followLeaderBtn'),
-    clearVotesBtn: document.getElementById('clearVotesBtn')
+    searchInput: document.getElementById('searchInput'),
+    sortSelect: document.getElementById('sortSelect'), // New select
+    songList: document.getElementById('songListContainer'),
+    viewerCount: document.getElementById('viewerCount'),
+    songImg: document.getElementById('currentSongImg'),
+    songTitle: document.getElementById('currentSongTitle'),
+    viewerContainer: document.getElementById('viewerContainer'),
+    songDisplay: document.getElementById('songDisplay'),
+    toastContainer: document.getElementById('toastContainer'),
+    followLeaderBtn: document.getElementById('followLeaderBtn')
 };
+
+// Lazy Loading State
+let listObserver = null;
+let currentRenderedCount = 0;
+const BATCH_SIZE = 50;
+let currentSortedSongs = []; // Holds the active sorted array 
+let currentSearchQuery = ''; // Holds active search term
 
 // Refs
 // (Moved inside dynamic import)
@@ -277,40 +287,126 @@ function loadSong(id) {
     els.viewerContainer.scrollTo(0, 0);
 }
 
-function renderSongList() {
-    let html = '';
+function getSortValue(song, type) {
+    const rawTitle = song.title || "תתתת";
+    if (type === 'artist') {
+        const parts = rawTitle.split('/');
+        // If there is an artist defined after a slash, sort by it. Otherwise, use title.
+        return parts.length > 1 ? parts[1].trim() : parts[0].trim();
+    }
+    // Default to Title extraction
+    return rawTitle.split('/')[0].trim();
+}
 
-    // Create a sorted copy of songs based on vote count
-    const sortedSongs = [...state.songs].sort((a, b) => {
-        const votesA = state.votes[a.id] || 0;
-        const votesB = state.votes[b.id] || 0;
+function renderNextBatch() {
+    const fragment = document.createDocumentFragment();
+    const start = currentRenderedCount;
+    const end = Math.min(start + BATCH_SIZE, currentSortedSongs.length);
 
-        // Sort by votes descending
-        if (votesB !== votesA) {
-            return votesB - votesA;
-        }
+    // Simple text-node escaping helper to safely inject HTML
+    const escapeHtml = (unsafe) => {
+        return unsafe
+            .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;").replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    };
 
-        // Secondary sort: alphabetically by title
-        // Fallback to a string that sorts last in Hebrew ("תתתת")
-        const titleA = a.title || "תתתת";
-        const titleB = b.title || "תתתת";
-        return titleA.localeCompare(titleB);
-    });
-
-    sortedSongs.forEach(song => {
+    for (let i = start; i < end; i++) {
+        const song = currentSortedSongs[i];
         const votes = state.votes[song.id] || 0;
 
-        html += `
-        <div class="song-item">
-            <div class="song-title" onclick="selectSong('${song.id}')">${song.title || 'ללא שם'}</div>
+        const rawTitle = song.title || 'ללא שם';
+        let displayTitle = escapeHtml(rawTitle);
+
+        // Inject Highlight spans if there is a search query
+        if (currentSearchQuery.length > 0) {
+            const lowerTitle = rawTitle.toLowerCase();
+            const startIndex = lowerTitle.indexOf(currentSearchQuery);
+            if (startIndex !== -1) {
+                const matchText = rawTitle.substring(startIndex, startIndex + currentSearchQuery.length);
+                const before = rawTitle.substring(0, startIndex);
+                const after = rawTitle.substring(startIndex + currentSearchQuery.length);
+                displayTitle = `${escapeHtml(before)}<span class="highlight">${escapeHtml(matchText)}</span>${escapeHtml(after)}`;
+            }
+        }
+
+        const div = document.createElement('div');
+        div.className = 'song-item';
+        div.innerHTML = `
+            <div class="song-title" onclick="selectSong('${song.id}')">${displayTitle}</div>
             <div class="song-actions">
                 <div class="vote-badge ${votes > 0 ? 'has-votes' : ''}">${votes}</div>
                 <button class="vote-btn" onclick="castVote('${song.id}', event)">👍</button>
             </div>
-        </div>
         `;
+        fragment.appendChild(div);
+    }
+
+    // Remove the old sentinel if it exists
+    const oldSentinel = document.getElementById('list-sentinel');
+    if (oldSentinel) {
+        if (listObserver) listObserver.unobserve(oldSentinel);
+        oldSentinel.remove();
+    }
+
+    els.songList.appendChild(fragment);
+    currentRenderedCount = end;
+
+    // If there are more songs to load, attach a new sentinel
+    if (currentRenderedCount < currentSortedSongs.length) {
+        const sentinel = document.createElement('div');
+        sentinel.id = 'list-sentinel';
+        sentinel.style.height = '20px'; // invisible trigger area
+        els.songList.appendChild(sentinel);
+
+        if (!listObserver) {
+            listObserver = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    // Slight delay allows the UI thread to breathe while scrolling fast
+                    requestAnimationFrame(() => renderNextBatch());
+                }
+            }, { root: els.songSelector, rootMargin: '100px' });
+        }
+        listObserver.observe(sentinel);
+    }
+}
+
+function renderSongList() {
+    const sortBy = els.sortSelect ? els.sortSelect.value : 'votes';
+
+    // 1. Filter by Search Query First
+    let filteredSongs = [...state.songs];
+    if (currentSearchQuery.length > 0) {
+        filteredSongs = filteredSongs.filter(song => {
+            const title = (song.title || "ללא שם").toLowerCase();
+            return title.includes(currentSearchQuery);
+        });
+    }
+
+    // 2. Sort the filtered subset
+    currentSortedSongs = filteredSongs.sort((a, b) => {
+        const votesA = state.votes[a.id] || 0;
+        const votesB = state.votes[b.id] || 0;
+        const textA = getSortValue(a, sortBy);
+        const textB = getSortValue(b, sortBy);
+
+        if (sortBy === 'votes') {
+            if (votesB !== votesA) return votesB - votesA;
+            return getSortValue(a, 'title').localeCompare(getSortValue(b, 'title'));
+        } else {
+            return textA.localeCompare(textB);
+        }
     });
-    els.songList.innerHTML = html;
+
+    // Reset list and state for new render cycle
+    els.songList.innerHTML = '';
+    currentRenderedCount = 0;
+    if (listObserver) {
+        listObserver.disconnect();
+        listObserver = null;
+    }
+
+    renderNextBatch();
 }
 
 window.castVote = (id, event) => {
@@ -339,17 +435,41 @@ window.selectSong = (id) => {
     els.songSelector.classList.add('hidden');
 };
 
-// UI Handling
-els.openMenuBtn.onclick = () => els.songSelector.classList.remove('hidden');
-els.closePanelBtn.onclick = () => els.songSelector.classList.add('hidden');
+// Unified Control Drawer (Hamburger Menu)
+els.hamburgerBtn.onclick = () => {
+    els.controlDrawer.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+};
 
-els.searchInput.addEventListener('input', (e) => {
-    const q = e.target.value.toLowerCase();
-    const items = els.songList.children;
-    Array.from(items).forEach(item => {
-        const text = item.innerText.toLowerCase();
-        item.style.display = text.includes(q) ? 'block' : 'none';
+els.closeDrawerBtn.onclick = () => {
+    els.controlDrawer.classList.add('hidden');
+    document.body.style.overflow = '';
+};
+
+els.openMenuBtn.addEventListener('click', () => {
+    els.controlDrawer.classList.add('hidden');
+    els.songSelector.classList.remove('hidden');
+    // Ensure accurate rendering based on current state & sort dropdown
+    renderSongList();
+});
+
+// Close panel via the specific ✕ button in header
+els.closePanelBtn.onclick = () => {
+    els.songSelector.classList.add('hidden');
+};
+
+// Sort Dropdown listener
+if (els.sortSelect) {
+    els.sortSelect.addEventListener('change', () => {
+        renderSongList();
     });
+}
+
+// Search & Highlight Logic
+els.searchInput.addEventListener('input', (e) => {
+    // Update global search state and trigger a complete re-render pipeline
+    currentSearchQuery = e.target.value.toLowerCase();
+    renderSongList();
 });
 
 // --- UPDATE CHECKER ---

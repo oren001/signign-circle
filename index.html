@@ -41,7 +41,7 @@
         </div>
 
         <div class="header-left">
-            <span class="version-tag">Premium v5.0.0-beta</span>
+            <span class="version-tag">Premium v5.1.0-beta</span>
         </div>
     </header>
 
@@ -87,6 +87,13 @@
                 <input type="text" id="searchInput" class="song-search-input" placeholder="חפש שיר, אמן או מילים..."
                     autocomplete="off">
             </div>
+            <div class="sort-wrapper">
+                <select id="sortSelect" class="song-sort-select">
+                    <option value="votes">הכי פופולרי</option>
+                    <option value="title">שם שיר (א-ב)</option>
+                    <option value="artist">שם אמן (א-ב)</option>
+                </select>
+            </div>
         </div>
         <div id="songListContainer" class="song-list-container">
             <!-- Songs will be rendered here -->
@@ -96,7 +103,7 @@
     <!-- Notifications -->
     <div id="toastContainer" class="toast-container"></div>
 
-    <script type="module" src="app.js?v=4.55.1"></script>
+    <script type="module" src="app.js?v=5.1.0"></script>
 </body>
 
 </html>

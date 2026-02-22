@@ -216,12 +216,14 @@ body {
     padding: 24px 20px 12px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
 }
 
 .search-wrapper {
     position: relative;
     flex: 1;
+    margin-top: 10px;
+    /* Space from close button */
 }
 
 .song-search-input {
@@ -239,6 +241,49 @@ body {
 
 .song-search-input:focus {
     border-color: var(--accent);
+}
+
+.sort-wrapper {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.song-sort-select {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: all 0.2s ease;
+    direction: ltr;
+    /* Keeps the arrow cleanly on the right */
+}
+
+.song-sort-select:focus,
+.song-sort-select:hover {
+    border-color: var(--accent);
+    color: white;
+}
+
+.song-sort-select option {
+    background: var(--bg-deep);
+    /* Dark background for the dropdown menu items */
+    color: white;
+    direction: rtl;
+    /* Hebrew rendering */
+}
+
+.highlight {
+    background-color: rgba(241, 196, 15, 0.3);
+    color: #f1c40f;
+    font-weight: 700;
+    border-radius: 3px;
+    padding: 0 2px;
 }
 
 .close-panel-btn {
