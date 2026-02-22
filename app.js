@@ -278,27 +278,39 @@ function loadSong(id) {
 }
 
 function renderSongList() {
-    // Sort songs primarily by votes (descending), secondary by original order/name
+    let html = '';
+
+    // Create a sorted copy of songs based on vote count
     const sortedSongs = [...state.songs].sort((a, b) => {
-        const votesA = a.votes || 0;
-        const votesB = b.votes || 0;
+        const votesA = state.votes[a.id] || 0;
+        const votesB = state.votes[b.id] || 0;
+
+        // Sort by votes descending
         if (votesB !== votesA) {
-            return votesB - votesA; // Highest votes first
+            return votesB - votesA;
         }
-        const titleA = a.title || "";
-        const titleB = b.title || "";
-        return titleA.localeCompare(titleB); // Alphabetical tie-breaker
+
+        // Secondary sort: alphabetically by title
+        // Fallback to a string that sorts last in Hebrew ("תתתת")
+        const titleA = a.title || "תתתת";
+        const titleB = b.title || "תתתת";
+        return titleA.localeCompare(titleB);
     });
 
-    els.songList.innerHTML = sortedSongs.map(song => `
+    sortedSongs.forEach(song => {
+        const votes = state.votes[song.id] || 0;
+
+        html += `
         <div class="song-item">
-            <div class="song-title" onclick="selectSong('${song.id}')">${song.title}</div>
+            <div class="song-title" onclick="selectSong('${song.id}')">${song.title || 'ללא שם'}</div>
             <div class="song-actions">
-                <div class="vote-badge ${song.votes > 0 ? 'has-votes' : ''}">${song.votes || 0}</div>
+                <div class="vote-badge ${votes > 0 ? 'has-votes' : ''}">${votes}</div>
                 <button class="vote-btn" onclick="castVote('${song.id}', event)">👍</button>
             </div>
         </div>
-    `).join('');
+        `;
+    });
+    els.songList.innerHTML = html;
 }
 
 window.castVote = (id, event) => {
