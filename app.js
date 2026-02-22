@@ -62,7 +62,8 @@ let state = {
         zoom: 1,
         x: 0,
         y: 0
-    }
+    },
+    pdfOffset: 694
 };
 
 // DOM Elements
@@ -86,7 +87,11 @@ const els = {
     songDisplay: document.getElementById('songDisplay'),
     toastContainer: document.getElementById('toastContainer'),
     followLeaderBtn: document.getElementById('followLeaderBtn'),
-    activeVoteBtn: document.getElementById('activeVoteBtn')
+    activeVoteBtn: document.getElementById('activeVoteBtn'),
+    offsetUp: document.getElementById('offsetUp'),
+    offsetDown: document.getElementById('offsetDown'),
+    currentOffsetDisplay: document.getElementById('currentOffsetDisplay'),
+    currentPageDisplay: document.getElementById('currentPageDisplay')
 };
 
 // Lazy Loading State
@@ -101,18 +106,20 @@ let wakeLock = null;
 
 // PDF State
 // PDF page = book-page-N + PDF_PAGE_OFFSET (694)
-const PDF_PAGE_OFFSET = 694;
 
 // Get the PDF page number for a song
 function getPageNumber(song) {
     // book-page-79 → PDF page 79 + 694 = 773
     const match = song.id.match(/^book-page-(\d+)$/);
-    if (match) return parseInt(match[1], 10) + PDF_PAGE_OFFSET;
+    if (match) return parseInt(match[1], 10) + state.pdfOffset;
     return null; // extracted-p* or other types without a book page
 }
 
 // Render a PDF page using native iframe
 function renderPdfPage(pageNum) {
+    if (els.currentPageDisplay) els.currentPageDisplay.innerText = pageNum;
+    if (els.currentOffsetDisplay) els.currentOffsetDisplay.innerText = state.pdfOffset;
+
     els.pdfViewer.style.display = 'none';
     els.pdfLoader.style.display = 'block';
     els.pdfLoader.innerHTML = '⏳ טוען דף...';
@@ -541,8 +548,21 @@ els.searchInput.addEventListener('input', (e) => {
     renderSongList();
 });
 
+// --- DEBUG PDF OFFSET ---
+if (els.offsetUp && els.offsetDown) {
+    const updateOffset = (delta) => {
+        state.pdfOffset += delta;
+        console.log(`Debug: New PDF Offset = ${state.pdfOffset}`);
+        if (state.currentSong) {
+            loadSong(state.currentSong.id);
+        }
+    };
+    els.offsetUp.onclick = () => updateOffset(1);
+    els.offsetDown.onclick = () => updateOffset(-1);
+}
+
 // --- UPDATE CHECKER ---
-const CURRENT_VERSION = "5.2.0";
+const CURRENT_VERSION = "6.1.2";
 const VERSION_URL = "version.json";
 
 function checkForUpdates() {
