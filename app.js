@@ -27,6 +27,7 @@ const USER_ID = localStorage.getItem('userId') || `user-${Date.now()}`;
 localStorage.setItem('userId', USER_ID);
 
 let db, ref, onValue, set, runTransaction, refs;
+const DB_PREFIX = 'v5';
 
 Promise.all([
     import("https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"),
@@ -39,7 +40,6 @@ Promise.all([
     set = firebaseDb.set;
     runTransaction = firebaseDb.runTransaction;
 
-    const DB_PREFIX = 'v5';
     refs = {
         currentSong: ref(db, `${DB_PREFIX}/currentSongId`),
         votes: ref(db, `${DB_PREFIX}/votes`)
