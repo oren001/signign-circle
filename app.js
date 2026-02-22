@@ -71,15 +71,16 @@ const els = {
     controlDrawer: document.getElementById('controlDrawer'),
     closeDrawerBtn: document.getElementById('closeDrawerBtn'),
     leaderBtn: document.getElementById('leaderBtn'),
-    clearVotesBtn: document.getElementById('clearVotesBtn'), // New button
+    clearVotesBtn: document.getElementById('clearVotesBtn'),
     openMenuBtn: document.getElementById('openMenuBtn'),
     songSelector: document.getElementById('songSelector'),
     closePanelBtn: document.getElementById('closePanelBtn'),
     searchInput: document.getElementById('searchInput'),
-    sortSelect: document.getElementById('sortSelect'), // New select
+    sortSelect: document.getElementById('sortSelect'),
     songList: document.getElementById('songListContainer'),
     viewerCount: document.getElementById('viewerCount'),
-    songImg: document.getElementById('currentSongImg'),
+    pdfCanvas: document.getElementById('pdfCanvas'),
+    pdfLoader: document.getElementById('pdfLoader'),
     songTitle: document.getElementById('currentSongTitle'),
     viewerContainer: document.getElementById('viewerContainer'),
     songDisplay: document.getElementById('songDisplay'),
@@ -97,6 +98,81 @@ let currentSearchQuery = ''; // Holds active search term
 
 // Wakelock State
 let wakeLock = null;
+
+// PDF State
+// PDF page = book-page-N + PDF_PAGE_OFFSET (694)
+// Confirmed: PDF page 773 = book-page-79 ('יש לי סיכוי') → offset = 694
+const PDF_PAGE_OFFSET = 694;
+let pdfDoc = null;
+let pdfRendering = false;
+
+// Configure PDF.js worker
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/legacy/build/pdf.worker.min.js';
+
+// Load PDF once on startup
+pdfjsLib.getDocument('songs.pdf').promise.then(pdf => {
+    pdfDoc = pdf;
+    showToast(`✅ PDF נטען (${pdf.numPages} דפים)`, '#27ae60');
+    // If a song was selected before PDF loaded, render it now
+    if (window._pendingPdfPage) {
+        renderPdfPage(window._pendingPdfPage);
+        window._pendingPdfPage = null;
+    }
+}).catch(err => {
+    showToast('❌ שגיאה בטעינת PDF: ' + err.message, '#e74c3c');
+    console.error('PDF load error:', err);
+});
+
+// Get the PDF page number for a song
+function getPageNumber(song) {
+    // book-page-79 → PDF page 79 + 694 = 773
+    const match = song.id.match(/^book-page-(\d+)$/);
+    if (match) return parseInt(match[1], 10) + PDF_PAGE_OFFSET;
+    return null; // extracted-p* or other types without a book page
+}
+
+// Render a PDF page to the canvas
+async function renderPdfPage(pageNum) {
+    if (!pdfDoc) {
+        window._pendingPdfPage = pageNum;
+        els.pdfLoader.style.display = 'block';
+        els.pdfLoader.innerHTML = '⏳ ה-PDF בטעינה...';
+        return;
+    }
+    if (pdfRendering) return;
+    pdfRendering = true;
+
+    els.pdfCanvas.style.display = 'none';
+    els.pdfLoader.style.display = 'block';
+    els.pdfLoader.innerHTML = '⏳ טוען...';
+
+    try {
+        const page = await pdfDoc.getPage(pageNum);
+        const containerWidth = els.viewerContainer.clientWidth || 400;
+        const viewport = page.getViewport({ scale: 1 });
+        const scale = containerWidth / viewport.width;
+        const scaledViewport = page.getViewport({ scale });
+
+        els.pdfCanvas.width = scaledViewport.width;
+        els.pdfCanvas.height = scaledViewport.height;
+
+        await page.render({
+            canvasContext: els.pdfCanvas.getContext('2d'),
+            viewport: scaledViewport
+        }).promise;
+
+        els.pdfLoader.style.display = 'none';
+        els.pdfCanvas.style.display = 'block';
+        requestWakeLock();
+    } catch (err) {
+        showToast(`⚠️ שגיאה בטעינת דף ${pageNum}: ${err.message}`, '#e67e22');
+        els.pdfLoader.style.display = 'none';
+        console.error('PDF render error:', err);
+    } finally {
+        pdfRendering = false;
+    }
+}
 
 // Refs
 // (Moved inside dynamic import)
@@ -300,7 +376,7 @@ function loadSong(id) {
     const song = state.songs.find(s => s.id === id);
     if (!song) {
         state.pendingSongId = id;
-        els.songTitle.innerText = "מחפש שיר...";
+        els.songTitle.innerText = 'מחפש שיר...';
         if (els.activeVoteBtn) els.activeVoteBtn.classList.add('hidden');
         return;
     }
@@ -309,22 +385,16 @@ function loadSong(id) {
     els.songTitle.innerHTML = `${song.title} <span style="font-size:0.6em; opacity:0.5; font-weight:normal;">[${song.id}]</span>`;
     if (els.activeVoteBtn) els.activeVoteBtn.classList.remove('hidden');
 
-    els.songImg.style.opacity = '0.5';
+    const pageNum = getPageNumber(song);
 
-    const src = song.source.startsWith('http') ? song.source : `songs/${song.source.split('/').pop()}`;
-    els.songImg.src = src;
-    els.songImg.style.display = 'block';
-
-    els.songImg.onload = () => {
-        els.songImg.style.opacity = '1';
-        // Request Wake Lock once a song is actively being viewed
-        requestWakeLock();
-    };
-
-    els.songImg.onerror = () => {
-        showToast(`⚠️ שגיאה בטעינת תמונה: ${song.source.split('/').pop()}`, '#e67e22');
-        els.songImg.style.opacity = '1';
-    };
+    if (pageNum !== null) {
+        renderPdfPage(pageNum);
+    } else {
+        // extracted-p* songs not in the main PDF
+        els.pdfCanvas.style.display = 'none';
+        els.pdfLoader.style.display = 'block';
+        els.pdfLoader.innerHTML = `📄 "${song.title}"<br><small style="opacity:0.5;">שיר זה אינו בספר הראשי</small>`;
+    }
 
     state.viewport.zoom = 1;
     els.songDisplay.style.transform = 'scale(1)';

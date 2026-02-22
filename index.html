@@ -24,6 +24,9 @@
     <!-- CSS -->
     <link rel="stylesheet" href="styles.css">
 
+    <!-- PDF.js -->
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/legacy/build/pdf.min.js"></script>
+
     <!-- Firebase SDK -->
     <script type="module" src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js"></script>
@@ -41,7 +44,7 @@
         </div>
 
         <div class="header-left">
-            <span class="version-tag">Premium v5.2.0-beta</span>
+            <span class="version-tag">Premium v6.0.0</span>
         </div>
     </header>
 
@@ -69,8 +72,11 @@
         <div id="songViewer" class="song-viewer">
             <div id="viewerContainer" class="viewer-container">
                 <div id="songDisplay" class="song-display">
-                    <!-- Image will be injected here -->
-                    <img id="currentSongImg" src="" alt="מילות השיר" style="display: none;">
+                    <!-- PDF canvas rendered here -->
+                    <canvas id="pdfCanvas" style="display:none; width:100%; height:auto;"></canvas>
+                    <div id="pdfLoader"
+                        style="display:none; text-align:center; padding:2rem; color:rgba(255,255,255,0.6);">&#x23F3;
+                        &#x05D8;&#x05D5;&#x05E2;&#x05DF;...</div>
                 </div>
             </div>
             <button id="followLeaderBtn" class="follow-leader-btn hidden">
