@@ -531,3 +531,84 @@ body {
     pointer-events: none;
     transform: translate(-50%, 20px);
 }
+
+/* What's New Modal */
+.whats-new-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.whats-new-modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.whats-new-content {
+    background: var(--bg-elevated);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    width: 90%;
+    max-width: 400px;
+    text-align: right;
+    direction: rtl;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    transform: translateY(0);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.whats-new-modal.hidden .whats-new-content {
+    transform: translateY(20px);
+}
+
+.whats-new-content h2 {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+    color: var(--accent);
+}
+
+.whats-new-content ul {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 24px;
+}
+
+.whats-new-content li {
+    margin-bottom: 12px;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.whats-new-content li strong {
+    color: var(--text-primary);
+}
+
+.whats-new-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: var(--radius-md);
+    border: none;
+    background: linear-gradient(135deg, var(--accent), #9b59b6);
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.whats-new-btn:active {
+    transform: scale(0.97);
+}

@@ -94,6 +94,9 @@ const BATCH_SIZE = 50;
 let currentSortedSongs = []; // Holds the active sorted array 
 let currentSearchQuery = ''; // Holds active search term
 
+// Wakelock State
+let wakeLock = null;
+
 // Refs
 // (Moved inside dynamic import)
 
@@ -138,6 +141,28 @@ function checkBreakSync() {
         els.followLeaderBtn.classList.remove('hidden');
     }
 }
+
+// --- WAKELOCK API ---
+async function requestWakeLock() {
+    try {
+        if ('wakeLock' in navigator) {
+            wakeLock = await navigator.wakeLock.request('screen');
+            wakeLock.addEventListener('release', () => {
+                console.log('Wake Lock was released');
+            });
+            console.log('Wake Lock is active');
+        }
+    } catch (err) {
+        console.error(`Wake Lock error: ${err.name}, ${err.message}`);
+    }
+}
+
+// Re-acquire wake lock when tab becomes visible again
+document.addEventListener('visibilitychange', async () => {
+    if (wakeLock !== null && document.visibilityState === 'visible') {
+        requestWakeLock();
+    }
+});
 
 // Wait until DOM is fully parsed to attach this specific button listener
 if (els.followLeaderBtn) els.followLeaderBtn.addEventListener('click', resetViewToLeader);
@@ -276,6 +301,8 @@ function loadSong(id) {
 
     els.songImg.onload = () => {
         els.songImg.style.opacity = '1';
+        // Request Wake Lock once a song is actively being viewed
+        requestWakeLock();
     };
 
     els.songImg.onerror = () => {
@@ -474,7 +501,7 @@ els.searchInput.addEventListener('input', (e) => {
 });
 
 // --- UPDATE CHECKER ---
-const CURRENT_VERSION = "5.1.0";
+const CURRENT_VERSION = "5.2.0";
 const VERSION_URL = "version.json";
 
 function checkForUpdates() {
@@ -508,3 +535,22 @@ function showUpdateNotification(newVersion) {
 setInterval(checkForUpdates, 30000);
 // Check on load
 checkForUpdates();
+
+// --- WHAT'S NEW MODAL LOGIC ---
+const whatsNewModal = document.getElementById('whatsNewModal');
+const closeWhatsNewBtn = document.getElementById('closeWhatsNewBtn');
+
+if (whatsNewModal && closeWhatsNewBtn) {
+    const hasSeenVersion = localStorage.getItem('nigunim_version_seen');
+    if (hasSeenVersion !== CURRENT_VERSION) {
+        // Delay slightly for better UX impact after load
+        setTimeout(() => {
+            whatsNewModal.classList.remove('hidden');
+        }, 800);
+    }
+
+    closeWhatsNewBtn.addEventListener('click', () => {
+        whatsNewModal.classList.add('hidden');
+        localStorage.setItem('nigunim_version_seen', CURRENT_VERSION);
+    });
+}
