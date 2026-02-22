@@ -84,7 +84,8 @@ const els = {
     viewerContainer: document.getElementById('viewerContainer'),
     songDisplay: document.getElementById('songDisplay'),
     toastContainer: document.getElementById('toastContainer'),
-    followLeaderBtn: document.getElementById('followLeaderBtn')
+    followLeaderBtn: document.getElementById('followLeaderBtn'),
+    activeVoteBtn: document.getElementById('activeVoteBtn')
 };
 
 // Lazy Loading State
@@ -140,6 +141,17 @@ function checkBreakSync() {
         state.isFollowing = false;
         els.followLeaderBtn.classList.remove('hidden');
     }
+}
+
+// Active Song Vote Listener
+if (els.activeVoteBtn) {
+    els.activeVoteBtn.addEventListener('click', (e) => {
+        if (state.currentSong && state.currentSong.id) {
+            if (window.castVote) {
+                window.castVote(state.currentSong.id, e);
+            }
+        }
+    });
 }
 
 // --- WAKELOCK API ---
@@ -260,9 +272,11 @@ function initFirebaseListeners() {
             } else {
                 state.pendingSongId = id;
                 els.songTitle.innerText = "מחכה לרשימת השירים...";
+                if (els.activeVoteBtn) els.activeVoteBtn.classList.add('hidden');
             }
         } else {
             els.songTitle.innerText = "בחרו שיר מהספריה";
+            if (els.activeVoteBtn) els.activeVoteBtn.classList.add('hidden');
         }
     }, (err) => {
         showToast(`❌ שגיאת בסיס נתונים (סנכרון): ${err.message}`, '#e74c3c');
@@ -287,11 +301,13 @@ function loadSong(id) {
     if (!song) {
         state.pendingSongId = id;
         els.songTitle.innerText = "מחפש שיר...";
+        if (els.activeVoteBtn) els.activeVoteBtn.classList.add('hidden');
         return;
     }
 
     state.currentSong = song;
-    els.songTitle.innerText = song.title;
+    els.songTitle.innerHTML = `${song.title} <span style="font-size:0.6em; opacity:0.5; font-weight:normal;">[${song.id}]</span>`;
+    if (els.activeVoteBtn) els.activeVoteBtn.classList.remove('hidden');
 
     els.songImg.style.opacity = '0.5';
 
