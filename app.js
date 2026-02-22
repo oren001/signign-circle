@@ -39,9 +39,10 @@ Promise.all([
     set = firebaseDb.set;
     runTransaction = firebaseDb.runTransaction;
 
+    const DB_PREFIX = 'v5';
     refs = {
-        currentSong: ref(db, 'currentSongId'),
-        votes: ref(db, 'votes')
+        currentSong: ref(db, `${DB_PREFIX}/currentSongId`),
+        votes: ref(db, `${DB_PREFIX}/votes`)
     };
 
     initFirebaseListeners();
@@ -199,7 +200,7 @@ if (els.clearVotesBtn) {
 
 function initFirebaseListeners() {
     // Load Songs
-    onValue(ref(db, 'songs'), (snap) => {
+    onValue(ref(db, `${DB_PREFIX}/songs`), (snap) => {
         const data = snap.val();
         if (data) {
             state.songs = Object.values(data);
@@ -314,7 +315,7 @@ window.castVote = (id, event) => {
     // Optimistic UI Toast
     showToast(`הצבעת לשיר!`, '#3498db');
 
-    const songVoteRef = ref(db, `votes/${id}`);
+    const songVoteRef = ref(db, `${DB_PREFIX}/votes/${id}`);
     runTransaction(songVoteRef, (currentVotes) => {
         return (currentVotes || 0) + 1;
     });
@@ -324,7 +325,7 @@ window.selectSong = (id) => {
     if (state.isLeader) {
         set(refs.currentSong, id);
         // Clear votes for this song so it doesn't stay at the top forever
-        set(ref(db, `votes/${id}`), 0);
+        set(ref(db, `${DB_PREFIX}/votes/${id}`), 0);
     } else {
         loadSong(id); // Local preview
     }
@@ -345,7 +346,7 @@ els.searchInput.addEventListener('input', (e) => {
 });
 
 // --- UPDATE CHECKER ---
-const CURRENT_VERSION = "4.56.0";
+const CURRENT_VERSION = "5.0.0";
 const VERSION_URL = "version.json";
 
 function checkForUpdates() {
