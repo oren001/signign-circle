@@ -110,8 +110,13 @@ let pdfRendering = false;
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/legacy/build/pdf.worker.min.js';
 
-// Load PDF once on startup
-pdfjsLib.getDocument('songs.pdf').promise.then(pdf => {
+// Load PDF once on startup (cMapUrl fixes Hebrew font rendering)
+pdfjsLib.getDocument({
+    url: 'songs.pdf',
+    cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/cmaps/',
+    cMapPacked: true,
+    standardFontDataUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@2.16.105/standard_fonts/'
+}).promise.then(pdf => {
     pdfDoc = pdf;
     showToast(`✅ PDF נטען (${pdf.numPages} דפים)`, '#27ae60');
     // If a song was selected before PDF loaded, render it now
