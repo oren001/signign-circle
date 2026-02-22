@@ -96,12 +96,7 @@ window.onerror = (msg, url, line) => {
 };
 
 function showToast(text, bg = '#333') {
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.style.background = bg;
-    toast.innerText = text;
-    document.getElementById('toastContainer').appendChild(toast);
-    setTimeout(() => toast.remove(), 5000);
+    // console.log("Toast suppressed:", text);
 }
 
 // --- FOLLOW LEADER / RESET VIEW ---
