@@ -123,12 +123,10 @@ function renderPdfPage(pageNum) {
     // Set src
     els.pdfViewer.src = pdfUrl;
 
-    // When iframe loads, show it
-    els.pdfViewer.onload = () => {
-        els.pdfLoader.style.display = 'none';
-        els.pdfViewer.style.display = 'block';
-        requestWakeLock();
-    };
+    // Show immediately (onload is unreliable for PDFs)
+    els.pdfLoader.style.display = 'none';
+    els.pdfViewer.style.display = 'block';
+    requestWakeLock();
 }
 
 // Refs
