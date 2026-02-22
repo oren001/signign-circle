@@ -57,6 +57,7 @@ let state = {
     lastViewportData: null,
     currentSong: null,
     songs: [],
+    votes: {},
     viewport: {
         zoom: 1,
         x: 0,
