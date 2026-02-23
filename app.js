@@ -567,7 +567,7 @@ if (els.offsetUp && els.offsetDown) {
 }
 
 // --- UPDATE CHECKER ---
-const CURRENT_VERSION = "6.1.5";
+const CURRENT_VERSION = "6.1.6";
 const VERSION_URL = "version.json";
 
 function checkForUpdates() {
@@ -598,7 +598,12 @@ function showUpdateNotification(newVersion) {
     toast.style.cursor = 'pointer';
     toast.innerHTML = `🚀 גרסה חדשה (${newVersion}) זמינה! לחץ לרענון`;
 
-    toast.onclick = () => window.location.reload();
+    toast.onclick = () => {
+        // Force the browser to bypass cache for index.html by appending the new version as a query param
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('v', newVersion);
+        window.location.href = currentUrl.toString();
+    };
 
     document.getElementById('toastContainer').appendChild(toast);
 }
