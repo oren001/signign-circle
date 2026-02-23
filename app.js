@@ -125,15 +125,20 @@ function renderPdfPage(pageNum) {
     els.pdfLoader.innerHTML = '⏳ טוען דף...';
 
     // Using PDF open parameters for native navigation
-    const pdfUrl = `songs.pdf#page=${pageNum}&view=FitH&scrollbar=0&toolbar=0&statusbar=0&navpanes=0`;
+    const pdfUrl = `songs.pdf?v=${CURRENT_VERSION}#page=${pageNum}&view=FitH&scrollbar=0&toolbar=0&statusbar=0&navpanes=0`;
 
-    // Set src
-    els.pdfViewer.src = pdfUrl;
+    // Force reload by clearing src first (fixes hash-only navigation issues)
+    els.pdfViewer.src = 'about:blank';
 
-    // Show immediately (onload is unreliable for PDFs)
-    els.pdfLoader.style.display = 'none';
-    els.pdfViewer.style.display = 'block';
-    requestWakeLock();
+    // Tiny delay to ensure the browser processes the clear
+    setTimeout(() => {
+        els.pdfViewer.src = pdfUrl;
+
+        // Show immediately
+        els.pdfLoader.style.display = 'none';
+        els.pdfViewer.style.display = 'block';
+        requestWakeLock();
+    }, 50);
 }
 
 // Refs
@@ -562,7 +567,7 @@ if (els.offsetUp && els.offsetDown) {
 }
 
 // --- UPDATE CHECKER ---
-const CURRENT_VERSION = "6.1.2";
+const CURRENT_VERSION = "6.1.3";
 const VERSION_URL = "version.json";
 
 function checkForUpdates() {
