@@ -50,6 +50,16 @@ Promise.all([
     console.error("Firebase load error", err);
 });
 
+// --- CONFIG & STATE ---
+const CURRENT_VERSION = "6.1.10";
+
+// Manual overrides for problematic song-to-pdf mappings
+const PDF_PAGE_OVERRIDES = {
+    'book-page-3': 24,    // Hey Jude
+    'book-page-63': 660,  // Chofim
+    'book-page-103': 797, // Laban Bachalom
+};
+
 // State
 let state = {
     isLeader: false,
@@ -111,17 +121,32 @@ let wakeLock = null;
 function getPageNumber(song) {
     if (!song) return null;
 
-    // Backward compatibility for old manual entries
-    if (song.id && song.id.startsWith('book-page-')) {
-        const match = song.id.match(/^book-page-(\d+)$/);
-        if (match) return parseInt(match[1], 10) + state.pdfOffset;
+    // 1. High-priority explicit overrides
+    if (song.id && PDF_PAGE_OVERRIDES[song.id]) {
+        return PDF_PAGE_OVERRIDES[song.id];
     }
 
-    // New extraction mapping 1:1
+    // 2. New extraction mapping 1:1 (most accurate for extracted-p*)
     if (song.source) {
         const match = song.source.match(/page_(\d+)\.(png|jpg|jpeg)/i);
         if (match) {
             return parseInt(match[1], 10);
+        }
+    }
+
+    // 3. Backward compatibility for old manual book-page entries
+    if (song.id && song.id.startsWith('book-page-')) {
+        const match = song.id.match(/^book-page-(\d+)$/);
+        if (match) {
+            const pageNum = parseInt(match[1], 10);
+
+            // English section (heuristic: pages 1-12) starts after index (approx page 21)
+            if (pageNum <= 12) {
+                return pageNum + 21;
+            }
+
+            // Hebrew section uses the standard offset
+            return pageNum + state.pdfOffset;
         }
     }
 
@@ -580,8 +605,6 @@ if (els.offsetUp && els.offsetDown) {
 }
 
 // --- UPDATE CHECKER ---
-const CURRENT_VERSION = "6.1.9";
-const VERSION_URL = "version.json";
 
 function checkForUpdates() {
     fetch(VERSION_URL + '?t=' + Date.now()) // bust cache
