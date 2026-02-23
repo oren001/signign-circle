@@ -109,13 +109,20 @@ let wakeLock = null;
 
 // Get the PDF page number for a song based on its source image filename
 function getPageNumber(song) {
-    if (!song || !song.source) return null;
+    if (!song) return null;
 
-    // songs.pdf is a 1:1 compilation of the original page_*** images
-    // e.g. "songs_full/page_047.png" is exactly PDF Page 47
-    const match = song.source.match(/page_(\d+)\.(png|jpg|jpeg)/i);
-    if (match) {
-        return parseInt(match[1], 10);
+    // Backward compatibility for old manual entries
+    if (song.id && song.id.startsWith('book-page-')) {
+        const match = song.id.match(/^book-page-(\d+)$/);
+        if (match) return parseInt(match[1], 10) + state.pdfOffset;
+    }
+
+    // New extraction mapping 1:1
+    if (song.source) {
+        const match = song.source.match(/page_(\d+)\.(png|jpg|jpeg)/i);
+        if (match) {
+            return parseInt(match[1], 10);
+        }
     }
 
     return null;
@@ -573,7 +580,7 @@ if (els.offsetUp && els.offsetDown) {
 }
 
 // --- UPDATE CHECKER ---
-const CURRENT_VERSION = "6.1.8";
+const CURRENT_VERSION = "6.1.9";
 const VERSION_URL = "version.json";
 
 function checkForUpdates() {
