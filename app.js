@@ -1,14 +1,8 @@
 // --- CRITICAL CACHE BUSTER ---
-// If the user's browser has an old service worker caching index.html, it may load this file as a classic script.
-// Top-level imports would throw a SyntaxError. We use dynamic imports instead.
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistrations().then(function (registrations) {
         for (let registration of registrations) {
-            registration.unregister().then(boolean => {
-                if (boolean) {
-                    console.log('Unregistered old ServiceWorker successfully');
-                }
-            });
+            registration.unregister();
         }
     });
 }
@@ -23,7 +17,7 @@ const firebaseConfig = {
     appId: "1:154350722932:web:86eaabc6c734c755625621"
 };
 
-const USER_ID = localStorage.getItem('userId') || `user-${Date.now()}`;
+const USER_ID = localStorage.getItem('userId') || (`user-${Date.now()}`);
 localStorage.setItem('userId', USER_ID);
 
 let db, ref, onValue, set, runTransaction, refs;
@@ -53,11 +47,300 @@ Promise.all([
 // --- CONFIG & STATE ---
 const CURRENT_VERSION = "6.1.10";
 
-// Manual overrides for problematic song-to-pdf mappings
-const PDF_PAGE_OVERRIDES = {
-    'book-page-3': 24,    // Hey Jude
-    'book-page-63': 660,  // Chofim
-    'book-page-103': 797, // Laban Bachalom
+// --- PDF MAPPING TABLE ---
+const LEGACY_MAPPING = {
+  "book-page-3": 25,
+  "book-page-5": 5,
+  "book-page-13": 13,
+  "book-page-14": 73,
+  "book-page-19": 122,
+  "book-page-21": 140,
+  "book-page-63": 665,
+  "book-page-79": 773,
+  "book-page-100": 848,
+  "book-page-116": 927,
+  "book-page-200": 1160,
+  "book-page-292": 1470,
+  "book-page-105": 871,
+  "book-page-107": 882,
+  "book-page-108": 882,
+  "book-page-125": 961,
+  "book-page-131": 984,
+  "book-page-132": 985,
+  "book-page-135": 993,
+  "book-page-142": 1031,
+  "book-page-144": 1038,
+  "book-page-15": 81,
+  "book-page-156": 1086,
+  "book-page-160": 1097,
+  "book-page-171": 1122,
+  "book-page-178": 1129,
+  "book-page-18": 107,
+  "book-page-182": 1135,
+  "book-page-183": 1136,
+  "book-page-184": 1137,
+  "book-page-185": 1137,
+  "book-page-186": 1137,
+  "book-page-187": 1139,
+  "book-page-188": 1140,
+  "book-page-199": 1172,
+  "book-page-204": 1161,
+  "book-page-206": 1172,
+  "book-page-230": 1245,
+  "book-page-24": 235,
+  "book-page-257": 1343,
+  "book-page-261": 1354,
+  "book-page-269": 1391,
+  "book-page-279": 1426,
+  "book-page-283": 1436,
+  "book-page-32": 320,
+  "book-page-33": 325,
+  "book-page-34": 350,
+  "book-page-40": 426,
+  "book-page-46": 457,
+  "book-page-47": 89,
+  "book-page-48": 470,
+  "book-page-53": 542,
+  "book-page-56": 616,
+  "book-page-59": 652,
+  "book-page-62": 659,
+  "book-page-68": 721,
+  "book-page-70": 724,
+  "book-page-73": 737,
+  "book-page-74": 739,
+  "book-page-75": 740,
+  "book-page-83": 793,
+  "book-page-85": 802,
+  "book-page-87": 810,
+  "book-page-90": 829,
+  "book-page-94": 835,
+  "book-page-98": 846,
+  "book-page-1": 23,
+  "book-page-10": 10,
+  "book-page-101": 853,
+  "book-page-102": 858,
+  "book-page-103": 862,
+  "book-page-104": 867,
+  "book-page-106": 877,
+  "book-page-109": 888,
+  "book-page-11": 11,
+  "book-page-110": 894,
+  "book-page-111": 900,
+  "book-page-112": 905,
+  "book-page-113": 911,
+  "book-page-114": 916,
+  "book-page-115": 922,
+  "book-page-117": 931,
+  "book-page-118": 935,
+  "book-page-119": 939,
+  "book-page-12": 12,
+  "book-page-120": 943,
+  "book-page-121": 947,
+  "book-page-122": 951,
+  "book-page-123": 954,
+  "book-page-124": 958,
+  "book-page-126": 965,
+  "book-page-127": 969,
+  "book-page-128": 973,
+  "book-page-129": 977,
+  "book-page-130": 981,
+  "book-page-133": 988,
+  "book-page-134": 991,
+  "book-page-136": 998,
+  "book-page-137": 1004,
+  "book-page-138": 1009,
+  "book-page-139": 1015,
+  "book-page-140": 1020,
+  "book-page-141": 1026,
+  "book-page-143": 1035,
+  "book-page-145": 1042,
+  "book-page-146": 1046,
+  "book-page-147": 1050,
+  "book-page-148": 1054,
+  "book-page-149": 1058,
+  "book-page-150": 1062,
+  "book-page-151": 1066,
+  "book-page-152": 1070,
+  "book-page-153": 1074,
+  "book-page-154": 1078,
+  "book-page-155": 1082,
+  "book-page-157": 1089,
+  "book-page-158": 1092,
+  "book-page-159": 1095,
+  "book-page-16": 90,
+  "book-page-161": 1099,
+  "book-page-162": 1101,
+  "book-page-163": 1103,
+  "book-page-164": 1105,
+  "book-page-165": 1107,
+  "book-page-166": 1110,
+  "book-page-167": 1112,
+  "book-page-168": 1115,
+  "book-page-169": 1117,
+  "book-page-17": 99,
+  "book-page-170": 1120,
+  "book-page-172": 1123,
+  "book-page-173": 1124,
+  "book-page-174": 1125,
+  "book-page-175": 1126,
+  "book-page-176": 1127,
+  "book-page-177": 1128,
+  "book-page-179": 1131,
+  "book-page-180": 1132,
+  "book-page-181": 1134,
+  "book-page-189": 1143,
+  "book-page-190": 1146,
+  "book-page-191": 1149,
+  "book-page-192": 1152,
+  "book-page-193": 1155,
+  "book-page-194": 1158,
+  "book-page-195": 1161,
+  "book-page-196": 1164,
+  "book-page-197": 1167,
+  "book-page-198": 1170,
+  "book-page-2": 24,
+  "book-page-20": 131,
+  "book-page-201": 1160,
+  "book-page-202": 1160,
+  "book-page-203": 1161,
+  "book-page-205": 1167,
+  "book-page-207": 1175,
+  "book-page-208": 1178,
+  "book-page-209": 1181,
+  "book-page-210": 1184,
+  "book-page-211": 1187,
+  "book-page-212": 1190,
+  "book-page-213": 1193,
+  "book-page-214": 1196,
+  "book-page-215": 1199,
+  "book-page-216": 1202,
+  "book-page-217": 1205,
+  "book-page-218": 1208,
+  "book-page-219": 1211,
+  "book-page-22": 172,
+  "book-page-220": 1214,
+  "book-page-221": 1217,
+  "book-page-222": 1220,
+  "book-page-223": 1223,
+  "book-page-224": 1226,
+  "book-page-225": 1229,
+  "book-page-226": 1232,
+  "book-page-227": 1235,
+  "book-page-228": 1238,
+  "book-page-229": 1242,
+  "book-page-23": 204,
+  "book-page-231": 1249,
+  "book-page-232": 1253,
+  "book-page-233": 1257,
+  "book-page-234": 1261,
+  "book-page-235": 1265,
+  "book-page-236": 1269,
+  "book-page-237": 1273,
+  "book-page-238": 1277,
+  "book-page-239": 1280,
+  "book-page-240": 1284,
+  "book-page-241": 1287,
+  "book-page-242": 1291,
+  "book-page-243": 1294,
+  "book-page-244": 1298,
+  "book-page-245": 1301,
+  "book-page-246": 1305,
+  "book-page-247": 1308,
+  "book-page-248": 1312,
+  "book-page-249": 1315,
+  "book-page-25": 246,
+  "book-page-250": 1319,
+  "book-page-251": 1322,
+  "book-page-252": 1326,
+  "book-page-253": 1329,
+  "book-page-254": 1333,
+  "book-page-255": 1336,
+  "book-page-256": 1340,
+  "book-page-258": 1346,
+  "book-page-259": 1349,
+  "book-page-26": 257,
+  "book-page-260": 1352,
+  "book-page-262": 1359,
+  "book-page-263": 1364,
+  "book-page-264": 1369,
+  "book-page-265": 1373,
+  "book-page-266": 1378,
+  "book-page-267": 1382,
+  "book-page-268": 1387,
+  "book-page-27": 268,
+  "book-page-270": 1395,
+  "book-page-271": 1398,
+  "book-page-272": 1402,
+  "book-page-273": 1405,
+  "book-page-274": 1409,
+  "book-page-275": 1412,
+  "book-page-276": 1416,
+  "book-page-277": 1419,
+  "book-page-278": 1423,
+  "book-page-28": 278,
+  "book-page-280": 1429,
+  "book-page-281": 1431,
+  "book-page-282": 1434,
+  "book-page-284": 1440,
+  "book-page-285": 1444,
+  "book-page-286": 1448,
+  "book-page-287": 1452,
+  "book-page-288": 1456,
+  "book-page-289": 1460,
+  "book-page-29": 289,
+  "book-page-290": 1463,
+  "book-page-291": 1467,
+  "book-page-30": 299,
+  "book-page-31": 310,
+  "book-page-35": 363,
+  "book-page-36": 376,
+  "book-page-37": 389,
+  "book-page-38": 401,
+  "book-page-39": 414,
+  "book-page-4": 15,
+  "book-page-41": 431,
+  "book-page-42": 436,
+  "book-page-43": 441,
+  "book-page-44": 446,
+  "book-page-45": 452,
+  "book-page-49": 484,
+  "book-page-50": 499,
+  "book-page-51": 513,
+  "book-page-52": 528,
+  "book-page-54": 567,
+  "book-page-55": 592,
+  "book-page-57": 628,
+  "book-page-58": 640,
+  "book-page-6": 6,
+  "book-page-60": 654,
+  "book-page-61": 657,
+  "book-page-64": 676,
+  "book-page-65": 687,
+  "book-page-66": 698,
+  "book-page-67": 710,
+  "book-page-69": 723,
+  "book-page-7": 7,
+  "book-page-71": 728,
+  "book-page-72": 733,
+  "book-page-76": 748,
+  "book-page-77": 756,
+  "book-page-78": 765,
+  "book-page-8": 8,
+  "book-page-80": 778,
+  "book-page-81": 783,
+  "book-page-82": 788,
+  "book-page-84": 798,
+  "book-page-86": 806,
+  "book-page-88": 816,
+  "book-page-89": 823,
+  "book-page-9": 9,
+  "book-page-91": 831,
+  "book-page-92": 832,
+  "book-page-93": 834,
+  "book-page-95": 838,
+  "book-page-96": 841,
+  "book-page-97": 844,
+  "book-page-99": 847
 };
 
 // State
@@ -73,7 +356,7 @@ let state = {
         x: 0,
         y: 0
     },
-    pdfOffset: 694
+    pdfOffset: 0
 };
 
 // DOM Elements
@@ -108,45 +391,29 @@ const els = {
 let listObserver = null;
 let currentRenderedCount = 0;
 const BATCH_SIZE = 50;
-let currentSortedSongs = []; // Holds the active sorted array 
-let currentSearchQuery = ''; // Holds active search term
+let currentSortedSongs = [];
+let currentSearchQuery = '';
 
 // Wakelock State
 let wakeLock = null;
 
-// PDF State
-// PDF page = book-page-N + PDF_PAGE_OFFSET (694)
-
-// Get the PDF page number for a song based on its source image filename
+// Get the PDF page number for a song
 function getPageNumber(song) {
     if (!song) return null;
 
-    // 1. High-priority explicit overrides
-    if (song.id && PDF_PAGE_OVERRIDES[song.id]) {
-        return PDF_PAGE_OVERRIDES[song.id];
+    if (song.id && LEGACY_MAPPING[song.id]) {
+        return LEGACY_MAPPING[song.id];
     }
 
-    // 2. New extraction mapping 1:1 (most accurate for extracted-p*)
+    if (song.id && song.id.startsWith('extracted-p')) {
+        const num = parseInt(song.id.replace('extracted-p', ''), 10);
+        if (!isNaN(num)) return num;
+    }
+
     if (song.source) {
         const match = song.source.match(/page_(\d+)\.(png|jpg|jpeg)/i);
         if (match) {
             return parseInt(match[1], 10);
-        }
-    }
-
-    // 3. Backward compatibility for old manual book-page entries
-    if (song.id && song.id.startsWith('book-page-')) {
-        const match = song.id.match(/^book-page-(\d+)$/);
-        if (match) {
-            const pageNum = parseInt(match[1], 10);
-
-            // English section (heuristic: pages 1-12) starts after index (approx page 21)
-            if (pageNum <= 12) {
-                return pageNum + 21;
-            }
-
-            // Hebrew section uses the standard offset
-            return pageNum + state.pdfOffset;
         }
     }
 
@@ -162,113 +429,17 @@ function renderPdfPage(pageNum) {
     els.pdfLoader.style.display = 'block';
     els.pdfLoader.innerHTML = '⏳ טוען דף...';
 
-    // Using PDF open parameters for native navigation
     const pdfUrl = `songs.pdf?v=${CURRENT_VERSION}#page=${pageNum}&view=FitH&scrollbar=0&toolbar=0&statusbar=0&navpanes=0`;
 
-    // Force reload by clearing src first (fixes hash-only navigation issues)
     els.pdfViewer.src = 'about:blank';
 
-    // Tiny delay to ensure the browser processes the clear
     setTimeout(() => {
         els.pdfViewer.src = pdfUrl;
-
-        // Show immediately
         els.pdfLoader.style.display = 'none';
         els.pdfViewer.style.display = 'block';
         requestWakeLock();
     }, 50);
 }
-
-// Refs
-// (Moved inside dynamic import)
-
-// --- OVERVIEW: SONG SYNC ONLY (v4.54.0) ---
-// Viewport synchronization (zoom/pan) has been entirely removed. 
-// Users can navigate freely natively. Only the current song selection is synchronized.
-
-// Global Error Handler for better debugging on mobile
-window.onerror = (msg, url, line) => {
-    showToast(`❌ שגיאה: ${msg} (שורה ${line})`, '#e74c3c');
-};
-
-function showToast(text, bg = '#333') {
-    // console.log("Toast suppressed:", text);
-}
-
-// --- FOLLOW LEADER / RESET VIEW ---
-
-// This function now simply resets the user's manual zoom/pan back to (0,0) scale(1)
-// It does NOT initiate ongoing coordinate synchronization anymore.
-function resetViewToLeader() {
-    if (state.isLeader) return;
-
-    // Reset any arbitrary transforms and scroll position
-    els.songDisplay.style.transform = `scale(1)`;
-    els.songDisplay.style.transformOrigin = `0 0`;
-    els.viewerContainer.scrollTo({ left: 0, top: 0, behavior: 'smooth' });
-
-    // Hide the button after reset
-    els.followLeaderBtn.classList.add('hidden');
-
-    // We are now technically "Following" the leader's default view
-    state.isFollowing = true;
-    showToast('חזרת לתחילת השיר', '#27ae60');
-}
-
-// Show the "Follow Leader" button if user navigates away from default view
-function checkBreakSync() {
-    if (state.isLeader) return;
-    if (state.isFollowing) {
-        state.isFollowing = false;
-        els.followLeaderBtn.classList.remove('hidden');
-    }
-}
-
-// Active Song Vote Listener
-if (els.activeVoteBtn) {
-    els.activeVoteBtn.addEventListener('click', (e) => {
-        if (state.currentSong && state.currentSong.id) {
-            if (window.castVote) {
-                window.castVote(state.currentSong.id, e);
-            }
-        }
-    });
-}
-
-// --- WAKELOCK API ---
-async function requestWakeLock() {
-    try {
-        if ('wakeLock' in navigator) {
-            wakeLock = await navigator.wakeLock.request('screen');
-            wakeLock.addEventListener('release', () => {
-                console.log('Wake Lock was released');
-            });
-            console.log('Wake Lock is active');
-        }
-    } catch (err) {
-        console.error(`Wake Lock error: ${err.name}, ${err.message}`);
-    }
-}
-
-// Re-acquire wake lock when tab becomes visible again
-document.addEventListener('visibilitychange', async () => {
-    if (wakeLock !== null && document.visibilityState === 'visible') {
-        requestWakeLock();
-    }
-});
-
-// Wait until DOM is fully parsed to attach this specific button listener
-if (els.followLeaderBtn) els.followLeaderBtn.addEventListener('click', resetViewToLeader);
-
-// Trigger break sync if user scrolls at all
-els.viewerContainer.addEventListener('scroll', checkBreakSync);
-
-// Trigger break sync if user interacts (e.g., pinch zoom) via native visualViewport
-if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', checkBreakSync);
-    window.visualViewport.addEventListener('scroll', checkBreakSync);
-}
-
 
 // --- UI LOGIC ---
 
