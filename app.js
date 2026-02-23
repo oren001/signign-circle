@@ -110,9 +110,14 @@ let wakeLock = null;
 // Get the PDF page number for a song
 function getPageNumber(song) {
     // book-page-79 → PDF page 79 + 694 = 773
-    const match = song.id.match(/^book-page-(\d+)$/);
-    if (match) return parseInt(match[1], 10) + state.pdfOffset;
-    return null; // extracted-p* or other types without a book page
+    const bookMatch = song.id.match(/^book-page-(\d+)$/);
+    if (bookMatch) return parseInt(bookMatch[1], 10) + state.pdfOffset;
+
+    // extracted-p811 → PDF page 811 (no offset needed as the PDF combines all PNGs sequentially)
+    const extractedMatch = song.id.match(/^extracted-p(\d+)$/);
+    if (extractedMatch) return parseInt(extractedMatch[1], 10);
+
+    return null;
 }
 
 // Render a PDF page using native iframe
@@ -357,10 +362,10 @@ function loadSong(id) {
     if (pageNum !== null) {
         renderPdfPage(pageNum);
     } else {
-        // extracted-p* songs not in the main PDF
+        // Fallback only for genuinely unknown formats
         els.pdfViewer.style.display = 'none';
         els.pdfLoader.style.display = 'block';
-        els.pdfLoader.innerHTML = `📄 "${song.title}"<br><small style="opacity:0.5;">שיר זה אינו בספר הראשי</small>`;
+        els.pdfLoader.innerHTML = `📄 "${song.title}"<br><small style="opacity:0.5;">שגיאה: לא ניתן לאתר את עמוד השיר</small>`;
     }
 
     state.viewport.zoom = 1;
@@ -567,7 +572,7 @@ if (els.offsetUp && els.offsetDown) {
 }
 
 // --- UPDATE CHECKER ---
-const CURRENT_VERSION = "6.1.6";
+const CURRENT_VERSION = "6.1.7";
 const VERSION_URL = "version.json";
 
 function checkForUpdates() {
