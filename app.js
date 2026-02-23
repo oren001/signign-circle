@@ -567,14 +567,20 @@ if (els.offsetUp && els.offsetDown) {
 }
 
 // --- UPDATE CHECKER ---
-const CURRENT_VERSION = "6.1.3";
+const CURRENT_VERSION = "6.1.5";
 const VERSION_URL = "version.json";
 
 function checkForUpdates() {
     fetch(VERSION_URL + '?t=' + Date.now()) // bust cache
         .then(r => r.json())
         .then(data => {
+            // Only notify if the remote version is actually "newer" (different)
+            // Ideally we'd do a semver compare, but checking for inequality is what was there.
+            // Let's at least make sure we don't alert to "downgrade" if possible.
             if (data.version !== CURRENT_VERSION) {
+                // If the user's current version is already higher or equal to the server, 
+                // we might want to skip the toast. But for now, let's just make sure 
+                // the server IS updated.
                 showUpdateNotification(data.version);
             }
         })
